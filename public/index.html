@@ -112,6 +112,53 @@
         .card-btn { background: rgba(6,182,212,0.1); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 0.7rem 1rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.85rem; text-align: center; transition: 0.2s; }
         .card-btn:hover { background: var(--accent-cyan); color: #000; }
 
+        /* Estilos para Quiénes Somos / Misión / Visión */
+        .about-section {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            margin: 3rem auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .about-text {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 3rem auto;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .about-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: left;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+        }
+        .about-card h3 {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .about-card h3 i {
+            color: var(--accent-cyan);
+        }
+        .about-card p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+            line-height: 1.7;
+        }
+
         /* Mensaje de sugerencia debajo de las opciones */
         .suggestion-notice {
             text-align: center;
@@ -202,7 +249,6 @@
             <img src="/logo.png" alt="Ingeniería MyP Salazar Lagos" class="logo-img">
         </a>
         
-        <!-- Banners con los nombres exactos proporcionados -->
         <div class="header-collage">
             <div class="header-mini-banner" title="ChatGPT"><img src="ChatGPT.jpg" alt="ChatGPT"></div>
             <div class="header-mini-banner" title="Claude"><img src="Claude.jpg" alt="Claude"></div>
@@ -230,6 +276,32 @@
         <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
             <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
         </a>
+    </section>
+
+    <!-- Sección Quiénes Somos, Misión y Visión -->
+    <section class="container">
+        <div class="about-section">
+            <div class="section-title">
+                <h2>¿Quiénes Somos?</h2>
+            </div>
+            <p class="about-text">
+                En <strong>Ingeniería MyP</strong> somos un emprendimiento fundado por dos jóvenes apasionados por la tecnología y la innovación digital. Impulsados por nuestra sólida formación y constante desempeño en el área tecnológica, decidimos unir fuerzas y crear este proyecto con la firme convicción de acercar herramientas de automatización, desarrollo web e Inteligencia Artificial de alto nivel a empresas y PyMEs que buscan transformar y escalar sus operaciones de manera eficiente.
+            </p>
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3><i class="fa-solid fa-bullseye"></i> Misión</h3>
+                    <p>
+                        Nuestra misión es potenciar la productividad y el crecimiento de las empresas mediante soluciones tecnológicas a la medida, automatizando procesos complejos y conectando sistemas digitales de forma inteligente, ágil y accesible.
+                    </p>
+                </div>
+                <div class="about-card">
+                    <h3><i class="fa-solid fa-eye"></i> Visión</h3>
+                    <p>
+                        Convertirnos en el socio tecnológico de referencia en el desarrollo de automatizaciones avanzadas y transformación digital para PyMEs, reconociéndonos por nuestra calidad, innovación constante y compromiso absoluto con el éxito de nuestros clientes.
+                    </p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Sección de Servicios -->
