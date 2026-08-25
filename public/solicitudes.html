@@ -148,7 +148,7 @@
         <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Lógica de Envío al Webhook de n8n y Firebase -->
+    <!-- Lógica de Envío al Webhook de Producción de n8n y Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -204,7 +204,7 @@
                 });
         }
 
-        // Función para enviar datos al Webhook de n8n
+        // Función para enviar datos al Webhook de Producción de n8n
         window.enviarSolicitud = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
@@ -215,15 +215,15 @@
                 email: document.getElementById('email').value.trim(),
                 telefono: document.getElementById('telefono').value.trim(),
                 mensaje: document.getElementById('mensaje').value.trim(),
-                fecha: new Date().toISOString()
+                fecha: new Date().toLocaleString()
             };
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
 
             try {
-                // URL de tu Webhook de prueba de n8n
-                const webhookUrl = 'https://mauriciogabriel.app.n8n.cloud/webhook-test/99f7f370-110c-41cf-9aca-790688566092';
+                // URL de Producción oficial de tu Webhook de n8n
+                const webhookUrl = 'https://mauriciogabriel.app.n8n.cloud/webhook/99f7f370-110c-41cf-9aca-790688566092';
                 
                 await fetch(webhookUrl, {
                     method: 'POST',
