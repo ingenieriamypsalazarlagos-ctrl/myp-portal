@@ -103,7 +103,7 @@
         }
         .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(6,182,212,0.7); }
         
-        /* Sección Hero interactiva: Se aclara por defecto y se opaca al pasar el cursor */
+        /* Sección Hero interactiva con la imagen de fondo */
         .hero { 
             position: relative;
             text-align: center; 
@@ -115,12 +115,10 @@
             content: '';
             position: absolute;
             inset: 0;
-            /* Por defecto está translúcida (foto clara y visible) */
             background: rgba(15, 23, 42, 0.35); 
             transition: background 0.5s ease-in-out;
             z-index: 1;
         }
-        /* Al pasar el cursor por encima de la sección hero, la capa se oscurece (opaca la foto) */
         .hero:hover::before {
             background: rgba(15, 23, 42, 0.85); 
         }
@@ -200,6 +198,7 @@
         <nav class="nav-links">
             <a href="index.html" class="active">Inicio</a>
             <a href="quienessomos.html">Quiénes Somos</a>
+            <a href="precios.html">Precios y Planes</a>
             <a href="solicitudes.html">Solicitudes</a>
             <a href="faq.html">Preguntas Frecuentes</a>
         </nav>
