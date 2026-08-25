@@ -129,8 +129,7 @@
             <h3><i class="fa-solid fa-chart-pie" style="color: var(--accent-cyan);"></i> Balance y Analítica de Aplicaciones (Looker Studio)</h3>
         </div>
         <div class="dashboard-frame">
-            <!-- REEMPLAZA EL ENLACE DE ABAJO CON TU CÓDIGO EMBEBIDO DE LOOKER STUDIO (IFRAME) -->
-            <<iframe width="600" height="450" src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/p_5k6fiaqs6d" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>>
+            <iframe width="600" height="450" src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/p_5k6fiaqs6d" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
         </div>
 
         <!-- SECCIÓN: SOLICITUDES EN VIVO DESDE LA WEB -->
@@ -207,7 +206,6 @@
 
     <!-- Script Inteligente para manejar estados y almacenamiento local (Simulando Papelera y Flujo) -->
     <script>
-        // Datos simulados iniciales basados en lo que ya tienes llegando a Google Sheets
         let solicitudes = JSON.parse(localStorage.getItem('myp_solicitudes')) || [
             { id: 1, fecha: "25 Ago 2026, 16:05", nombre: "Mauricio Salazar", email: "mauriciosalazar.f1996@gmail.com", telefono: "+56932257821", mensaje: "quiero ampliar mi negocio dejando dashboard", estado: "PENDIENTE" }
         ];
