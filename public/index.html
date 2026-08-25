@@ -32,7 +32,6 @@
             border-bottom: 1px solid var(--border); 
         }
         
-        /* Logo */
         .logo-container {
             display: flex;
             align-items: center;
@@ -46,43 +45,68 @@
             display: block; 
         }
         
-        /* Carrusel en el Header (al medio) */
-        .header-carrusel {
-            position: relative;
-            width: 250px;
-            height: 55px;
-            overflow: hidden;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+        .nav-buttons { display: flex; gap: 1rem; align-items: center; }
+        
+        /* Banner Tipo Collage Superior para 5 Fotos */
+        .collage-banner {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
         }
-        .header-slide {
-            position: absolute;
-            inset: 0;
+        .collage-item {
+            position: relative;
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(6, 182, 212, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .collage-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+        }
+        .collage-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
+            filter: brightness(0.85);
+            transition: filter 0.3s ease;
         }
-        .header-slide.activo {
-            opacity: 1;
+        .collage-item:hover img {
+            filter: brightness(1);
+        }
+        .collage-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, transparent 70%);
+            display: flex;
+            align-items: flex-end;
+            padding: 0.8rem;
+        }
+        .collage-overlay span {
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
-        .nav-buttons { display: flex; gap: 1rem; align-items: center; }
-        
-        /* Sección Hero normal (sin carrusel de fondo) */
+        /* Sección Hero con información principal */
         .hero { 
             text-align: center; 
-            padding: 7rem 2rem 5rem; 
+            padding: 3rem 2rem 4rem; 
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
         }
-        .hero h1 { font-size: 3.2rem; margin-bottom: 1.2rem; font-weight: 900; }
-        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem; }
+        .hero h1 { font-size: 3rem; margin-bottom: 1.2rem; font-weight: 900; }
+        .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem; }
         
         .btn-glow { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; padding: 0.9rem 2.2rem; border-radius: 10px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 0 15px rgba(6,182,212,0.3); }
         .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(6,182,212,0.5); }
         
-        .container { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
         .section-title { text-align: center; margin-bottom: 3rem; }
         .section-title h2 { font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem; }
         
@@ -103,24 +127,23 @@
         .close-btn { position: absolute; top: 1rem; right: 1rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
         
         footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.9rem; }
+
+        /* Adaptable a celulares (se acomodan en filas de 2 o 1) */
+        @media (max-width: 900px) {
+            .collage-banner { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 500px) {
+            .collage-banner { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <!-- 1. Logo a la izquierda -->
         <a href="/" class="logo-container">
             <img src="/logo.png" alt="Ingeniería MyP Salazar Lagos" class="logo-img">
         </a>
         
-        <!-- 2. Carrusel al centro de la barra superior -->
-        <div class="header-carrusel">
-            <img src="banner1.jpg" class="header-slide activo" alt="Banner 1">
-            <img src="banner2.jpg" class="header-slide" alt="Banner 2">
-            <img src="banner3.jpg" class="header-slide" alt="Banner 3">
-        </div>
-
-        <!-- 3. Botones a la derecha -->
         <div class="nav-buttons">
             <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.5rem 1rem; font-size:0.85rem; box-shadow:none;">
                 <i class="fa-solid fa-user-lock"></i> Acceso Equipo
@@ -130,6 +153,30 @@
             </button>
         </div>
     </header>
+
+    <!-- Banner Superior en Tipo Collage con las 5 fotos una al lado de otra -->
+    <div class="collage-banner">
+        <div class="collage-item">
+            <img src="banner1.jpg" alt="Banner 1">
+            <div class="collage-overlay"><span>Proyecto 1</span></div>
+        </div>
+        <div class="collage-item">
+            <img src="banner2.jpg" alt="Banner 2">
+            <div class="collage-overlay"><span>Proyecto 2</span></div>
+        </div>
+        <div class="collage-item">
+            <img src="banner3.jpg" alt="Banner 3">
+            <div class="collage-overlay"><span>Proyecto 3</span></div>
+        </div>
+        <div class="collage-item">
+            <img src="banner4.jpg" alt="Banner 4">
+            <div class="collage-overlay"><span>Proyecto 4</span></div>
+        </div>
+        <div class="collage-item">
+            <img src="banner5.jpg" alt="Banner 5">
+            <div class="collage-overlay"><span>Proyecto 5</span></div>
+        </div>
+    </div>
 
     <section class="hero">
         <h1>Soluciones Digitales Inteligentes & Automatización</h1>
@@ -188,21 +235,6 @@
     </footer>
 
     <script>
-        // Lógica del Carrusel Superior
-        let indexActual = 0;
-        const slides = document.querySelectorAll('.header-slide');
-
-        function cambiarBanner() {
-            if(slides.length === 0) return;
-            slides[indexActual].classList.remove('activo');
-            indexActual = (indexActual + 1) % slides.length;
-            slides[indexActual].classList.add('activo');
-        }
-
-        // Cambia de foto automáticamente cada 4 segundos
-        setInterval(cambiarBanner, 4000);
-
-        // Funciones del Modal de Login
         function abrirLogin(tipo) {
             const titulo = document.getElementById('modal-title');
             const userField = document.getElementById('usuario');
