@@ -3,252 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solicitudes y Cotizaciones - Ingeniería MyP</title>
+    <title>Solicitudes - Ingeniería MyP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
             --bg-dark: #0f172a; --surface-card: #1e293b; --accent-cyan: #06b6d4; 
-            --accent-blue: #3b82f6; --accent-orange: #f97316; --text-main: #f1f5f9; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.12);
+            --accent-blue: #3b82f6; --text-main: #f1f5f9; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.12);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 2rem; }
         
-        header { 
-            background: rgba(15, 23, 42, 0.95); 
-            backdrop-filter: blur(10px); 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            padding: 0.5rem 1rem; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid var(--border); 
-        }
-        
-        .logo-container { display: flex; align-items: center; background: transparent; text-decoration: none; flex-shrink: 0; }
-        .logo-img { height: 45px; width: auto; object-fit: contain; display: block; }
-        
-        .nav-links { display: flex; gap: 1.2rem; align-items: center; margin-left: 0.5rem; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: color 0.3s; }
-        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
-        
-        .header-collage { display: flex; gap: 3px; align-items: center; justify-content: flex-start; margin: 0 0.5rem; flex-wrap: nowrap; max-width: 440px; overflow: hidden; }
-        .header-mini-banner { position: relative; width: 50px; height: 32px; border-radius: 4px; overflow: hidden; border: 1px solid rgba(6, 182, 212, 0.4); transition: all 0.3s ease; cursor: pointer; flex-shrink: 0; }
-        .header-mini-banner img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); transition: all 0.3s ease; }
-        .header-mini-banner:hover { transform: scale(1.15); border-color: var(--accent-cyan); box-shadow: 0 0 10px rgba(6, 182, 212, 0.8); z-index: 10; }
+        .form-container { background: var(--surface-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .form-header { text-align: center; margin-bottom: 2rem; }
+        .form-header h2 { font-size: 1.8rem; color: #fff; margin-bottom: 0.5rem; }
+        .form-header p { color: var(--text-muted); font-size: 0.9rem; }
 
-        .nav-buttons { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
-        .btn-glow { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; padding: 0.9rem 2.2rem; border-radius: 10px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 0 20px rgba(6,182,212,0.4); }
-        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(6,182,212,0.7); }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; font-weight: 600; text-transform: uppercase; }
+        .form-control { width: 100%; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1rem; color: #fff; font-size: 1rem; transition: 0.3s; }
+        .form-control:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 10px rgba(6,182,212,0.2); }
+        textarea.form-control { resize: vertical; min-height: 120px; }
 
-        .container { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
-        .section-title { text-align: center; margin-bottom: 2.5rem; }
-        .section-title h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
-        
-        .form-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: 20px; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted); }
-        .form-input, .form-textarea { width: 100%; padding: 0.85rem; background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; color: #fff; outline: none; font-size: 1rem; }
-        .form-input:focus, .form-textarea:focus { border-color: var(--accent-cyan); }
-        .form-textarea { resize: vertical; min-height: 120px; }
-        
-        #response-msg { display: none; margin-top: 1.5rem; padding: 1rem; border-radius: 8px; text-align: center; font-weight: bold; }
+        .btn-enviar { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; width: 100%; padding: 0.9rem; border-radius: 8px; font-weight: bold; font-size: 1rem; border: none; cursor: pointer; transition: 0.3s; margin-top: 1rem; }
+        .btn-enviar:hover { opacity: 0.9; }
 
-        #login-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
-        .login-card { background: var(--surface-card); padding: 2.5rem; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--accent-cyan); position: relative; }
-        .login-input { width: 100%; padding: 0.85rem; margin: 0.6rem 0; background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; color: #fff; outline: none; }
-        .close-btn { position: absolute; top: 1rem; right: 1rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
-        
-        footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
-        
-        @media(max-width: 1250px) { .header-collage { display: none; } }
-        @media(max-width: 768px) { .nav-links { display: none; } }
+        #mensaje-alerta { margin-top: 1rem; text-align: center; font-size: 0.9rem; font-weight: bold; }
     </style>
 </head>
 <body>
-    <header>
-        <a href="index.html" class="logo-container"><img src="logo.png" alt="Logo" class="logo-img"></a>
-        <nav class="nav-links">
-            <a href="index.html">Inicio</a>
-            <a href="quienessomos.html">Quiénes Somos</a>
-            <a href="precios.html">Precios y Planes</a>
-            <a href="solicitudes.html" class="active">Solicitudes</a>
-            <a href="faq.html">FAQ</a>
-        </nav>
 
-        <div class="header-collage">
-            <div class="header-mini-banner" title="ChatGPT"><img src="ChatGPT.jpg" alt="ChatGPT"></div>
-            <div class="header-mini-banner" title="Claude"><img src="Claude.jpg" alt="Claude"></div>
-            <div class="header-mini-banner" title="Datastudio"><img src="Datastudio.jpg" alt="Datastudio"></div>
-            <div class="header-mini-banner" title="Gemini"><img src="Gemini.jpg" alt="Gemini"></div>
-            <div class="header-mini-banner" title="Google"><img src="Google.jpg" alt="Google"></div>
-            <div class="header-mini-banner" title="Googledrive"><img src="Googledrive.jpg" alt="Googledrive"></div>
-            <div class="header-mini-banner" title="Googleforms"><img src="Googleforms.jpg" alt="Googleforms"></div>
-            <div class="header-mini-banner" title="N8N"><img src="N8N.jpg" alt="N8N"></div>
-        </div>
-
-        <div class="nav-buttons">
-            <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none;">
-                <i class="fa-solid fa-user-lock"></i> Acceso Equipo
-            </button>
-            <button class="btn-glow" onclick="abrirLogin('cliente')" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none;">
-                <i class="fa-solid fa-users"></i> Acceso Clientes
-            </button>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="section-title">
+    <div class="form-container">
+        <div class="form-header">
             <h2>Bandeja de Solicitudes</h2>
-            <p style="color:var(--text-muted)">Envíanos tus requerimientos, dudas o propuestas y te responderemos a la brevedad.</p>
+            <p>Envíanos tus requerimientos, dudas o propuestas y te responderemos a la brevedad.</p>
         </div>
 
-        <div class="form-card">
-            <form id="solicitud-form" onsubmit="enviarSolicitud(event)">
-                <div class="form-group">
-                    <label for="nombre">Nombre o Empresa</label>
-                    <input type="text" id="nombre" class="form-input" placeholder="Ej. Juan Pérez / Empresa SpA" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" class="form-input" placeholder="ejemplo@correo.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="telefono">Teléfono / WhatsApp</label>
-                    <input type="tel" id="telefono" class="form-input" placeholder="+56 9 ...">
-                </div>
-                <div class="form-group">
-                    <label for="mensaje">Detalle de la Solicitud</label>
-                    <textarea id="mensaje" class="form-textarea" placeholder="Cuéntanos qué proyecto, automatización o servicio necesitas..." required></textarea>
-                </div>
-                <button type="submit" class="btn-glow" style="width:100%; justify-content:center;" id="submit-btn">
-                    <i class="fa-solid fa-paper-plane"></i> Enviar Solicitud
-                </button>
-                <div id="response-msg"></div>
-            </form>
-        </div>
-    </div>
+        <form id="form-solicitud">
+            <div class="form-group">
+                <label>Nombre o Empresa</label>
+                <input type="text" name="nombre" class="form-control" required placeholder="Tu nombre o empresa">
+            </div>
 
-    <!-- Modal de Login -->
-    <div id="login-modal">
-        <div class="login-card">
-            <i class="fa-solid fa-xmark close-btn" onclick="cerrarLogin()"></i>
-            <h3 id="modal-title" style="margin-bottom:1.5rem;">Acceso al Sistema</h3>
-            <form onsubmit="enviarLogin(event)">
-                <input type="email" id="usuario" class="login-input" placeholder="Correo electrónico" required>
-                <input type="password" id="password" class="login-input" placeholder="Contraseña" required>
-                <button type="submit" class="btn-glow" style="width:100%; margin-top:1rem; justify-content:center;">Ingresar</button>
-                <p id="error-msg" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;"></p>
-            </form>
-        </div>
-    </div>
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input type="email" name="email" class="form-control" required placeholder="correo@ejemplo.com">
+            </div>
 
-    <footer>
-        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Todos los derechos reservados.</p>
-    </footer>
+            <div class="form-group">
+                <label>Teléfono / WhatsApp</label>
+                <input type="tel" name="telefono" class="form-control" required placeholder="+569...">
+            </div>
 
-    <!-- Lógica de Envío sin bloqueos CORS y Firebase -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+            <div class="form-group">
+                <label>Detalle de la Solicitud</label>
+                <textarea name="mensaje" class="form-control" required placeholder="Cuéntanos qué necesitas..."></textarea>
+            </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAHQLLGjYtjHQ6dYiOcBTx8xyRv7X3RUco",
-            authDomain: "ingenieriamyp-auth.firebaseapp.com",
-            projectId: "ingenieriamyp-auth",
-            storageBucket: "ingenieriamyp-auth.firebasestorage.app",
-            messagingSenderId: "834613528522",
-            appId: "1:834613528522:web:e6d63d05970a2ef4d23133",
-            measurementId: "G-3TYPD3EJ7F"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        let tipoUsuarioActual = '';
-
-        window.abrirLogin = function(tipo) {
-            tipoUsuarioActual = tipo;
-            const titulo = document.getElementById('modal-title');
-            const userField = document.getElementById('usuario');
-            if (tipo === 'admin') {
-                titulo.innerText = "Acceso Administrativo (Gerencia MyP)";
-                userField.placeholder = "Correo de Gerencia";
-            } else {
-                titulo.innerText = "Portal Exclusivo de Clientes";
-                userField.placeholder = "Correo del Cliente";
-            }
-            document.getElementById('login-modal').style.display = 'flex';
-            document.getElementById('error-msg').style.display = 'none';
-        }
-
-        window.cerrarLogin = function() { document.getElementById('login-modal').style.display = 'none'; }
-
-        window.enviarLogin = function(e) {
-            e.preventDefault();
-            const email = document.getElementById('usuario').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const errorMsg = document.getElementById('error-msg');
-
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    if (tipoUsuarioActual === 'admin') {
-                        window.location.href = 'equipo-dashboard.html';
-                    } else {
-                        window.location.href = 'cliente-dashboard.html';
-                    }
-                })
-                .catch(() => {
-                    errorMsg.style.display = 'block';
-                    errorMsg.innerText = "Correo o contraseña incorrectos.";
-                });
-        }
-
-        // Función de envío optimizada para evitar bloqueos CORS en n8n
-        window.enviarSolicitud = async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submit-btn');
-            const msgBox = document.getElementById('response-msg');
+            <button type="submit" class="btn-enviar" id="btn-submit">
+                <i class="fa-solid fa-paper-plane"></i> Enviar Solicitud
+            </button>
             
-            const datos = {
-                nombre: document.getElementById('nombre').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                telefono: document.getElementById('telefono').value.trim(),
-                mensaje: document.getElementById('mensaje').value.trim(),
-                fecha: new Date().toLocaleString()
-            };
+            <div id="mensaje-alerta"></div>
+        </form>
+    </div>
 
+    <script>
+        const URL_WEBHOOK_PRODUCCION = "https://mauriciogabriel.app.n8n.cloud/webhook/99f7f370-110c-41cf-9aca-790688566092";
+
+        document.getElementById('form-solicitud').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btn-submit');
+            const alerta = document.getElementById('mensaje-alerta');
+            
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+            alerta.textContent = '';
+
+            const formData = {
+                nombre: this.nombre.value,
+                email: this.email.value,
+                telefono: this.telefono.value,
+                mensaje: this.mensaje.value
+            };
 
             try {
-                const webhookUrl = 'https://mauriciogabriel.app.n8n.cloud/webhook/99f7f370-110c-41cf-9aca-790688566092';
-                
-                // Usamos mode: 'no-cors' para que el navegador entregue el dato al webhook sin bloquear la respuesta
-                await fetch(webhookUrl, {
+                const response = await fetch(URL_WEBHOOK_PRODUCCION, {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
+                    body: JSON.stringify(formData)
                 });
 
-                msgBox.style.display = 'block';
-                msgBox.style.background = 'rgba(6, 182, 212, 0.1)';
-                msgBox.style.color = 'var(--accent-cyan)';
-                msgBox.style.border = '1px solid var(--accent-cyan)';
-                msgBox.innerHTML = '¡Solicitud enviada con éxito! Nos pondremos en contacto pronto.';
-                document.getElementById('solicitud-form').reset();
+                if (response.ok) {
+                    alerta.style.color = 'var(--accent-cyan)';
+                    alerta.textContent = '¡Solicitud enviada con éxito!';
+                    this.reset();
+                } else {
+                    throw new Error('Error en el servidor');
+                }
             } catch (error) {
-                msgBox.style.display = 'block';
-                msgBox.style.background = 'rgba(239, 68, 68, 0.1)';
-                msgBox.style.color = '#ef4444';
-                msgBox.style.border = '1px solid #ef4444';
-                msgBox.innerHTML = 'Hubo un error al enviar. Por favor intenta de nuevo.';
+                alerta.style.color = '#ef4444';
+                alerta.textContent = 'Hubo un error al enviar. Inténtalo de nuevo.';
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Solicitud';
             }
-        }
+        });
     </script>
 </body>
 </html>
