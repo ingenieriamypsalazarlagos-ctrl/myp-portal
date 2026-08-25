@@ -37,7 +37,38 @@
         
         .nav-buttons { display: flex; gap: 1rem; align-items: center; }
         
-        .hero { text-align: center; padding: 7rem 2rem 5rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        /* Estilos del Hero con Carrusel Automático de Fondo */
+        .hero { 
+            position: relative; 
+            text-align: center; 
+            padding: 7rem 2rem 5rem; 
+            overflow: hidden; 
+            background: #0f172a;
+        }
+        .banner-carrusel {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .banner-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            filter: brightness(0.4); /* Oscurece la foto para que el texto resalte perfectamente */
+        }
+        .banner-slide.activo {
+            opacity: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2; /* Mantiene el texto flotando sobre las fotos del carrusel */
+        }
         .hero h1 { font-size: 3.2rem; margin-bottom: 1.2rem; font-weight: 900; }
         .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem; }
         
@@ -64,7 +95,7 @@
         .login-input:focus { border-color: var(--accent-cyan); }
         .close-btn { position: absolute; top: 1rem; right: 1rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
         
-        footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.9rem; }
+        <footer> { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -85,11 +116,20 @@
     </header>
 
     <section class="hero">
-        <h1>Soluciones Digitales Inteligentes & Automatización</h1>
-        <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar tu PyME.</p>
-        <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
-            <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
-        </a>
+        <!-- Carrusel Automático de Fondo -->
+        <div class="banner-carrusel">
+            <img src="/public/banner1.jpg" class="banner-slide activo" alt="Banner 1">
+            <img src="/public/banner2.jpg" class="banner-slide" alt="Banner 2">
+            <img src="/public/banner3.jpg" class="banner-slide" alt="Banner 3">
+        </div>
+        
+        <div class="hero-content">
+            <h1>Soluciones Digitales Inteligentes & Automatización</h1>
+            <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar tu PyME.</p>
+            <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
+                <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
+            </a>
+        </div>
     </section>
 
     <section class="container">
@@ -141,6 +181,21 @@
     </footer>
 
     <script>
+        // Lógica del Carrusel Automático de Fotos
+        let indexActual = 0;
+        const slides = document.querySelectorAll('.banner-slide');
+
+        function cambiarBanner() {
+            if(slides.length === 0) return;
+            slides[indexActual].classList.remove('activo');
+            indexActual = (indexActual + 1) % slides.length;
+            slides[indexActual].classList.add('activo');
+        }
+
+        // Cambia de foto automáticamente cada 4 segundos
+        setInterval(cambiarBanner, 4000);
+
+        // Funciones del Modal de Login
         function abrirLogin(tipo) {
             const titulo = document.getElementById('modal-title');
             const userField = document.getElementById('usuario');
