@@ -103,12 +103,12 @@
         }
         .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(6,182,212,0.7); }
         
-        /* Sección Hero interactiva con la imagen de fondo */
+        /* Sección Hero interactiva con imagen de fondo */
         .hero { 
             position: relative;
             text-align: center; 
             padding: 7rem 2rem 6rem; 
-            background: url('creaciondeadan.jpg') no-repeat center center;
+            background: url('creacion de adan.jpg') no-repeat center center;
             background-size: cover;
         }
         .hero::before {
@@ -296,12 +296,15 @@
     </footer>
 
     <script>
+        let tipoUsuarioActual = '';
+
         function abrirLogin(tipo) {
+            tipoUsuarioActual = tipo;
             const titulo = document.getElementById('modal-title');
             const userField = document.getElementById('usuario');
             if (tipo === 'admin') {
                 titulo.innerText = "Acceso Administrativo (Equipo MyP)";
-                userField.placeholder = "Usuario (ej. masteradmin)";
+                userField.placeholder = "Usuario (ej. admin)";
             } else {
                 titulo.innerText = "Portal Exclusivo de Clientes";
                 userField.placeholder = "Usuario (ej. cliente)";
@@ -309,21 +312,29 @@
             document.getElementById('login-modal').style.display = 'flex';
             document.getElementById('error-msg').style.display = 'none';
         }
-        function cerrarLogin() { document.getElementById('login-modal').style.display = 'none'; }
-        async function enviarLogin(e) {
+
+        function cerrarLogin() { 
+            document.getElementById('login-modal').style.display = 'none'; 
+        }
+
+        function enviarLogin(e) {
             e.preventDefault();
-            const usuario = document.getElementById('usuario').value;
-            const password = document.getElementById('password').value;
-            try {
-                const respuesta = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ usuario, password })
-                });
-                const resultado = await respuesta.json();
-                if (resultado.success) { window.location.href = resultado.redirect; }
-                else { document.getElementById('error-msg').style.display = 'block'; }
-            } catch (error) { document.getElementById('error-msg').style.display = 'block'; }
+            const usuario = document.getElementById('usuario').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (tipoUsuarioActual === 'admin') {
+                if (usuario === 'admin' && password === '1234') {
+                    window.location.href = 'equipo-dashboard.html';
+                } else {
+                    document.getElementById('error-msg').style.display = 'block';
+                }
+            } else if (tipoUsuarioActual === 'cliente') {
+                if (usuario === 'cliente' && password === '1234') {
+                    window.location.href = 'cliente-dashboard.html';
+                } else {
+                    document.getElementById('error-msg').style.display = 'block';
+                }
+            }
         }
     </script>
 </body>
