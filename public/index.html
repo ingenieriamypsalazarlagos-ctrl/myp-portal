@@ -7,21 +7,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --bg-dark: #0f172a;        /* Azul grisáceo elegante y menos oscuro (Slate 900) */
-            --surface-card: #1e293b;   /* Tarjetas con mejor contraste (Slate 800) */
+            --bg-dark: #0f172a;        
+            --surface-card: #1e293b;   
             --accent-cyan: #06b6d4; 
             --accent-blue: #3b82f6;
             --accent-orange: #f97316; 
-            --text-main: #f1f5f9;      /* Texto principal brillante */
-            --text-muted: #94a3b8;     /* Texto secundario suave */
+            --text-main: #f1f5f9;      
+            --text-muted: #94a3b8;     
             --border: rgba(255, 255, 255, 0.12);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
         
-        header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        header { 
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(10px); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            padding: 0.6rem 2rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border); 
+        }
         
-        /* Contenedor y tamaño ampliado para el logotipo */
+        /* Logo */
         .logo-container {
             display: flex;
             align-items: center;
@@ -29,45 +40,41 @@
             text-decoration: none;
         }
         .logo-img { 
-            height: 75px; 
+            height: 60px; 
             width: auto; 
             object-fit: contain; 
             display: block; 
         }
         
-        .nav-buttons { display: flex; gap: 1rem; align-items: center; }
-        
-        /* Estilos del Hero con Carrusel Automático de Fondo */
-        .hero { 
-            position: relative; 
-            text-align: center; 
-            padding: 7rem 2rem 5rem; 
-            overflow: hidden; 
-            background: #0f172a;
+        /* Carrusel en el Header (al medio) */
+        .header-carrusel {
+            position: relative;
+            width: 250px;
+            height: 55px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
-        .banner-carrusel {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-        .banner-slide {
+        .header-slide {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
             opacity: 0;
-            transition: opacity 1.5s ease-in-out;
-            filter: brightness(0.4); /* Oscurece la foto para que el texto resalte perfectamente */
+            transition: opacity 1s ease-in-out;
         }
-        .banner-slide.activo {
+        .header-slide.activo {
             opacity: 1;
         }
-        .hero-content {
-            position: relative;
-            z-index: 2; /* Mantiene el texto flotando sobre las fotos del carrusel */
+
+        .nav-buttons { display: flex; gap: 1rem; align-items: center; }
+        
+        /* Sección Hero normal (sin carrusel de fondo) */
+        .hero { 
+            text-align: center; 
+            padding: 7rem 2rem 5rem; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
         }
         .hero h1 { font-size: 3.2rem; margin-bottom: 1.2rem; font-weight: 900; }
         .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem; }
@@ -101,10 +108,19 @@
 <body>
 
     <header>
+        <!-- 1. Logo a la izquierda -->
         <a href="/" class="logo-container">
             <img src="/logo.png" alt="Ingeniería MyP Salazar Lagos" class="logo-img">
         </a>
         
+        <!-- 2. Carrusel al centro de la barra superior -->
+        <div class="header-carrusel">
+            <img src="banner1.jpg" class="header-slide activo" alt="Banner 1">
+            <img src="banner2.jpg" class="header-slide" alt="Banner 2">
+            <img src="banner3.jpg" class="header-slide" alt="Banner 3">
+        </div>
+
+        <!-- 3. Botones a la derecha -->
         <div class="nav-buttons">
             <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.5rem 1rem; font-size:0.85rem; box-shadow:none;">
                 <i class="fa-solid fa-user-lock"></i> Acceso Equipo
@@ -116,20 +132,11 @@
     </header>
 
     <section class="hero">
-        <!-- Carrusel Automático de Fondo con rutas directas -->
-        <div class="banner-carrusel">
-            <img src="banner1.jpg" class="banner-slide activo" alt="Banner 1">
-            <img src="banner2.jpg" class="banner-slide" alt="Banner 2">
-            <img src="banner3.jpg" class="banner-slide" alt="Banner 3">
-        </div>
-        
-        <div class="hero-content">
-            <h1>Soluciones Digitales Inteligentes & Automatización</h1>
-            <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar tu PyME.</p>
-            <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
-                <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
-            </a>
-        </div>
+        <h1>Soluciones Digitales Inteligentes & Automatización</h1>
+        <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar tu PyME.</p>
+        <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
+            <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
+        </a>
     </section>
 
     <section class="container">
@@ -181,9 +188,9 @@
     </footer>
 
     <script>
-        // Lógica del Carrusel Automático de Fotos
+        // Lógica del Carrusel Superior
         let indexActual = 0;
-        const slides = document.querySelectorAll('.banner-slide');
+        const slides = document.querySelectorAll('.header-slide');
 
         function cambiarBanner() {
             if(slides.length === 0) return;
