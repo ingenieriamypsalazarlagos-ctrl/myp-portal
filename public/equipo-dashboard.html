@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Central - Ingeniería MyP</title>
+    <title>ERP Central - Ingeniería MyP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
@@ -53,11 +53,11 @@
         .sidebar-header img { height: 32px; width: auto; }
         .sidebar-header span { font-weight: 800; font-size: 1.1rem; color: #fff; letter-spacing: -0.5px; }
         
-        .sidebar-menu { padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 0.5s; flex: 1; overflow-y: auto; }
+        .sidebar-menu { padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 0.3rem; flex: 1; overflow-y: auto; }
         .menu-category { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin: 1rem 0 0.5rem 0.8rem; letter-spacing: 0.5px; }
         .menu-item {
             display: flex; align-items: center; gap: 0.9rem; padding: 0.8rem 1rem; color: var(--text-muted);
-            text-decoration: none; border-radius: 10px; font-size: 0.9rem; font-weight: 600; transition: 0.2s;
+            text-decoration: none; border-radius: 10px; font-size: 0.9rem; font-weight: 600; transition: 0.2s; cursor: pointer;
         }
         .menu-item:hover, .menu-item.active { background: var(--surface-hover); color: #fff; }
         .menu-item.active { border-left: 3px solid var(--accent-cyan); color: var(--accent-cyan); }
@@ -79,7 +79,11 @@
         .btn-logout { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: 0.2s; }
         .btn-logout:hover { background: #ef4444; color: #fff; }
 
-        /* GRID DE TARJETAS SUPERIORES */
+        /* SECCIONES DINÁMICAS */
+        .app-section { display: none; }
+        .app-section.active { display: block; }
+
+        /* GRID DE TARJETAS */
         .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 2.5rem; }
         .metric-card {
             background: var(--surface-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem;
@@ -88,10 +92,9 @@
         .metric-card:hover { border-color: var(--accent-cyan); transform: translateY(-2px); box-shadow: 0 8px 25px var(--glow-cyan); }
         .metric-card .header-card { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
         .metric-card .header-card i { font-size: 1.2rem; color: var(--accent-cyan); }
-        .metric-card h3 { font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 0.2rem; }
+        .metric-card h3 { font-size: 1.6rem; font-weight: 800; color: #fff; margin-bottom: 0.2rem; }
         .metric-card p { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
 
-        /* SECCIONES Y TABLAS */
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; margin-top: 2.5rem; }
         .section-header h3 { font-size: 1.2rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.6rem; }
         
@@ -131,6 +134,12 @@
 
         .btn-papelera { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 0.4rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
         .btn-papelera:hover { border-color: var(--accent-red); color: var(--accent-red); }
+
+        /* ESTILOS PARA CALENDARIO Y MINUTA */
+        .calendar-box { background: var(--surface-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-top: 1.5rem; }
+        .minuta-input-area { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .minuta-input-area input, .minuta-input-area select { background: var(--bg-dark); border: 1px solid var(--border); color: #fff; padding: 0.6rem 1rem; border-radius: 8px; outline: none; font-size: 0.9rem; }
+        .minuta-input-area input:focus, .minuta-input-area select:focus { border-color: var(--accent-cyan); }
     </style>
 </head>
 <body>
@@ -149,7 +158,7 @@
         </div>
     </div>
 
-    <!-- DASHBOARD ESTILO SAAS CON MENÚ LATERAL -->
+    <!-- DASHBOARD ERP -->
     <div id="main-dashboard" style="display: none; width: 100%;">
         
         <!-- BARRA LATERAL -->
@@ -160,14 +169,15 @@
             </div>
             <div class="sidebar-menu">
                 <div class="menu-category">Principal</div>
-                <a href="#" class="menu-item active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-folder-open"></i> Proyectos Activos</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-envelope-open-text"></i> Solicitudes Web</a>
+                <a onclick="cambiarSeccion('seccion-dashboard', this)" class="menu-item active"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a onclick="cambiarSeccion('seccion-calendario', this)" class="menu-item"><i class="fa-solid fa-calendar-days"></i> Calendario & Minuta</a>
+                <a onclick="cambiarSeccion('seccion-finanzas', this)" class="menu-item"><i class="fa-solid fa-wallet"></i> Ingresos & Egresos</a>
                 
-                <div class="menu-category">Gestión</div>
-                <a href="#" class="menu-item"><i class="fa-solid fa-users-gear"></i> Clientes Mantenimiento</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Analítica Looker</a>
-                <a href="#" class="menu-item" onclick="togglePapelera()"><i class="fa-solid fa-trash-can"></i> Papelera</a>
+                <div class="menu-category">Operaciones</div>
+                <a onclick="cambiarSeccion('seccion-pagos', this)" class="menu-item"><i class="fa-solid fa-credit-card"></i> Central de Pago</a>
+                <a onclick="cambiarSeccion('seccion-proveedores', this)" class="menu-item"><i class="fa-solid fa-truck-field"></i> Proveedores</a>
+                <a onclick="cambiarSeccion('seccion-solicitudes', this)" class="menu-item"><i class="fa-solid fa-envelope-open-text"></i> Solicitudes Web</a>
+                <a onclick="cambiarSeccion('seccion-papelera', this)" class="menu-item"><i class="fa-solid fa-trash-can"></i> Papelera</a>
             </div>
             <div class="sidebar-footer">
                 <div class="user-mini">
@@ -184,8 +194,8 @@
         <div class="main-content">
             <div class="top-bar">
                 <div class="greeting">
-                    <h1>Buenos días, Equipo MyP</h1>
-                    <p>Agosto de 2026 • Soporte técnico operativo activo</p>
+                    <h1>Centro de Control Empresarial</h1>
+                    <p>Agosto de 2026 • Gestión de Pymes, Proyectos y Finanzas</p>
                 </div>
                 <div class="top-actions">
                     <div class="badge-pill" style="border-color: var(--accent-cyan); color: var(--accent-cyan);">
@@ -195,144 +205,264 @@
                 </div>
             </div>
 
-            <!-- TARJETAS DE MÉTRICAS SUPERIORES -->
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="header-card">
-                        <p>Proyectos Activos</p>
-                        <i class="fa-solid fa-folder"></i>
+            <!-- 1. SECCIÓN: DASHBOARD GENERAL -->
+            <div id="seccion-dashboard" class="app-section active">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="header-card"><p>Ingresos Mes</p><i class="fa-solid fa-arrow-trend-up" style="color: var(--accent-green);"></i></div>
+                        <h3 style="color: var(--accent-green);">$2.821.939</h3>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Balance positivo</p>
                     </div>
-                    <h3>6</h3>
-                    <span style="font-size: 0.75rem; color: var(--accent-green);"><i class="fa-solid fa-arrow-up"></i> Operando al 100%</span>
-                </div>
-                <div class="metric-card">
-                    <div class="header-card">
-                        <p>Solicitudes Pendientes</p>
-                        <i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-orange);"></i>
+                    <div class="metric-card">
+                        <div class="header-card"><p>Egresos Mes</p><i class="fa-solid fa-arrow-trend-down" style="color: var(--accent-red);"></i></div>
+                        <h3 style="color: var(--accent-red);">$650.000</h3>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Gastos operativos</p>
                     </div>
-                    <h3 id="contador-pendientes">0</h3>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">Requieren atención</span>
-                </div>
-                <div class="metric-card">
-                    <div class="header-card">
-                        <p>Proyectos Entregados</p>
-                        <i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i>
+                    <div class="metric-card">
+                        <div class="header-card"><p>Solicitudes Pendientes</p><i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-orange);"></i></div>
+                        <h3 id="contador-pendientes">0</h3>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Por atender</p>
                     </div>
-                    <h3>14</h3>
-                    <span style="font-size: 0.75rem; color: var(--accent-green);">Historial exitoso</span>
-                </div>
-                <div class="metric-card">
-                    <div class="header-card">
-                        <p>Mantenimiento SLA</p>
-                        <i class="fa-solid fa-screwdriver-wrench" style="color: var(--accent-blue);"></i>
+                    <div class="metric-card">
+                        <div class="header-card"><p>Proyectos Activos</p><i class="fa-solid fa-folder" style="color: var(--accent-cyan);"></i></div>
+                        <h3>6</h3>
+                        <p style="font-size: 0.75rem; color: var(--accent-cyan); margin-top: 4px;">En desarrollo</p>
                     </div>
-                    <h3>5</h3>
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">Empresas suscritas</span>
+                </div>
+
+                <div class="section-header"><h3><i class="fa-solid fa-chart-pie" style="color: var(--accent-cyan);"></i> Analítica de Aplicaciones y Rendimiento</h3></div>
+                <div class="dashboard-frame">
+                    <iframe src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/p_5k6fiaqs6d" allowfullscreen></iframe>
                 </div>
             </div>
 
-            <!-- SECCIÓN DE GRÁFICOS (LOOKER STUDIO) -->
-            <div class="section-header">
-                <h3><i class="fa-solid fa-chart-pie" style="color: var(--accent-cyan);"></i> Balance y Analítica de Aplicaciones</h3>
-            </div>
-            <div class="dashboard-frame">
-                <iframe src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/p_5k6fiaqs6d" allowfullscreen></iframe>
-            </div>
+            <!-- 2. SECCIÓN: CALENDARIO Y MINUTA -->
+            <div id="seccion-calendario" class="app-section">
+                <div class="section-header"><h3><i class="fa-solid fa-calendar-days" style="color: var(--accent-cyan);"></i> Calendario de Cupos, Reuniones y Minuta</h3></div>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Agrega reuniones, hitos o bloqueos de tiempo para verificar si tienes disponibilidad para nuevos proyectos.</p>
+                
+                <div class="calendar-box">
+                    <div class="minuta-input-area">
+                        <input type="date" id="minuta-fecha">
+                        <input type="text" id="minuta-titulo" placeholder="Ej: Reunión con Pyme Los Álamos" style="flex:1;">
+                        <select id="minuta-tipo">
+                            <option value="Reunión">Reunión</option>
+                            <option value="Proyecto">Nuevo Proyecto</option>
+                            <option value="Bloqueado">Tiempo Bloqueado</option>
+                        </select>
+                        <button class="btn-accion btn-proceso" onclick="agregarMinuta()"><i class="fa-solid fa-plus"></i> Agendar</button>
+                    </div>
 
-            <!-- SECCIÓN: SOLICITUDES EN VIVO -->
-            <div class="section-header">
-                <h3><i class="fa-solid fa-envelope-open-text" style="color: var(--accent-cyan);"></i> Solicitudes del Formulario Web</h3>
-                <button class="btn-papelera" onclick="togglePapelera()"><i class="fa-solid fa-trash-arrow-up"></i> <span id="txt-papelera">Ver Papelera</span></button>
-            </div>
-
-            <div class="controls-bar">
-                <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="input-buscar" placeholder="Buscar por cliente o correo..." oninput="filtrarSolicitudes()">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Título / Evento</th>
+                                    <th>Tipo</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-minuta">
+                                <!-- Se llena por JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="filter-btns">
-                    <button class="filter-btn active" onclick="cambiarFiltro('TODOS', this)">Todos</button>
-                    <button class="filter-btn" onclick="cambiarFiltro('PENDIENTE', this)">Pendientes</button>
-                    <button class="filter-btn" onclick="cambiarFiltro('EN PROCESO', this)">En Proceso</button>
-                    <button class="filter-btn" onclick="cambiarFiltro('COMPLETADO', this)">Completados</button>
+            </div>
+
+            <!-- 3. SECCIÓN: INGRESOS Y EGRESOS -->
+            <div id="seccion-finanzas" class="app-section">
+                <div class="section-header"><h3><i class="fa-solid fa-wallet" style="color: var(--accent-cyan);"></i> Control Financiero (Ingresos y Egresos)</h3></div>
+                
+                <div class="metrics-grid" style="margin-top: 1.5rem;">
+                    <div class="metric-card">
+                        <div class="header-card"><p>Total Ingresos</p><i class="fa-solid fa-arrow-up" style="color: var(--accent-green);"></i></div>
+                        <h3 style="color: var(--accent-green);">$2.821.939</h3>
+                    </div>
+                    <div class="metric-card">
+                        <div class="header-card"><p>Total Egresos</p><i class="fa-solid fa-arrow-down" style="color: var(--accent-red);"></i></div>
+                        <h3 style="color: var(--accent-red);">$650.000</h3>
+                    </div>
+                    <div class="metric-card">
+                        <div class="header-card"><p>Balance Neto</p><i class="fa-solid fa-scale-balanced" style="color: var(--accent-cyan);"></i></div>
+                        <h3 style="color: var(--accent-cyan);">$2.171.939</h3>
+                    </div>
+                </div>
+
+                <div class="section-header"><h3><i class="fa-solid fa-list" style="color: var(--accent-cyan);"></i> Movimientos del Mes</h3></div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción / Concepto</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>24 Ago 2026</td>
+                                <td>Desarrollo Dashboard Club Deportivo Fénix</td>
+                                <td><span class="badge-status status-completado">Ingreso</span></td>
+                                <td style="color: var(--accent-green); font-weight: bold;">+$1.200.000</td>
+                            </tr>
+                            <tr>
+                                <td>22 Ago 2026</td>
+                                <td>Pago Servidores Hosting y Automatización n8n</td>
+                                <td><span class="badge-status status-pendiente">Egreso</span></td>
+                                <td style="color: var(--accent-red); font-weight: bold;">-$150.000</td>
+                            </tr>
+                            <tr>
+                                <td>18 Ago 2026</td>
+                                <td>Implementación Sistema Restaurante Don Lucho</td>
+                                <td><span class="badge-status status-completado">Ingreso</span></td>
+                                <td style="color: var(--accent-green); font-weight: bold;">+$1.621.939</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="table-container" style="margin-bottom: 3rem;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Fecha / Hora</th>
-                            <th>Nombre / Empresa</th>
-                            <th>Correo Electrónico</th>
-                            <th>Teléfono</th>
-                            <th>Requerimiento</th>
-                            <th>Estado / Gestión</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-solicitudes">
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                                <i class="fa-solid fa-spinner fa-spin"></i> Cargando base de datos...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- 4. SECCIÓN: CENTRAL DE PAGO -->
+            <div id="seccion-pagos" class="app-section">
+                <div class="section-header"><h3><i class="fa-solid fa-credit-card" style="color: var(--accent-cyan);"></i> Central de Pago y Cobranza</h3></div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente / Pyme</th>
+                                <th>Servicio</th>
+                                <th>Monto Acordado</th>
+                                <th>Estado de Pago</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Restaurante Don Lucho</strong></td>
+                                <td>Flujo de Automatización</td>
+                                <td>$500.000</td>
+                                <td><span class="badge-status status-completado">Pagado</span></td>
+                                <td><button class="btn-accion btn-proceso">Ver Comprobante</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Junta de Vecinos Los Álamos</strong></td>
+                                <td>Landing Page Corporativa</td>
+                                <td>$350.000</td>
+                                <td><span class="badge-status status-pendiente">Pendiente Cobro</span></td>
+                                <td><button class="btn-accion btn-completar">Enviar Recordatorio</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- SECCIÓN DE SEGUIMIENTO INTERNO -->
-            <div class="section-header">
-                <h3><i class="fa-solid fa-list-check" style="color: var(--accent-cyan);"></i> Seguimiento de Clientes y Soporte</h3>
+            <!-- 5. SECCIÓN: PROVEEDORES -->
+            <div id="seccion-proveedores" class="app-section">
+                <div class="section-header"><h3><i class="fa-solid fa-truck-field" style="color: var(--accent-cyan);"></i> Directorio de Proveedores</h3></div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Proveedor / Empresa</th>
+                                <th>Rubro / Servicio</th>
+                                <th>Contacto</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Cloud Services Latam</strong></td>
+                                <td>Infraestructura Cloud / Servidores VPS</td>
+                                <td>soporte@cloudlatam.cl</td>
+                                <td><span class="badge-status status-completado">Activo</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Telecomunicaciones Icetel</strong></td>
+                                <td>Redes y Conectividad Fibra Óptica</td>
+                                <td>contacto@icetel.cl</td>
+                                <td><span class="badge-status status-completado">Aliado Estratégico</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cliente / Organización</th>
-                            <th>Servicio Contratado</th>
-                            <th>Fecha de Ingreso</th>
-                            <th>Estado Actual</th>
-                            <th>Arquitectura / Conexión</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Restaurante Don Lucho</strong></td>
-                            <td>Flujo de Automatización</td>
-                            <td>22 Ago 2026</td>
-                            <td><span class="badge-status status-proceso">En Proceso</span></td>
-                            <td>n8n + Google Sheets</td>
-                            <td><button class="btn-accion btn-proceso">Ver Detalle</button></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Club Deportivo Fénix</strong></td>
-                            <td>Dashboard & Web Interactiva</td>
-                            <td>18 Ago 2026</td>
-                            <td><span class="badge-status status-completado">Completado</span></td>
-                            <td>Looker Studio + Drive</td>
-                            <td><button class="btn-accion btn-proceso">Ver Detalle</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+
+            <!-- 6. SECCIÓN: SOLICITUDES WEB -->
+            <div id="seccion-solicitudes" class="app-section">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-envelope-open-text" style="color: var(--accent-cyan);"></i> Solicitudes del Formulario Web</h3>
+                </div>
+
+                <div class="controls-bar">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="input-buscar" placeholder="Buscar por cliente o correo..." oninput="filtrarSolicitudes()">
+                    </div>
+                    <div class="filter-btns">
+                        <button class="filter-btn active" onclick="cambiarFiltro('TODOS', this)">Todos</button>
+                        <button class="filter-btn" onclick="cambiarFiltro('PENDIENTE', this)">Pendientes</button>
+                        <button class="filter-btn" onclick="cambiarFiltro('EN PROCESO', this)">En Proceso</button>
+                        <button class="filter-btn" onclick="cambiarFiltro('COMPLETADO', this)">Completados</button>
+                    </div>
+                </div>
+
+                <div class="table-container" style="margin-bottom: 3rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha / Hora</th>
+                                <th>Nombre / Empresa</th>
+                                <th>Correo Electrónico</th>
+                                <th>Teléfono</th>
+                                <th>Requerimiento</th>
+                                <th>Estado / Gestión</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-solicitudes">
+                            <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+            <!-- 7. SECCIÓN: PAPELERA -->
+            <div id="seccion-papelera" class="app-section">
+                <div class="section-header"><h3><i class="fa-solid fa-trash-can" style="color: var(--accent-red);"></i> Papelera de Registros Eliminados</h3></div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-papelera">
+                            <!-- Se llena por JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- SCRIPT DE SEGURIDAD Y LÓGICA -->
+    <!-- SCRIPT GENERAL ERP -->
     <script>
         const PASSWORD_SECRETA = "myp2026";
 
         function verificarPassword(e) {
             e.preventDefault();
             const pass = document.getElementById('input-password').value;
-            const errorMsg = document.getElementById('error-msg');
-
             if (pass === PASSWORD_SECRETA) {
                 sessionStorage.setItem('myp_sesion_activa', 'true');
                 mostrarDashboard();
             } else {
-                errorMsg.style.display = 'block';
+                document.getElementById('error-msg').style.display = 'block';
                 document.getElementById('input-password').value = '';
             }
         }
@@ -341,6 +471,7 @@
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('main-dashboard').style.display = 'flex';
             renderizarSolicitudes();
+            renderizarMinuta();
         }
 
         function cerrarSesion() {
@@ -354,29 +485,41 @@
             }
         });
 
+        // Cambio de Secciones en el Menú Lateral
+        function cambiarSeccion(seccionId, elemento) {
+            document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(seccionId).classList.add('active');
+            
+            document.querySelectorAll('.sidebar-menu .menu-item').forEach(item => item.classList.remove('active'));
+            if(elemento) elemento.classList.add('active');
+        }
+
+        // Lógica de Solicitudes
         let solicitudes = JSON.parse(localStorage.getItem('myp_solicitudes')) || [
             { id: 1, fecha: "25 Ago 2026, 16:05", nombre: "Mauricio Salazar", email: "mauriciosalazar.f1996@gmail.com", telefono: "+56932257821", mensaje: "quiero ampliar mi negocio dejando dashboard", estado: "PENDIENTE" }
         ];
 
         let filtroActual = 'TODOS';
-        let viendoPapelera = false;
 
         function renderizarSolicitudes() {
             const tbody = document.getElementById('tabla-solicitudes');
+            const tbodyPapelera = document.getElementById('tabla-papelera');
             const contadorPendientes = document.getElementById('contador-pendientes');
-            const textoBusqueda = document.getElementById('input-buscar').value.toLowerCase();
+            const textoBusqueda = document.getElementById('input-buscar')?.value.toLowerCase() || '';
             
             tbody.innerHTML = '';
+            tbodyPapelera.innerHTML = '';
             let pendientesCount = 0;
 
-            let lista = solicitudes.filter(s => viendoPapelera ? s.estado === 'ELIMINADO' : s.estado !== 'ELIMINADO');
+            let activas = solicitudes.filter(s => s.estado !== 'ELIMINADO');
+            let eliminadas = solicitudes.filter(s => s.estado === 'ELIMINADO');
 
-            if (!viendoPapelera && filtroActual !== 'TODOS') {
-                lista = lista.filter(s => s.estado === filtroActual);
+            if (filtroActual !== 'TODOS') {
+                activas = activas.filter(s => s.estado === filtroActual);
             }
 
             if (textoBusqueda.trim() !== '') {
-                lista = lista.filter(s => 
+                activas = activas.filter(s => 
                     s.nombre.toLowerCase().includes(textoBusqueda) || 
                     s.email.toLowerCase().includes(textoBusqueda) || 
                     s.mensaje.toLowerCase().includes(textoBusqueda)
@@ -386,47 +529,52 @@
             solicitudes.forEach(s => { if(s.estado === 'PENDIENTE') pendientesCount++; });
             contadorPendientes.textContent = pendientesCount;
 
-            if (lista.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay registros para mostrar.</td></tr>`;
-                return;
+            // Render Activas
+            if (activas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay registros activos.</td></tr>`;
+            } else {
+                activas.forEach(s => {
+                    let badgeHtml = s.estado === 'PENDIENTE' ? '<span class="badge-status status-pendiente">Pendiente</span>' :
+                                    s.estado === 'EN PROCESO' ? '<span class="badge-status status-proceso">En Proceso</span>' :
+                                    '<span class="badge-status status-completado">Completado</span>';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-size:0.8rem; color:var(--text-muted);">${s.fecha}</td>
+                        <td><strong>${s.nombre}</strong></td>
+                        <td style="color: var(--accent-cyan);">${s.email}</td>
+                        <td>${s.telefono}</td>
+                        <td>${s.mensaje}</td>
+                        <td>
+                            <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;">
+                                ${badgeHtml}
+                                <div style="display: flex; gap: 4px;">
+                                    <button class="btn-accion btn-proceso" onclick="cambiarEstado(${s.id}, 'EN PROCESO')">Proceso</button>
+                                    <button class="btn-accion btn-completar" onclick="cambiarEstado(${s.id}, 'COMPLETADO')">Listo</button>
+                                    <button class="btn-accion btn-eliminar" onclick="cambiarEstado(${s.id}, 'ELIMINADO')"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             }
 
-            lista.forEach(s => {
-                let badgeHtml = '';
-                if(s.estado === 'PENDIENTE') badgeHtml = '<span class="badge-status status-pendiente">Pendiente</span>';
-                else if(s.estado === 'EN PROCESO') badgeHtml = '<span class="badge-status status-proceso">En Proceso</span>';
-                else if(s.estado === 'COMPLETADO') badgeHtml = '<span class="badge-status status-completado">Completado</span>';
-                else if(s.estado === 'ELIMINADO') badgeHtml = '<span class="badge-status" style="background:rgba(239,68,68,0.2); color:#ef4444;">Papelera</span>';
-
-                let botonesAccion = '';
-                if (viendoPapelera) {
-                    botonesAccion = `<button class="btn-accion btn-proceso" onclick="cambiarEstado(${s.id}, 'PENDIENTE')"><i class="fa-solid fa-rotate-left"></i> Restaurar</button>`;
-                } else {
-                    botonesAccion = `
-                        <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-                            <button class="btn-accion btn-proceso" onclick="cambiarEstado(${s.id}, 'EN PROCESO')">Proceso</button>
-                            <button class="btn-accion btn-completar" onclick="cambiarEstado(${s.id}, 'COMPLETADO')">Listo</button>
-                            <button class="btn-accion btn-eliminar" onclick="cambiarEstado(${s.id}, 'ELIMINADO')"><i class="fa-solid fa-trash"></i></button>
-                        </div>
+            // Render Papelera
+            if (eliminadas.length === 0) {
+                tbodyPapelera.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Papelera vacía.</td></tr>`;
+            } else {
+                eliminadas.forEach(s => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${s.fecha}</td>
+                        <td><strong>${s.nombre}</strong></td>
+                        <td>${s.email}</td>
+                        <td><button class="btn-accion btn-proceso" onclick="cambiarEstado(${s.id}, 'PENDIENTE')"><i class="fa-solid fa-rotate-left"></i> Restaurar</button></td>
                     `;
-                }
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-size:0.8rem; color:var(--text-muted); white-space:nowrap;">${s.fecha}</td>
-                    <td><strong>${s.nombre}</strong></td>
-                    <td style="color: var(--accent-cyan);">${s.email}</td>
-                    <td>${s.telefono}</td>
-                    <td style="max-width: 220px; word-break: break-word;">${s.mensaje}</td>
-                    <td>
-                        <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;">
-                            ${badgeHtml}
-                            ${botonesAccion}
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+                    tbodyPapelera.appendChild(tr);
+                });
+            }
         }
 
         function cambiarEstado(id, nuevoEstado) {
@@ -449,15 +597,59 @@
             renderizarSolicitudes();
         }
 
-        function togglePapelera() {
-            viendoPapelera = !viendoPapelera;
-            const txt = document.getElementById('txt-papelera');
-            if (viendoPapelera) {
-                txt.textContent = "Ver Solicitudes Activas";
-            } else {
-                txt.textContent = "Ver Papelera";
+        // Lógica de Calendario y Minuta
+        let minutaEventos = JSON.parse(localStorage.getItem('myp_minuta')) || [
+            { id: 1, fecha: "2026-08-28", titulo: "Reunión con Restaurant Don Lucho", tipo: "Reunión" }
+        ];
+
+        function agregarMinuta() {
+            const fecha = document.getElementById('minuta-fecha').value;
+            const titulo = document.getElementById('minuta-titulo').value;
+            const tipo = document.getElementById('minuta-tipo').value;
+
+            if(!fecha || !titulo) {
+                alert("Por favor completa la fecha y el título.");
+                return;
             }
-            renderizarSolicitudes();
+
+            minutaEventos.push({ id: Date.now(), fecha, titulo, tipo });
+            localStorage.setItem('myp_minuta', JSON.stringify(minutaEventos));
+            
+            document.getElementById('minuta-titulo').value = '';
+            document.getElementById('minuta-fecha').value = '';
+            renderizarMinuta();
+        }
+
+        function renderizarMinuta() {
+            const tbody = document.getElementById('tabla-minuta');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            if(minutaEventos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay eventos agendados.</td></tr>`;
+                return;
+            }
+
+            minutaEventos.forEach(ev => {
+                let badge = ev.tipo === 'Reunión' ? '<span class="badge-status status-proceso">Reunión</span>' :
+                            ev.tipo === 'Proyecto' ? '<span class="badge-status status-completado">Nuevo Proyecto</span>' :
+                            '<span class="badge-status" style="background:rgba(239,68,68,0.2); color:#ef4444;">Bloqueado</span>';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${ev.fecha}</strong></td>
+                    <td>${ev.titulo}</td>
+                    <td>${badge}</td>
+                    <td><button class="btn-accion btn-eliminar" onclick="eliminarMinuta(${ev.id})"><i class="fa-solid fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function eliminarMinuta(id) {
+            minutaEventos = minutaEventos.filter(e => e.id !== id);
+            localStorage.setItem('myp_minuta', JSON.stringify(minutaEventos));
+            renderizarMinuta();
         }
     </script>
 </body>
