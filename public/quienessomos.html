@@ -8,15 +8,79 @@
     <style>
         :root { 
             --bg-dark: #0f172a; --surface-card: #1e293b; --accent-cyan: #06b6d4; 
-            --accent-blue: #3b82f6; --text-main: #f1f5f9; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.12);
+            --accent-blue: #3b82f6; --accent-orange: #f97316; --text-main: #f1f5f9; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.12);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
-        header { background: rgba(15, 23, 42, 0.95); position: sticky; top: 0; z-index: 100; padding: 0.5rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .logo-img { height: 50px; width: auto; object-fit: contain; }
-        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.3s; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+        
+        header { 
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(10px); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            padding: 0.5rem 1rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border); 
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            background: transparent;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .logo-img { height: 45px; width: auto; object-fit: contain; display: block; }
+        
+        .nav-links { display: flex; gap: 1.2rem; align-items: center; margin-left: 0.5rem; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: color 0.3s; }
         .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+        
+        /* Contenedor de los 8 banners superiores */
+        .header-collage {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+            justify-content: flex-start;
+            margin: 0 0.5rem;
+            flex-wrap: nowrap;
+            max-width: 440px;
+            overflow: hidden;
+        }
+        .header-mini-banner {
+            position: relative;
+            width: 50px;
+            height: 32px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .header-mini-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+            transition: all 0.3s ease;
+        }
+        .header-mini-banner:hover {
+            transform: scale(1.15);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+            z-index: 10;
+        }
+        .header-mini-banner:hover img {
+            filter: brightness(1.15);
+        }
+
+        .nav-buttons { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
+        .btn-glow { background: transparent; padding: 0.4rem 0.8rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.75rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.4rem; }
+
         .container { max-width: 1000px; margin: 0 auto; padding: 4rem 2rem; }
         .section-title { text-align: center; margin-bottom: 2rem; }
         .section-title h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
@@ -29,19 +93,42 @@
         .mv-card h3 { font-size: 1.3rem; color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.8rem; }
         .mv-card h3 i { color: var(--accent-cyan); }
         .mv-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; }
+        
         footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
+        
+        @media(max-width: 1250px) { .header-collage { display: none; } }
         @media(max-width: 768px) { .nav-links { display: none; } }
     </style>
 </head>
 <body>
     <header>
-        <a href="index.html"><img src="logo.png" alt="Logo" class="logo-img"></a>
+        <a href="index.html" class="logo-container"><img src="logo.png" alt="Logo" class="logo-img"></a>
         <nav class="nav-links">
             <a href="index.html">Inicio</a>
             <a href="quienessomos.html" class="active">Quiénes Somos</a>
             <a href="solicitudes.html">Solicitudes</a>
             <a href="faq.html">Preguntas Frecuentes</a>
         </nav>
+
+        <div class="header-collage">
+            <div class="header-mini-banner" title="ChatGPT"><img src="ChatGPT.jpg" alt="ChatGPT"></div>
+            <div class="header-mini-banner" title="Claude"><img src="Claude.jpg" alt="Claude"></div>
+            <div class="header-mini-banner" title="Datastudio"><img src="Datastudio.jpg" alt="Datastudio"></div>
+            <div class="header-mini-banner" title="Gemini"><img src="Gemini.jpg" alt="Gemini"></div>
+            <div class="header-mini-banner" title="Google"><img src="Google.jpg" alt="Google"></div>
+            <div class="header-mini-banner" title="Googledrive"><img src="Googledrive.jpg" alt="Googledrive"></div>
+            <div class="header-mini-banner" title="Googleforms"><img src="Googleforms.jpg" alt="Googleforms"></div>
+            <div class="header-mini-banner" title="N8N"><img src="N8N.jpg" alt="N8N"></div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-glow" onclick="alert('Acceso Equipo')" style="border:1px solid var(--accent-cyan); color:var(--accent-cyan);">
+                <i class="fa-solid fa-user-lock"></i> Acceso Equipo
+            </button>
+            <button class="btn-glow" onclick="alert('Acceso Clientes')" style="border:1px solid var(--accent-orange); color:var(--accent-orange);">
+                <i class="fa-solid fa-users"></i> Acceso Clientes
+            </button>
+        </div>
     </header>
 
     <div class="container">
