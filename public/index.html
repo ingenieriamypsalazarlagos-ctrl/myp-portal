@@ -25,7 +25,7 @@
             position: sticky; 
             top: 0; 
             z-index: 100; 
-            padding: 0.5rem 1.5rem; 
+            padding: 0.5rem 1rem; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -39,46 +39,33 @@
             text-decoration: none;
             flex-shrink: 0;
         }
-        .logo-img { 
-            height: 50px; 
-            width: auto; 
-            object-fit: contain; 
-            display: block; 
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--accent-cyan);
-        }
+        .logo-img { height: 45px; width: auto; object-fit: contain; display: block; }
         
+        .nav-links { display: flex; gap: 1.2rem; align-items: center; margin-left: 0.5rem; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+        
+        /* Contenedor de los 8 banners superiores */
         .header-collage {
             display: flex;
-            gap: 5px;
+            gap: 3px;
             align-items: center;
-            justify-content: center;
-            margin: 0 1rem;
-            flex-wrap: wrap;
+            justify-content: flex-start;
+            margin: 0 0.5rem;
+            flex-wrap: nowrap;
+            max-width: 440px;
+            overflow: hidden;
         }
         .header-mini-banner {
             position: relative;
-            width: 65px;
-            height: 38px;
-            border-radius: 5px;
+            width: 50px;
+            height: 32px;
+            border-radius: 4px;
             overflow: hidden;
             border: 1px solid rgba(6, 182, 212, 0.4);
             transition: all 0.3s ease;
             cursor: pointer;
+            flex-shrink: 0;
         }
         .header-mini-banner img {
             width: 100%;
@@ -90,25 +77,70 @@
         .header-mini-banner:hover {
             transform: scale(1.15);
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 12px rgba(6, 182, 212, 0.8);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
             z-index: 10;
         }
         .header-mini-banner:hover img {
             filter: brightness(1.15);
         }
 
-        .nav-buttons { display: flex; gap: 0.6rem; align-items: center; flex-shrink: 0; }
-        
-        .hero { 
-            text-align: center; 
-            padding: 5rem 2rem 5rem; 
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+        .nav-buttons { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
+
+        .btn-glow { 
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); 
+            color: #fff; 
+            padding: 0.9rem 2.2rem; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            border: none; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+            box-shadow: 0 0 20px rgba(6,182,212,0.4); 
         }
-        .hero h1 { font-size: 3rem; margin-bottom: 1.2rem; font-weight: 900; }
-        .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem; }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(6,182,212,0.7); }
         
-        .btn-glow { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; padding: 0.9rem 2.2rem; border-radius: 10px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 0 15px rgba(6,182,212,0.3); }
-        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(6,182,212,0.5); }
+        /* Sección Hero con la imagen de fondo "creacion de adan" y capa oscura para legibilidad */
+        .hero { 
+            position: relative;
+            text-align: center; 
+            padding: 7rem 2rem 6rem; 
+            background: url('creacion de adan.jpg') no-repeat center center;
+            background-size: cover;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.88); /* Capa oscura translúcida para que resalten las letras */
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        .hero h1 { 
+            font-size: 3.2rem; 
+            margin-bottom: 1.2rem; 
+            font-weight: 900; 
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+        .hero h1 span {
+            color: var(--accent-cyan);
+        }
+        .hero p { 
+            font-size: 1.2rem; 
+            color: #e2e8f0; 
+            max-width: 750px; 
+            margin: 0 auto 2.5rem; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
         .section-title { text-align: center; margin-bottom: 3rem; }
@@ -145,31 +177,26 @@
         .login-input:focus { border-color: var(--accent-cyan); }
         .close-btn { position: absolute; top: 1rem; right: 1rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
         
-        footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.9rem; }
+        footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
 
-        @media (max-width: 1200px) {
-            .header-collage { display: none; }
-        }
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-        }
+        @media (max-width: 1250px) { .header-collage { display: none; } }
+        @media (max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 2.2rem; } }
     </style>
 </head>
 <body>
 
     <header>
         <a href="index.html" class="logo-container">
-            <img src="logo.png" alt="Ingeniería MyP Salazar Lagos" class="logo-img">
+            <img src="logo.png" alt="Logo" class="logo-img">
         </a>
         
-        <!-- Enlaces hacia las páginas independientes -->
         <nav class="nav-links">
             <a href="index.html" class="active">Inicio</a>
             <a href="quienessomos.html">Quiénes Somos</a>
             <a href="solicitudes.html">Solicitudes</a>
             <a href="faq.html">Preguntas Frecuentes</a>
         </nav>
-        
+
         <div class="header-collage">
             <div class="header-mini-banner" title="ChatGPT"><img src="ChatGPT.jpg" alt="ChatGPT"></div>
             <div class="header-mini-banner" title="Claude"><img src="Claude.jpg" alt="Claude"></div>
@@ -182,21 +209,24 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.45rem 0.9rem; font-size:0.8rem; box-shadow:none;">
+            <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none;">
                 <i class="fa-solid fa-user-lock"></i> Acceso Equipo
             </button>
-            <button class="btn-glow" onclick="abrirLogin('cliente')" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.45rem 0.9rem; font-size:0.8rem; box-shadow:none;">
+            <button class="btn-glow" onclick="abrirLogin('cliente')" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none;">
                 <i class="fa-solid fa-users"></i> Acceso Clientes
             </button>
         </div>
     </header>
 
+    <!-- Sección Hero con la imagen de fondo y textos encima -->
     <section class="hero">
-        <h1>Soluciones Digitales Inteligentes & Automatización</h1>
-        <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar tu PyME.</p>
-        <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
-            <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
-        </a>
+        <div class="hero-content">
+            <h1>Soluciones Digitales <span>Inteligentes</span> & Automatización</h1>
+            <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar tu PyME.</p>
+            <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
+                <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
+            </a>
+        </div>
     </section>
 
     <!-- Sección de Servicios Principales -->
