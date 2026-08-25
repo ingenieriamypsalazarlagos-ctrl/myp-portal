@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiénes Somos - Ingeniería MyP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg-dark: #0f172a; --surface-card: #1e293b; --accent-cyan: #06b6d4; 
+            --accent-blue: #3b82f6; --text-main: #f1f5f9; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.12);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
+        header { background: rgba(15, 23, 42, 0.95); position: sticky; top: 0; z-index: 100; padding: 0.5rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .logo-img { height: 50px; width: auto; object-fit: contain; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 4rem 2rem; }
+        .section-title { text-align: center; margin-bottom: 2rem; }
+        .section-title h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        
+        .about-box { background: var(--surface-card); border: 1px solid var(--border); border-radius: 20px; padding: 3rem; margin-bottom: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .about-box p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem; text-align: center; }
+        
+        .mission-vision-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .mv-card { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--accent-cyan); border-radius: 16px; padding: 2rem; }
+        .mv-card h3 { font-size: 1.3rem; color: #fff; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.8rem; }
+        .mv-card h3 i { color: var(--accent-cyan); }
+        .mv-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; }
+        footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
+        @media(max-width: 768px) { .nav-links { display: none; } }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html"><img src="logo.png" alt="Logo" class="logo-img"></a>
+        <nav class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="quienessomos.html" class="active">Quiénes Somos</a>
+            <a href="solicitudes.html">Solicitudes</a>
+            <a href="faq.html">Preguntas Frecuentes</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="section-title">
+            <h2>Quiénes Somos</h2>
+            <p style="color:var(--text-muted)">Nuestra historia, origen y propósito en el mundo tecnológico.</p>
+        </div>
+
+        <div class="about-box">
+            <p>
+                En <strong>Ingeniería MyP</strong> somos un emprendimiento tecnológico fundado por dos jóvenes apasionados por la innovación y la digitalización de procesos. 
+            </p>
+            <p>
+                Impulsados por nuestra sólida formación y constante desempeño en el área técnica, decidimos unir fuerzas y crear este proyecto con la firme convicción de acercar herramientas avanzadas —como automatizaciones inteligentes, desarrollo web corporativo y agentes de inteligencia artificial— a empresas y PyMEs que buscan destacar y optimizar su rendimiento diario.
+            </p>
+        </div>
+
+        <div class="mission-vision-grid">
+            <div class="mv-card">
+                <h3><i class="fa-solid fa-bullseye"></i> Nuestra Misión</h3>
+                <p>Potenciar la productividad y el crecimiento de las empresas mediante soluciones tecnológicas a la medida, automatizando procesos complejos y conectando sistemas digitales de forma inteligente, ágil y accesible.</p>
+            </div>
+            <div class="mv-card">
+                <h3><i class="fa-solid fa-eye"></i> Nuestra Visión</h3>
+                <p>Convertirnos en el socio tecnológico de referencia en el desarrollo de automatizaciones avanzadas y transformación digital para PyMEs, reconociéndonos por nuestra calidad, innovación constante y compromiso absoluto con el éxito de nuestros clientes.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
