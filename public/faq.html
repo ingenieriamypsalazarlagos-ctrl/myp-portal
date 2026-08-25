@@ -11,12 +11,70 @@
             --accent-blue: #3b82f6; --text-main: #f1f5f9; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.12);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
-        header { background: rgba(15, 23, 42, 0.95); position: sticky; top: 0; z-index: 100; padding: 0.5rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-        .logo-img { height: 50px; width: auto; object-fit: contain; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+        
+        header { 
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(10px); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            padding: 0.5rem 1.5rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border); 
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            background: transparent;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .logo-img { height: 50px; width: auto; object-fit: contain; display: block; }
+        
         .nav-links { display: flex; gap: 1.5rem; align-items: center; }
         .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.3s; }
         .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+        
+        /* Contenedor de los 8 banners superiores */
+        .header-collage {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            justify-content: center;
+            margin: 0 1rem;
+            flex-wrap: wrap;
+        }
+        .header-mini-banner {
+            position: relative;
+            width: 65px;
+            height: 38px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .header-mini-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+            transition: all 0.3s ease;
+        }
+        .header-mini-banner:hover {
+            transform: scale(1.15);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.8);
+            z-index: 10;
+        }
+        .header-mini-banner:hover img {
+            filter: brightness(1.15);
+        }
+
         .container { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
         .section-title { text-align: center; margin-bottom: 3rem; }
         .section-title h2 { font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem; }
@@ -27,28 +85,62 @@
         .accordion-header { padding: 1.2rem 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 700; font-size: 1.1rem; color: #fff; }
         .accordion-header i { color: var(--accent-cyan); transition: transform 0.3s ease; }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out, padding 0.3s ease; padding: 0 1.5rem; color: var(--text-muted); font-size: 0.98rem; line-height: 1.7; }
-        .accordion-item.active .accordion-content { max-height: 250px; padding: 0 1.5rem 1.5rem 1.5rem; }
+        .accordion-item.active .accordion-content { max-height: 350px; padding: 0 1.5rem 1.5rem 1.5rem; }
         .accordion-item.active .accordion-header i { transform: rotate(180deg); }
+
+        .contacto-destacado {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .contacto-destacado a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .contacto-destacado a:hover {
+            text-decoration: underline;
+        }
         
         footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
+        
+        @media(max-width: 1200px) { .header-collage { display: none; } }
         @media(max-width: 768px) { .nav-links { display: none; } }
     </style>
 </head>
 <body>
     <header>
-        <a href="index.html"><img src="logo.png" alt="Logo" class="logo-img"></a>
+        <a href="index.html" class="logo-container">
+            <img src="logo.png" alt="Logo" class="logo-img">
+        </a>
+        
         <nav class="nav-links">
             <a href="index.html">Inicio</a>
             <a href="quienessomos.html">Quiénes Somos</a>
             <a href="solicitudes.html">Solicitudes</a>
             <a href="faq.html" class="active">Preguntas Frecuentes</a>
         </nav>
+
+        <!-- Banners superiores -->
+        <div class="header-collage">
+            <div class="header-mini-banner" title="ChatGPT"><img src="ChatGPT.jpg" alt="ChatGPT"></div>
+            <div class="header-mini-banner" title="Claude"><img src="Claude.jpg" alt="Claude"></div>
+            <div class="header-mini-banner" title="Datastudio"><img src="Datastudio.jpg" alt="Datastudio"></div>
+            <div class="header-mini-banner" title="Gemini"><img src="Gemini.jpg" alt="Gemini"></div>
+            <div class="header-mini-banner" title="Google"><img src="Google.jpg" alt="Google"></div>
+            <div class="header-mini-banner" title="Googledrive"><img src="Googledrive.jpg" alt="Googledrive"></div>
+            <div class="header-mini-banner" title="Googleforms"><img src="Googleforms.jpg" alt="Googleforms"></div>
+            <div class="header-mini-banner" title="N8N"><img src="N8N.jpg" alt="N8N"></div>
+        </div>
     </header>
 
     <div class="container">
         <div class="section-title">
             <h2>Preguntas Frecuentes</h2>
-            <p style="color:var(--text-muted)">Resolvemos las dudas más comunes sobre nuestros servicios y metodologías.</p>
+            <p style="color:var(--text-muted)">Resolvemos las dudas más comunes sobre nuestros servicios y tiempos de atención.</p>
         </div>
 
         <div class="accordion-menu">
@@ -58,12 +150,28 @@
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
                 <div class="accordion-content">
-                    Puedes contactarnos directamente por WhatsApp o enviarnos los detalles a través de nuestra bandeja de solicitudes. Evaluamos tus requerimientos técnicos y te entregamos una propuesta a la medida.
+                    Puedes enviarnos tus requerimientos directamente a través de nuestra <a href="solicitudes.html" style="color:var(--accent-cyan); text-decoration:none; font-weight:bold;">bandeja de solicitudes</a>. También puedes comunicarte con nosotros por los siguientes medios:
+                    <div class="contacto-destacado">
+                        <span><i class="fa-solid fa-envelope"></i> Correo: <a href="mailto:ingenieriamypsalazarlagos@gmail.com">ingenieriamypsalazarlagos@gmail.com</a></span>
+                        <span><i class="fa-brands fa-whatsapp"></i> WhatsApp: <a href="https://wa.me/56969176666" target="_blank">+56 9 6917 6666</a></span>
+                        <span><i class="fa-brands fa-instagram"></i> Instagram: <a href="#" target="_blank">@ingenieria.myp</a></span>
+                        <span><i class="fa-solid fa-phone"></i> Teléfono de contacto directo disponible.</span>
+                    </div>
                 </div>
             </div>
 
             <div class="accordion-item" id="faq-2">
                 <div class="accordion-header" onclick="toggleAccordion('faq-2')">
+                    <span>¿Cuál es el tiempo de respuesta y de evaluación (SLA)?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    Contamos con un riguroso tiempo de respuesta <strong>SLA de 48 horas</strong> a partir del momento en que envías tu solicitud a través de nuestra plataforma. Dentro de este plazo, nos pondremos en contacto para indicarte los pasos del proyecto, costos detallados, tiempo de elaboración y la escalabilidad de la herramienta.
+                </div>
+            </div>
+
+            <div class="accordion-item" id="faq-3">
+                <div class="accordion-header" onclick="toggleAccordion('faq-3')">
                     <span>¿Qué incluye el servicio de mantenimiento mensual?</span>
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
@@ -72,8 +180,8 @@
                 </div>
             </div>
 
-            <div class="accordion-item" id="faq-3">
-                <div class="accordion-header" onclick="toggleAccordion('faq-3')">
+            <div class="accordion-item" id="faq-4">
+                <div class="accordion-header" onclick="toggleAccordion('faq-4')">
                     <span>¿Qué herramientas utilizan para las automatizaciones?</span>
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
