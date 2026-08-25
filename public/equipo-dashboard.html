@@ -8,7 +8,8 @@
     <style>
         :root { 
             --bg-dark: #0f172a; --surface-card: #1e293b; --accent-cyan: #06b6d4; 
-            --accent-blue: #3b82f6; --accent-orange: #f97316; --text-main: #f1f5f9; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.12);
+            --accent-blue: #3b82f6; --accent-orange: #f97316; --accent-red: #ef4444;
+            --text-main: #f1f5f9; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.12);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
@@ -56,6 +57,16 @@
         .status-completado { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
         .status-pendiente { background: rgba(249, 115, 22, 0.2); color: var(--accent-orange); border: 1px solid var(--accent-orange); }
 
+        /* Botones de acción rápida en la tabla */
+        .btn-accion { padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; border: none; margin-right: 4px; }
+        .btn-proceso { background: rgba(59,130,246,0.2); color: #3b82f6; border: 1px solid #3b82f6; }
+        .btn-completar { background: rgba(6,182,212,0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
+        .btn-eliminar { background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid #ef4444; }
+
+        /* Contenedor para Looker Studio */
+        .dashboard-frame { background: var(--surface-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-top: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .dashboard-frame iframe { width: 100%; height: 500px; border: none; border-radius: 8px; }
+
         footer { background: #0b0f19; padding: 1.5rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 4rem; }
     </style>
 </head>
@@ -93,7 +104,7 @@
             <div class="stat-card">
                 <div class="stat-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
                 <div class="stat-info">
-                    <h3>2</h3>
+                    <h3 id="contador-pendientes">...</h3>
                     <p>Solicitudes Pendientes</p>
                 </div>
             </div>
@@ -113,7 +124,16 @@
             </div>
         </div>
 
-        <!-- SECCIÓN NUEVA: SOLICITUDES EN VIVO DESDE LA WEB -->
+        <!-- SECCIÓN DE GRÁFICOS (LOOKER STUDIO) -->
+        <div class="section-header">
+            <h3><i class="fa-solid fa-chart-pie" style="color: var(--accent-cyan);"></i> Balance y Analítica de Aplicaciones (Looker Studio)</h3>
+        </div>
+        <div class="dashboard-frame">
+            <!-- REEMPLAZA EL ENLACE DE ABAJO CON TU CÓDIGO EMBEBIDO DE LOOKER STUDIO (IFRAME) -->
+            <iframe src="https://lookerstudio.google.com/embed/reporting/TU_ID_DE_LOOKER_STUDIO" allowfullscreen></iframe>
+        </div>
+
+        <!-- SECCIÓN: SOLICITUDES EN VIVO DESDE LA WEB -->
         <div class="section-header">
             <h3><i class="fa-solid fa-envelope-open-text" style="color: var(--accent-cyan);"></i> Solicitudes Recientes (Formulario Web)</h3>
             <span style="font-size: 0.85rem; color: var(--text-muted);">Sincronizado con Google Sheets / n8n</span>
@@ -128,7 +148,7 @@
                         <th>Correo Electrónico</th>
                         <th>Teléfono</th>
                         <th>Mensaje / Requerimiento</th>
-                        <th>Acción</th>
+                        <th>Estado / Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-solicitudes">
@@ -176,22 +196,6 @@
                         <td>Looker Studio + Drive</td>
                         <td><button style="background:none; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.3rem 0.6rem; border-radius:5px; cursor:pointer;">Ver</button></td>
                     </tr>
-                    <tr>
-                        <td><strong>Junta de Vecinos Los Álamos</strong></td>
-                        <td>Landing Page Corporativa</td>
-                        <td>24 Ago 2026</td>
-                        <td><span class="badge-status status-pendiente">Pendiente SLA</span></td>
-                        <td>HTML / Hosting MyP</td>
-                        <td><button style="background:none; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.3rem 0.6rem; border-radius:5px; cursor:pointer;">Ver</button></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Tenis de Mesa Ñuñoa</strong></td>
-                        <td>Mantenimiento Pro (IA)</td>
-                        <td>10 Jul 2026</td>
-                        <td><span class="badge-status status-completado">Activo (Mensual)</span></td>
-                        <td>Agentes Claude / Gemini</td>
-                        <td><button style="background:none; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.3rem 0.6rem; border-radius:5px; cursor:pointer;">Ver</button></td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -201,25 +205,73 @@
         <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Panel de Control Administrativo del Equipo.</p>
     </footer>
 
-    <!-- Script de conexión para mostrar registros simulados / listos para API -->
+    <!-- Script Inteligente para manejar estados y almacenamiento local (Simulando Papelera y Flujo) -->
     <script>
-        // Aquí puedes conectar opcionalmente una URL de Webhook de lectura de n8n o dejar una simulación activa
-        window.addEventListener('DOMContentLoaded', () => {
+        // Datos simulados iniciales basados en lo que ya tienes llegando a Google Sheets
+        let solicitudes = JSON.parse(localStorage.getItem('myp_solicitudes')) || [
+            { id: 1, fecha: "25 Ago 2026, 16:05", nombre: "Mauricio Salazar", email: "mauriciosalazar.f1996@gmail.com", telefono: "+56932257821", mensaje: "quiero ampliar mi negocio dejando dashboard", estado: "PENDIENTE" }
+        ];
+
+        function renderizarSolicitudes() {
             const tbody = document.getElementById('tabla-solicitudes');
+            const contadorPendientes = document.getElementById('contador-pendientes');
             
-            // Ejemplo visual de cómo lucirán las solicitudes llegando desde tu Google Sheet
-            setTimeout(() => {
-                tbody.innerHTML = `
-                    <tr>
-                        <td style="font-size:0.85rem; color:var(--text-muted);">25 Ago 2026, 16:05</td>
-                        <td><strong>Mauricio Salazar</strong></td>
-                        <td>mauriciosalazar.f1996@gmail.com</td>
-                        <td>+56932257821</td>
-                        <td>quiero ampliar mi negocio dejando dashboard</td>
-                        <td><button onclick="alert('Atendiendo solicitud de Mauricio Salazar')" style="background:rgba(6,182,212,0.1); border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.3rem 0.8rem; border-radius:5px; cursor:pointer; font-weight:bold;">Atender</button></td>
-                    </tr>
+            tbody.innerHTML = '';
+            let pendientesCount = 0;
+
+            const activas = solicitudes.filter(s => s.estado !== 'ELIMINADO');
+
+            if (activas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay solicitudes pendientes en este momento.</td></tr>`;
+                contadorPendientes.textContent = '0';
+                return;
+            }
+
+            activas.forEach(s => {
+                if(s.estado === 'PENDIENTE') pendientesCount++;
+
+                let badgeHtml = '';
+                if(s.estado === 'PENDIENTE') badgeHtml = '<span class="badge-status status-pendiente">Pendiente</span>';
+                else if(s.estado === 'EN PROCESO') badgeHtml = '<span class="badge-status status-proceso">En Proceso</span>';
+                else if(s.estado === 'COMPLETADO') badgeHtml = '<span class="badge-status status-completado">Completado</span>';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-size:0.85rem; color:var(--text-muted);">${s.fecha}</td>
+                    <td><strong>${s.nombre}</strong></td>
+                    <td>${s.email}</td>
+                    <td>${s.telefono}</td>
+                    <td>${s.mensaje}</td>
+                    <td>
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            ${badgeHtml}
+                            <div>
+                                <button class="btn-accion btn-proceso" onclick="cambiarEstado(${s.id}, 'EN PROCESO')">Proceso</button>
+                                <button class="btn-accion btn-completar" onclick="cambiarEstado(${s.id}, 'COMPLETADO')">Listo</button>
+                                <button class="btn-accion btn-eliminar" onclick="cambiarEstado(${s.id}, 'ELIMINADO')"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </td>
                 `;
-            }, 800);
+                tbody.appendChild(tr);
+            });
+
+            contadorPendientes.textContent = pendientesCount;
+        }
+
+        function cambiarEstado(id, nuevoEstado) {
+            solicitudes = solicitudes.map(s => {
+                if(s.id === id) {
+                    s.estado = nuevoEstado;
+                }
+                return s;
+            });
+            localStorage.setItem('myp_solicitudes', JSON.stringify(solicitudes));
+            renderizarSolicitudes();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderizarSolicitudes();
         });
     </script>
 </body>
