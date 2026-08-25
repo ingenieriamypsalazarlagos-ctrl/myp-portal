@@ -17,7 +17,7 @@
             --border: rgba(255, 255, 255, 0.12);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
         
         header { 
             background: rgba(15, 23, 42, 0.95); 
@@ -25,7 +25,7 @@
             position: sticky; 
             top: 0; 
             z-index: 100; 
-            padding: 0.6rem 2rem; 
+            padding: 0.5rem 1.5rem; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -40,51 +40,52 @@
             flex-shrink: 0;
         }
         .logo-img { 
-            height: 55px; 
+            height: 50px; 
             width: auto; 
             object-fit: contain; 
             display: block; 
         }
         
-        /* Contenedor de los 5 banners al lado del logo en el Header */
+        /* Contenedor optimizado para 8 banners sin barra de desplazamiento */
         .header-collage {
             display: flex;
-            gap: 8px;
+            gap: 6px; /* Espacio un poco menor para que quepan los 8 */
             align-items: center;
-            margin: 0 1rem;
-            overflow-x: auto;
-            padding: 4px 0;
+            justify-content: center;
+            flex: 1;
+            margin: 0 1.5rem;
+            flex-wrap: wrap; /* Si el espacio es muy justo, se acomodan solos sin crear scroll */
         }
         .header-mini-banner {
             position: relative;
-            width: 75px;
+            width: 80px; /* Tamaño ajustado para 8 elementos */
             height: 45px;
             border-radius: 6px;
             overflow: hidden;
-            border: 1px solid rgba(6, 182, 212, 0.4);
+            border: 1.5px solid rgba(6, 182, 212, 0.4);
             transition: all 0.3s ease;
             cursor: pointer;
-            flex-shrink: 0;
+            flex-shrink: 1;
         }
         .header-mini-banner img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.75);
+            filter: brightness(0.8);
             transition: all 0.3s ease;
         }
         /* Efecto de resalto al pasar el mouse */
         .header-mini-banner:hover {
             transform: scale(1.15);
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.7);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.8);
             z-index: 10;
         }
         .header-mini-banner:hover img {
-            filter: brightness(1.1);
+            filter: brightness(1.15);
         }
 
-        .nav-buttons { display: flex; gap: 1rem; align-items: center; flex-shrink: 0; }
+        .nav-buttons { display: flex; gap: 0.8rem; align-items: center; flex-shrink: 0; }
         
         /* Sección Hero */
         .hero { 
@@ -120,8 +121,8 @@
         
         footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.9rem; }
 
-        /* Ocultar en celulares pequeños si falta espacio horizontal, o ajustar tamaño */
-        @media (max-width: 950px) {
+        /* Oculta los banners en pantallas pequeñas para que no desarmen la vista de celular */
+        @media (max-width: 1100px) {
             .header-collage { display: none; }
         }
     </style>
@@ -134,21 +135,24 @@
             <img src="/logo.png" alt="Ingeniería MyP Salazar Lagos" class="logo-img">
         </a>
         
-        <!-- Los 5 Banners en miniatura al lado del logo con efecto al pasar el mouse -->
+        <!-- Banners ajustados al espacio central (8 Imágenes) -->
         <div class="header-collage">
             <div class="header-mini-banner" title="Banner 1"><img src="banner1.jpg" alt="Banner 1"></div>
             <div class="header-mini-banner" title="Banner 2"><img src="banner2.jpg" alt="Banner 2"></div>
             <div class="header-mini-banner" title="Banner 3"><img src="banner3.jpg" alt="Banner 3"></div>
             <div class="header-mini-banner" title="Banner 4"><img src="banner4.jpg" alt="Banner 4"></div>
             <div class="header-mini-banner" title="Banner 5"><img src="banner5.jpg" alt="Banner 5"></div>
+            <div class="header-mini-banner" title="Banner 6"><img src="banner6.jpg" alt="Banner 6"></div>
+            <div class="header-mini-banner" title="Banner 7"><img src="banner7.jpg" alt="Banner 7"></div>
+            <div class="header-mini-banner" title="Banner 8"><img src="banner8.jpg" alt="Banner 8"></div>
         </div>
 
         <!-- Botones de acceso a la derecha -->
         <div class="nav-buttons">
-            <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.5rem 1rem; font-size:0.85rem; box-shadow:none;">
+            <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.45rem 0.9rem; font-size:0.8rem; box-shadow:none;">
                 <i class="fa-solid fa-user-lock"></i> Acceso Equipo
             </button>
-            <button class="btn-glow" onclick="abrirLogin('cliente')" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.5rem 1rem; font-size:0.85rem; box-shadow:none;">
+            <button class="btn-glow" onclick="abrirLogin('cliente')" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.45rem 0.9rem; font-size:0.8rem; box-shadow:none;">
                 <i class="fa-solid fa-users"></i> Acceso Clientes
             </button>
         </div>
