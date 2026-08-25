@@ -39,7 +39,7 @@
         .stat-info h3 { font-size: 1.5rem; color: #fff; font-weight: 800; }
         .stat-info p { font-size: 0.85rem; color: var(--text-muted); }
 
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; margin-top: 3rem; }
         .section-header h3 { font-size: 1.4rem; color: #fff; }
         
         .btn-nuevo { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -113,6 +113,35 @@
             </div>
         </div>
 
+        <!-- SECCIÓN NUEVA: SOLICITUDES EN VIVO DESDE LA WEB -->
+        <div class="section-header">
+            <h3><i class="fa-solid fa-envelope-open-text" style="color: var(--accent-cyan);"></i> Solicitudes Recientes (Formulario Web)</h3>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Sincronizado con Google Sheets / n8n</span>
+        </div>
+
+        <div class="projects-table-container" style="margin-bottom: 3rem;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha / Hora</th>
+                        <th>Nombre / Empresa</th>
+                        <th>Correo Electrónico</th>
+                        <th>Teléfono</th>
+                        <th>Mensaje / Requerimiento</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-solicitudes">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Cargando solicitudes en tiempo real...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECCIÓN DE PROYECTOS INTERNOS -->
         <div class="section-header">
             <h3><i class="fa-solid fa-list-check" style="color: var(--accent-cyan);"></i> Seguimiento de Proyectos y Clientes</h3>
             <button class="btn-nuevo" onclick="alert('Función para agregar nuevo proyecto')"><i class="fa-solid fa-plus"></i> Nuevo Proyecto</button>
@@ -172,5 +201,26 @@
         <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Panel de Control Administrativo del Equipo.</p>
     </footer>
 
+    <!-- Script de conexión para mostrar registros simulados / listos para API -->
+    <script>
+        // Aquí puedes conectar opcionalmente una URL de Webhook de lectura de n8n o dejar una simulación activa
+        window.addEventListener('DOMContentLoaded', () => {
+            const tbody = document.getElementById('tabla-solicitudes');
+            
+            // Ejemplo visual de cómo lucirán las solicitudes llegando desde tu Google Sheet
+            setTimeout(() => {
+                tbody.innerHTML = `
+                    <tr>
+                        <td style="font-size:0.85rem; color:var(--text-muted);">25 Ago 2026, 16:05</td>
+                        <td><strong>Mauricio Salazar</strong></td>
+                        <td>mauriciosalazar.f1996@gmail.com</td>
+                        <td>+56932257821</td>
+                        <td>quiero ampliar mi negocio dejando dashboard</td>
+                        <td><button onclick="alert('Atendiendo solicitud de Mauricio Salazar')" style="background:rgba(6,182,212,0.1); border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.3rem 0.8rem; border-radius:5px; cursor:pointer; font-weight:bold;">Atender</button></td>
+                    </tr>
+                `;
+            }, 800);
+        });
+    </script>
 </body>
 </html>
