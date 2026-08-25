@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal de Clientes - Ingeniería MyP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #070a13; color: #f8fafc; font-family: sans-serif; padding: 2rem; margin: 0; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; margin-bottom: 2rem; }
+        .btn-logout { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Portal Analítico de Clientes</h2>
+        <a href="/logout" class="btn-logout"><i class="fa-solid fa-power-off"></i> Salir</a>
+    </div>
+
+    <!-- Panel de Looker Studio con filtro de seguridad por correo -->
+    <div style="background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+        <iframe width="100%" height="750" src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/p_5k6fiaqs6d" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+    </div>
+</body>
+</html>

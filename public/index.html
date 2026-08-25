@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingeniería MyP - Soluciones Digitales & Automatización</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --bg-dark: #0f172a;        /* Azul grisáceo elegante y menos oscuro (Slate 900) */
+            --surface-card: #1e293b;   /* Tarjetas con mejor contraste (Slate 800) */
+            --accent-cyan: #06b6d4; 
+            --accent-blue: #3b82f6;
+            --accent-orange: #f97316; 
+            --text-main: #f1f5f9;      /* Texto principal brillante */
+            --text-muted: #94a3b8;     /* Texto secundario suave */
+            --border: rgba(255, 255, 255, 0.12);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
+        
+        header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        
+        /* Contenedor y tamaño ampliado para el logotipo */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            background: transparent;
+            text-decoration: none;
+        }
+        .logo-img { 
+            height: 75px; 
+            width: auto; 
+            object-fit: contain; 
+            display: block; 
+        }
+        
+        .nav-buttons { display: flex; gap: 1rem; align-items: center; }
+        
+        .hero { text-align: center; padding: 7rem 2rem 5rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        .hero h1 { font-size: 3.2rem; margin-bottom: 1.2rem; font-weight: 900; }
+        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem; }
+        
+        .btn-glow { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; padding: 0.9rem 2.2rem; border-radius: 10px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 0 15px rgba(6,182,212,0.3); }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(6,182,212,0.5); }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
+        .section-title { text-align: center; margin-bottom: 3rem; }
+        .section-title h2 { font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .card { background: var(--surface-card); border-radius: 16px; padding: 2.5rem 2rem; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+        .card:hover { border-color: var(--accent-cyan); transform: translateY(-5px); }
+        .card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: #fff; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+        
+        .card-btn { background: rgba(6,182,212,0.1); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 0.6rem 1rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.85rem; text-align: center; transition: 0.2s; }
+        .card-btn:hover { background: var(--accent-cyan); color: #000; }
+
+        /* Modal de Login seguro */
+        #login-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
+        .login-card { background: var(--surface-card); padding: 2.5rem; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--accent-cyan); position: relative; }
+        .login-input { width: 100%; padding: 0.85rem; margin: 0.6rem 0; background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; color: #fff; outline: none; }
+        .login-input:focus { border-color: var(--accent-cyan); }
+        .close-btn { position: absolute; top: 1rem; right: 1rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
+        
+        footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" class="logo-container">
+            <img src="/logo.png" alt="Ingeniería MyP Salazar Lagos" class="logo-img">
+        </a>
+        
+        <div class="nav-buttons">
+            <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.5rem 1rem; font-size:0.85rem; box-shadow:none;">
+                <i class="fa-solid fa-user-lock"></i> Acceso Equipo
+            </button>
+            <button class="btn-glow" onclick="abrirLogin('cliente')" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.5rem 1rem; font-size:0.85rem; box-shadow:none;">
+                <i class="fa-solid fa-users"></i> Acceso Clientes
+            </button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Soluciones Digitales Inteligentes & Automatización</h1>
+        <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar tu PyME.</p>
+        <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
+            <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
+        </a>
+    </section>
+
+    <section class="container">
+        <div class="section-title">
+            <h2>Nuestros Servicios Principales</h2>
+            <p style="color:var(--text-muted)">Lo que ofrecemos para llevar tu negocio al siguiente nivel digital.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div>
+                    <h3>Landing Pages de Alta Conversión</h3>
+                    <p>Diseño ultrarrápido optimizado para celulares, integración directa a WhatsApp y formularios de captación instantáneos.</p>
+                </div>
+                <a href="https://wa.me/56969176666?text=Me%20interesa%20una%20Landing%20Page" target="_blank" class="card-btn">Consultar por WhatsApp</a>
+            </div>
+            <div class="card">
+                <div>
+                    <h3>Flujos de Automatización (n8n)</h3>
+                    <p>Conectamos tus sistemas (Airtable, Google Drive, Correo) para automatizar procesos repetitivos sin errores humanos.</p>
+                </div>
+                <a href="https://wa.me/56969176666?text=Quiero%20automatizar%20procesos" target="_blank" class="card-btn">Consultar por WhatsApp</a>
+            </div>
+            <div class="card">
+                <div>
+                    <h3>Agentes de IA Conversacional</h3>
+                    <p>Asistentes virtuales inteligentes entrenados con la información de tu empresa para atender clientes 24/7 en WhatsApp.</p>
+                </div>
+                <a href="https://wa.me/56969176666?text=Quiero%20información%20de%20Agentes%20IA" target="_blank" class="card-btn">Consultar por WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Dinámico de Login -->
+    <div id="login-modal">
+        <div class="login-card">
+            <i class="fa-solid fa-xmark close-btn" onclick="cerrarLogin()"></i>
+            <h3 id="modal-title" style="margin-bottom:1.5rem;">Acceso al Sistema</h3>
+            <form onsubmit="enviarLogin(event)">
+                <input type="text" id="usuario" class="login-input" placeholder="Usuario" required>
+                <input type="password" id="password" class="login-input" placeholder="Contraseña" required>
+                <button type="submit" class="btn-glow" style="width:100%; margin-top:1rem; justify-content:center;">Ingresar</button>
+                <p id="error-msg" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;">Credenciales incorrectas</p>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Todos los derechos reservados. | Santiago, Chile</p>
+    </footer>
+
+    <script>
+        function abrirLogin(tipo) {
+            const titulo = document.getElementById('modal-title');
+            const userField = document.getElementById('usuario');
+            
+            if (tipo === 'admin') {
+                titulo.innerText = "Acceso Administrativo (Equipo MyP)";
+                userField.placeholder = "Usuario (ej. masteradmin)";
+            } else {
+                titulo.innerText = "Portal Exclusivo de Clientes";
+                userField.placeholder = "Usuario (ej. cliente)";
+            }
+
+            document.getElementById('login-modal').style.display = 'flex';
+            document.getElementById('error-msg').style.display = 'none';
+        }
+
+        function cerrarLogin() {
+            document.getElementById('login-modal').style.display = 'none';
+        }
+
+        async function enviarLogin(e) {
+            e.preventDefault();
+            const usuario = document.getElementById('usuario').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const respuesta = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario, password })
+                });
+
+                const resultado = await respuesta.json();
+                if (resultado.success) {
+                    window.location.href = resultado.redirect;
+                } else {
+                    document.getElementById('error-msg').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
