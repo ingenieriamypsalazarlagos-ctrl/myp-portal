@@ -283,10 +283,10 @@
             <i class="fa-solid fa-xmark close-btn" onclick="cerrarLogin()"></i>
             <h3 id="modal-title" style="margin-bottom:1.5rem;">Acceso al Sistema</h3>
             <form onsubmit="enviarLogin(event)">
-                <input type="text" id="usuario" class="login-input" placeholder="Usuario" required>
+                <input type="email" id="usuario" class="login-input" placeholder="Correo electrónico" required>
                 <input type="password" id="password" class="login-input" placeholder="Contraseña" required>
                 <button type="submit" class="btn-glow" style="width:100%; margin-top:1rem; justify-content:center;">Ingresar</button>
-                <p id="error-msg" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;">Credenciales incorrectas</p>
+                <p id="error-msg" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;"></p>
             </form>
         </div>
     </div>
@@ -295,46 +295,63 @@
         <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Todos los derechos reservados. | Santiago, Chile</p>
     </footer>
 
-    <script>
+    <!-- Lógica de Firebase Authentication Segura -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHQLLGjYtjHQ6dYiOcBTx8xyRv7X3RUco",
+            authDomain: "ingenieriamyp-auth.firebaseapp.com",
+            projectId: "ingenieriamyp-auth",
+            storageBucket: "ingenieriamyp-auth.firebasestorage.app",
+            messagingSenderId: "834613528522",
+            appId: "1:834613528522:web:e6d63d05970a2ef4d23133",
+            measurementId: "G-3TYPD3EJ7F"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         let tipoUsuarioActual = '';
 
-        function abrirLogin(tipo) {
+        window.abrirLogin = function(tipo) {
             tipoUsuarioActual = tipo;
             const titulo = document.getElementById('modal-title');
             const userField = document.getElementById('usuario');
+            
             if (tipo === 'admin') {
-                titulo.innerText = "Acceso Administrativo (Equipo MyP)";
-                userField.placeholder = "Usuario (ej. admin)";
+                titulo.innerText = "Acceso Administrativo (Gerencia MyP)";
+                userField.placeholder = "Correo de Gerencia";
             } else {
                 titulo.innerText = "Portal Exclusivo de Clientes";
-                userField.placeholder = "Usuario (ej. cliente)";
+                userField.placeholder = "Correo del Cliente";
             }
             document.getElementById('login-modal').style.display = 'flex';
             document.getElementById('error-msg').style.display = 'none';
         }
 
-        function cerrarLogin() { 
+        window.cerrarLogin = function() { 
             document.getElementById('login-modal').style.display = 'none'; 
         }
 
-        function enviarLogin(e) {
+        window.enviarLogin = function(e) {
             e.preventDefault();
-            const usuario = document.getElementById('usuario').value.trim();
+            const email = document.getElementById('usuario').value.trim();
             const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('error-msg');
 
-            if (tipoUsuarioActual === 'admin') {
-                if (usuario === 'admin' && password === '1234') {
-                    window.location.href = 'equipo-dashboard.html';
-                } else {
-                    document.getElementById('error-msg').style.display = 'block';
-                }
-            } else if (tipoUsuarioActual === 'cliente') {
-                if (usuario === 'cliente' && password === '1234') {
-                    window.location.href = 'cliente-dashboard.html';
-                } else {
-                    document.getElementById('error-msg').style.display = 'block';
-                }
-            }
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    if (tipoUsuarioActual === 'admin') {
+                        window.location.href = 'equipo-dashboard.html';
+                    } else {
+                        window.location.href = 'cliente-dashboard.html';
+                    }
+                })
+                .catch((error) => {
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerText = "Correo o contraseña incorrectos.";
+                });
         }
     </script>
 </body>
