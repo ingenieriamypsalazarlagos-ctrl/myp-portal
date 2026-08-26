@@ -246,12 +246,12 @@
                 </div>
             </div>
 
-            <!-- 2. NUEVA SECCIÓN: PORTAL DE CLIENTES (DOMINIOS Y APPS INDIVIDUALES) -->
+            <!-- 2. SECCIÓN: PORTAL DE CLIENTES (DOMINIOS Y VENCIMIENTOS .CL) -->
             <div id="seccion-portal-clientes" class="app-section">
                 <div class="section-header">
-                    <h3><i class="fa-solid fa-globe" style="color: var(--accent-cyan);"></i> Portal de Clientes y Dominios Específicos</h3>
+                    <h3><i class="fa-solid fa-globe" style="color: var(--accent-cyan);"></i> Portal de Clientes, Dominios y Vencimientos (.cl)</h3>
                 </div>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Administra los dominios web independientes de cada pyme (ej: www.clientedonlucho.cl), el estado de sus automatizaciones en n8n y sus dashboards asociados.</p>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Administra los dominios web independientes de cada pyme, su fecha límite de renovación y el estado de sus automatizaciones.</p>
 
                 <div class="form-box" style="background: rgba(6,182,212,0.03); border-color: var(--accent-cyan);">
                     <input type="text" id="pc-empresa" placeholder="Nombre de la Pyme / Cliente">
@@ -267,6 +267,10 @@
                         <option value="En Desarrollo / Configuración">En Desarrollo / Configuración</option>
                         <option value="Mantenimiento">Mantenimiento</option>
                     </select>
+                    <div>
+                        <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Vencimiento Dominio (.cl)</label>
+                        <input type="date" id="pc-vencimiento">
+                    </div>
                     <button class="btn-accion btn-proceso" style="padding: 0.8rem 1.5rem;" onclick="agregarPortalCliente()"><i class="fa-solid fa-plus"></i> Registrar Cliente</button>
                 </div>
 
@@ -278,6 +282,7 @@
                                 <th>Dominio Web Asignado</th>
                                 <th>Servicio Contratado</th>
                                 <th>Estado de Servidor / App</th>
+                                <th>Vencimiento (.cl)</th>
                                 <th>Acción</th>
                             </tr>
                         </thead>
@@ -540,7 +545,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT DEFINITIVO -->
+    <!-- SCRIPT DEFINITIVO INTEGRADO -->
     <script>
         const PASSWORD_SECRETA = "myp2026";
 
@@ -587,10 +592,10 @@
             if(elemento) elemento.classList.add('active');
         }
 
-        // --- PORTAL DE CLIENTES (DOMINIOS Y APPS) ---
+        // --- PORTAL DE CLIENTES, DOMINIOS Y VENCIMIENTOS (.CL) ---
         let portalClientes = JSON.parse(localStorage.getItem('myp_portal_clientes')) || [
-            { id: 1, empresa: "Restaurante Don Lucho", dominio: "www.donlucho.cl", servicio: "Automatización n8n + Sheets", estado: "Activo y Operativo" },
-            { id: 2, empresa: "Club Deportivo Fénix", dominio: "www.clubfenix.cl", servicio: "Dashboard Looker Studio", estado: "Activo y Operativo" }
+            { id: 1, empresa: "Restaurante Don Lucho", dominio: "www.donlucho.cl", servicio: "Automatización n8n + Sheets", estado: "Activo y Operativo", vencimiento: "2026-09-05" },
+            { id: 2, empresa: "Club Deportivo Fénix", dominio: "www.clubfenix.cl", servicio: "Dashboard Looker Studio", estado: "Activo y Operativo", vencimiento: "2027-01-15" }
         ];
 
         function agregarPortalCliente() {
@@ -598,13 +603,15 @@
             const dominio = document.getElementById('pc-dominio').value.trim();
             const servicio = document.getElementById('pc-servicio').value;
             const estado = document.getElementById('pc-estado').value;
+            const vencimiento = document.getElementById('pc-vencimiento').value || "2027-01-01";
 
             if(!empresa || !dominio) { alert("Completa el nombre de la empresa y su dominio web."); return; }
-            portalClientes.push({ id: Date.now(), empresa, dominio, servicio, estado });
+            portalClientes.push({ id: Date.now(), empresa, dominio, servicio, estado, vencimiento });
             localStorage.setItem('myp_portal_clientes', JSON.stringify(portalClientes));
 
             document.getElementById('pc-empresa').value = '';
             document.getElementById('pc-dominio').value = '';
+            document.getElementById('pc-vencimiento').value = '';
             renderizarPortalClientes();
         }
 
@@ -614,19 +621,25 @@
             tbody.innerHTML = '';
 
             if(portalClientes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No hay clientes en el portal.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:2rem;">No hay clientes en el portal.</td></tr>`;
                 return;
             }
 
             portalClientes.forEach(c => {
                 let badge = c.estado.includes('Activo') ? '<span class="badge-status status-completado">Activo</span>' : c.estado.includes('Desarrollo') ? '<span class="badge-status status-proceso">En Desarrollo</span>' : '<span class="badge-status status-pendiente">Mantenimiento</span>';
+                
+                let fechaVenc = c.vencimiento || '2026-12-31';
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${c.empresa}</strong></td>
                     <td style="color:var(--accent-cyan); font-family:monospace;"><i class="fa-solid fa-globe"></i> <a href="https://${c.dominio}" target="_blank" style="color:var(--accent-cyan); text-decoration:none;">${c.dominio}</a></td>
                     <td>${c.servicio}</td>
                     <td>${badge}</td>
-                    <td><button class="btn-accion btn-eliminar" onclick="eliminarPortalCliente(${c.id})"><i class="fa-solid fa-trash"></i></button></td>
+                    <td style="font-weight:600; color:var(--text-main);"><i class="fa-regular fa-calendar"></i> ${fechaVenc}</td>
+                    <td>
+                        <button class="btn-accion btn-proceso" onclick="alert('Enviando recordatorio de renovación de dominio a ${c.empresa}...')"><i class="fa-solid fa-bell"></i> Avisar</button>
+                        <button class="btn-accion btn-eliminar" onclick="eliminarPortalCliente(${c.id})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
