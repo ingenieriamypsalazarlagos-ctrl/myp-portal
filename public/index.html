@@ -7,25 +7,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
-            --bg-dark: #0f172a;        
-            --surface-card: #1e293b;   
+            --bg-dark: #090d16;        
+            --surface-card: #131c31;   
+            --surface-card-hover: #1b2642;
             --accent-cyan: #06b6d4;  
             --accent-blue: #3b82f6;
             --accent-orange: #f97316; 
-            --text-main: #f1f5f9;      
+            --text-main: #f8fafc;      
             --text-muted: #94a3b8;     
-            --border: rgba(255, 255, 255, 0.12);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(6, 182, 212, 0.3);
+            --shadow-card: 0 10px 30px -10px rgba(0,0,0,0.5);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
         
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* HEADER FLOTANTE CON EFECTO GLASS */
         header { 
-            background: rgba(15, 23, 42, 0.95); 
-            backdrop-filter: blur(10px); 
+            background: rgba(15, 23, 42, 0.85); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
             position: sticky; 
             top: 0; 
-            z-index: 100; 
-            padding: 0.5rem 1rem; 
+            z-index: 1000; 
+            padding: 0.8rem 2rem; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -38,32 +44,34 @@
             background: transparent;
             text-decoration: none;
             flex-shrink: 0;
+            transition: transform 0.3s ease;
         }
-        .logo-img { height: 45px; width: auto; object-fit: contain; display: block; }
+        .logo-container:hover { transform: scale(1.02); }
+        .logo-img { height: 42px; width: auto; object-fit: contain; display: block; }
         
-        .nav-links { display: flex; gap: 1.2rem; align-items: center; margin-left: 0.5rem; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: color 0.3s; }
-        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; margin-left: 1rem; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s ease; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); text-shadow: 0 0 10px rgba(6,182,212,0.4); }
         
-        /* Contenedor de los 8 banners superiores */
+        /* COLLAGE DE BANNERS SUPERIOR */
         .header-collage {
             display: flex;
-            gap: 3px;
+            gap: 4px;
             align-items: center;
             justify-content: flex-start;
-            margin: 0 0.5rem;
+            margin: 0 1rem;
             flex-wrap: nowrap;
-            max-width: 440px;
+            max-width: 380px;
             overflow: hidden;
         }
         .header-mini-banner {
             position: relative;
-            width: 50px;
-            height: 32px;
-            border-radius: 4px;
+            width: 44px;
+            height: 28px;
+            border-radius: 6px;
             overflow: hidden;
-            border: 1px solid rgba(6, 182, 212, 0.4);
-            transition: all 0.3s ease;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             flex-shrink: 0;
         }
@@ -71,43 +79,44 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.8);
+            filter: brightness(0.85);
             transition: all 0.3s ease;
         }
         .header-mini-banner:hover {
-            transform: scale(1.15);
+            transform: translateY(-2px) scale(1.1);
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
             z-index: 10;
         }
-        .header-mini-banner:hover img {
-            filter: brightness(1.15);
-        }
+        .header-mini-banner:hover img { filter: brightness(1.15); }
 
-        .nav-buttons { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
+        .nav-buttons { display: flex; gap: 0.8rem; align-items: center; flex-shrink: 0; }
 
-        .btn-glow { 
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); 
-            color: #fff; 
-            padding: 0.9rem 2.2rem; 
-            border-radius: 10px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            border: none; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 0.5rem; 
-            box-shadow: 0 0 20px rgba(6,182,212,0.4); 
+        /* BOTONES DE ACCESO SUPERIOR */
+        .btn-nav-action {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
         }
-        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(6,182,212,0.7); }
-        
-        /* Sección Hero interactiva con imagen de fondo */
+        .btn-nav-action.admin:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); box-shadow: 0 0 10px rgba(6,182,212,0.2); }
+        .btn-nav-action.client { border-color: rgba(249, 115, 22, 0.4); color: var(--accent-orange); }
+        .btn-nav-action.client:hover { border-color: var(--accent-orange); background: rgba(249,115,22,0.1); box-shadow: 0 0 10px rgba(249,115,22,0.2); }
+
+        /* SECCIÓN HERO PRINCIPAL */
         .hero { 
             position: relative;
             text-align: center; 
-            padding: 7rem 2rem 6rem; 
+            padding: 8rem 2rem 6rem; 
             background: url('creacion de adan.jpg') no-repeat center center;
             background-size: cover;
         }
@@ -115,84 +124,182 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(15, 23, 42, 0.35); 
-            transition: background 0.5s ease-in-out;
+            background: linear-gradient(180deg, rgba(9, 13, 22, 0.6) 0%, rgba(9, 13, 22, 0.92) 100%); 
             z-index: 1;
-        }
-        .hero:hover::before {
-            background: rgba(15, 23, 42, 0.85); 
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 850px;
+            max-width: 900px;
             margin: 0 auto;
         }
         .hero h1 { 
-            font-size: 3.2rem; 
-            margin-bottom: 1.2rem; 
+            font-size: 3.5rem; 
+            margin-bottom: 1.5rem; 
             font-weight: 900; 
             color: #ffffff;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
         }
         .hero h1 span {
-            color: var(--accent-cyan);
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .hero p { 
             font-size: 1.2rem; 
-            color: #f1f5f9; 
+            color: var(--text-muted); 
             max-width: 750px; 
             margin: 0 auto 2.5rem; 
-            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+            line-height: 1.7;
         }
         
-        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
-        .section-title { text-align: center; margin-bottom: 3rem; }
-        .section-title h2 { font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .btn-glow { 
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); 
+            color: #fff; 
+            padding: 1rem 2.5rem; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 1rem;
+            border: none; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.8rem; 
+            box-shadow: 0 0 25px rgba(6,182,212,0.35); 
+        }
+        .btn-glow:hover { transform: translateY(-3px); box-shadow: 0 0 35px rgba(6,182,212,0.6); filter: brightness(1.1); }
+
+        /* NUEVA SECCIÓN DE ESTADÍSTICAS DE CONFIANZA */
+        .stats-bar {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: -3rem auto 3rem auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            padding: 0 2rem;
+        }
+        .stat-card {
+            background: rgba(19, 28, 49, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-3px); border-color: var(--accent-cyan); }
+        .stat-card h4 { font-size: 2rem; font-weight: 800; color: var(--accent-cyan); margin-bottom: 0.3rem; }
+        .stat-card p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* CONTENEDOR Y TARJETAS DE SERVICIOS */
+        .container { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; flex: 1; }
+        .section-title { text-align: center; margin-bottom: 3.5rem; }
+        .section-title h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
+        .section-title p { color: var(--text-muted); font-size: 1.1rem; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
-        .card { background: var(--surface-card); border-radius: 16px; padding: 2.5rem 2rem; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
-        .card:hover { border-color: var(--accent-cyan); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(6,182,212,0.15); }
-        .card h3 { font-size: 1.2rem; margin-bottom: 1rem; color: #fff; display: flex; align-items: center; gap: 0.8rem; }
-        .card h3 i { color: var(--accent-cyan); font-size: 1.4rem; }
-        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .card { 
+            background: var(--surface-card); 
+            border-radius: 18px; 
+            padding: 2.5rem 2rem; 
+            border: 1px solid var(--border); 
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .card:hover { 
+            border-color: var(--border-glow); 
+            transform: translateY(-6px); 
+            background: var(--surface-card-hover);
+            box-shadow: 0 15px 35px -10px rgba(6, 182, 212, 0.15); 
+        }
+        .card:hover::before { opacity: 1; }
         
-        .card-btn { background: rgba(6,182,212,0.1); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 0.7rem 1rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.85rem; text-align: center; transition: 0.2s; }
-        .card-btn:hover { background: var(--accent-cyan); color: #000; }
+        .card-icon-wrapper {
+            width: 55px; height: 55px;
+            background: rgba(6, 182, 212, 0.1);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+        .card h3 { font-size: 1.25rem; margin-bottom: 1rem; color: #fff; font-weight: 700; }
+        .card h3 i { color: var(--accent-cyan); font-size: 1.3rem; margin-right: 0.5rem; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6; }
+        
+        .card-btn { 
+            background: rgba(6,182,212,0.08); 
+            border: 1px solid rgba(6,182,212,0.3); 
+            color: var(--accent-cyan); 
+            padding: 0.8rem 1rem; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            text-align: center; 
+            transition: all 0.3s ease; 
+            display: block;
+        }
+        .card-btn:hover { background: var(--accent-cyan); color: #090d16; box-shadow: 0 0 15px rgba(6,182,212,0.4); }
 
         .suggestion-notice {
             text-align: center;
-            margin-top: 2.5rem;
+            margin-top: 4rem;
             color: var(--text-muted);
             font-size: 1.05rem;
+            background: rgba(19, 28, 49, 0.4);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px dashed var(--border);
         }
-        .suggestion-notice a {
-            color: var(--accent-cyan);
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .suggestion-notice a:hover {
-            text-decoration: underline;
-        }
+        .suggestion-notice a { color: var(--accent-cyan); text-decoration: none; font-weight: 700; transition: color 0.2s; }
+        .suggestion-notice a:hover { text-decoration: underline; color: #fff; }
 
-        #login-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
-        .login-card { background: var(--surface-card); padding: 2.5rem; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--accent-cyan); position: relative; }
-        .login-input { width: 100%; padding: 0.85rem; margin: 0.6rem 0; background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; color: #fff; outline: none; }
-        .login-input:focus { border-color: var(--accent-cyan); }
-        .close-btn { position: absolute; top: 1rem; right: 1rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
+        /* MODAL DE LOGIN PROFESIONAL */
+        #login-modal { display: none; position: fixed; inset: 0; background: rgba(5, 8, 15, 0.85); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 2000; padding: 1rem; }
+        .login-card { background: var(--surface-card); padding: 3rem 2.5rem; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; border: 1px solid var(--accent-cyan); box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; }
+        .login-input { width: 100%; padding: 0.9rem 1rem; margin: 0.8rem 0; background: #090d16; border: 1px solid var(--border); border-radius: 10px; color: #fff; outline: none; font-size: 0.95rem; transition: border-color 0.3s; }
+        .login-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px rgba(6,182,212,0.2); }
+        .close-btn { position: absolute; top: 1.2rem; right: 1.2rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; transition: color 0.2s; }
+        .close-btn:hover { color: #fff; }
         
-        footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
+        /* FOOTER ELEGANTE */
+        footer { background: #05080f; padding: 2.5rem 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.9rem; }
 
         @media (max-width: 1250px) { .header-collage { display: none; } }
-        @media (max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 2.2rem; } }
+        @media (max-width: 768px) { 
+            .nav-links { display: none; } 
+            .hero h1 { font-size: 2.4rem; } 
+            header { padding: 0.8rem 1rem; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
     <header>
         <a href="index.html" class="logo-container">
-            <img src="logo.png" alt="Logo" class="logo-img">
+            <img src="logo.png" alt="Ingeniería MyP" class="logo-img">
         </a>
         
         <nav class="nav-links">
@@ -215,89 +322,121 @@
         </div>
 
         <div class="nav-buttons">
-            <!-- Acceso Equipo (Abre modal de Firebase para entrar al panel interno) -->
-            <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none;">
+            <button class="btn-nav-action admin" onclick="abrirLogin('admin')">
                 <i class="fa-solid fa-user-lock"></i> Acceso Equipo
             </button>
-            <!-- Acceso Clientes (Te redirige directamente a tu portal de pymes independiente) -->
-            <a href="portal-cliente.html" class="btn-glow" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem;">
+            <a href="portal-cliente.html" class="btn-nav-action client">
                 <i class="fa-solid fa-users"></i> Acceso Clientes
             </a>
         </div>
     </header>
 
-    <!-- Sección Hero interactiva -->
+    <!-- SECCIÓN HERO -->
     <section class="hero">
         <div class="hero-content">
             <h1>Soluciones Digitales <span>Inteligentes</span> & Automatización</h1>
-            <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar tu PyME.</p>
+            <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar el crecimiento de tu PyME.</p>
             <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
-                <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
+                <i class="fa-brands fa-whatsapp fa-lg"></i> Cotizar por WhatsApp Directo
             </a>
         </div>
     </section>
 
-    <!-- Sección de Servicios Principales -->
+    <!-- BARRA DE ESTADÍSTICAS DE CONFIANZA -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <h4>+100%</h4>
+            <p>Arquitectura Escalable</p>
+        </div>
+        <div class="stat-card">
+            <h4>24/7</h4>
+            <p>Flujos en Piloto Automático</p>
+        </div>
+        <div class="stat-card">
+            <h4>Dominio .CL</h4>
+            <p>Identidad Propia y Segura</p>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE SERVICIOS PRINCIPALES -->
     <section class="container">
         <div class="section-title">
             <h2>Nuestros Servicios Principales</h2>
-            <p style="color:var(--text-muted)">Soluciones robustas orientadas a la optimización, desarrollo y continuidad de tu negocio.</p>
+            <p>Soluciones robustas orientadas a la optimización operativa, desarrollo tecnológico y continuidad de tu negocio.</p>
         </div>
+        
         <div class="grid">
             <div class="card">
                 <div>
-                    <h3><i class="fa-solid fa-network-wired"></i> Flujos de Automatización</h3>
-                    <p>Flujos de automatización para empresas conectamos drive correo google form data studio</p>
+                    <div class="card-icon-wrapper">
+                        <i class="fa-solid fa-network-wired" style="color:var(--accent-cyan); font-size:1.5rem;"></i>
+                    </div>
+                    <h3>Flujos de Automatización</h3>
+                    <p>Conectamos de forma inteligente herramientas como Google Drive, correos, Google Forms y Looker Studio para operar sin intervención manual.</p>
                 </div>
                 <a href="https://wa.me/56969176666?text=Me%20interesa%20automatizar%20procesos" target="_blank" class="card-btn">Consultar por WhatsApp</a>
             </div>
+            
             <div class="card">
                 <div>
-                    <h3><i class="fa-solid fa-code"></i> Páginas Web, Dashboards & APIs</h3>
-                    <p>Diseño y desarrollo a medida de páginas web profesionales, paneles de control (dashboards) interactivos y construcción de APIs conectadas.</p>
+                    <div class="card-icon-wrapper">
+                        <i class="fa-solid fa-code" style="color:var(--accent-cyan); font-size:1.5rem;"></i>
+                    </div>
+                    <h3>Páginas Web, Dashboards & APIs</h3>
+                    <p>Diseño y desarrollo a medida de páginas web profesionales con dominios independientes (.cl), paneles de control interactivos y APIs conectadas.</p>
                 </div>
                 <a href="https://wa.me/56969176666?text=Quiero%20cotizar%20una%20web%20o%20dashboard" target="_blank" class="card-btn">Consultar por WhatsApp</a>
             </div>
+
             <div class="card">
                 <div>
-                    <h3><i class="fa-solid fa-screwdriver-wrench"></i> Mantenimiento Mensual Web</h3>
-                    <p>Servicio periódico de mantenimiento y soporte mensual para garantizar el óptimo funcionamiento, seguridad y actualización de tu página web.</p>
+                    <div class="card-icon-wrapper">
+                        <i class="fa-solid fa-screwdriver-wrench" style="color:var(--accent-cyan); font-size:1.5rem;"></i>
+                    </div>
+                    <h3>Mantenimiento Mensual Web</h3>
+                    <p>Servicio periódico de soporte técnico y mantenimiento mensual para garantizar el óptimo funcionamiento, alta seguridad y actualización de tu sitio.</p>
                 </div>
                 <a href="https://wa.me/56969176666?text=Quiero%20información%20de%20mantenimiento%20web" target="_blank" class="card-btn">Consultar por WhatsApp</a>
             </div>
+
             <div class="card">
                 <div>
-                    <h3><i class="fa-solid fa-brain"></i> Mantenimiento de Flujos & Agentes IA</h3>
-                    <p>Soporte y mantenimiento mensual especializado para flujos de automatización, APIs, agentes conversacionales de Inteligencia Artificial y más.</p>
+                    <div class="card-icon-wrapper">
+                        <i class="fa-solid fa-brain" style="color:var(--accent-cyan); font-size:1.5rem;"></i>
+                    </div>
+                    <h3>Mantenimiento de Flujos & Agentes IA</h3>
+                    <p>Soporte especializado para flujos en n8n, bases de datos y agentes conversacionales entrenados con Inteligencia Artificial.</p>
                 </div>
                 <a href="https://wa.me/56969176666?text=Quiero%20saber%20sobre%20mantenimiento%20de%20flujos%20e%20IA" target="_blank" class="card-btn">Consultar por WhatsApp</a>
             </div>
         </div>
 
         <div class="suggestion-notice">
-            ¿Necesitas otro servicio que no se encuentra en el listado? Déjanos tu sugerencia o solicitud en nuestra <a href="solicitudes.html">bandeja de solicitudes</a>.
+            ¿Necesitas otro servicio que no se encuentra en el listado? Déjanos tu sugerencia o solicitud en nuestra <a href="solicitudes.html">bandeja de solicitudes corporativas</a>.
         </div>
     </section>
 
-    <!-- Modal de Login (Solo para Acceso Equipo / Admin) -->
+    <!-- MODAL DE LOGIN ADMINISTRATIVO -->
     <div id="login-modal">
         <div class="login-card">
             <i class="fa-solid fa-xmark close-btn" onclick="cerrarLogin()"></i>
-            <h3 id="modal-title" style="margin-bottom:1.5rem;">Acceso al Sistema</h3>
+            <h3 style="margin-bottom:0.5rem; color:#fff; font-size:1.5rem;">Acceso Administrativo</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">Credenciales exclusivas para la gerencia de Ingeniería MyP.</p>
             <form onsubmit="enviarLogin(event)">
                 <input type="email" id="usuario" class="login-input" placeholder="Correo de Gerencia" required>
                 <input type="password" id="password" class="login-input" placeholder="Contraseña" required>
-                <button type="submit" class="btn-glow" style="width:100%; margin-top:1rem; justify-content:center;">Ingresar</button>
+                <button type="submit" class="btn-glow" style="width:100%; margin-top:1.2rem; justify-content:center; padding:0.9rem;">Ingresar al Panel</button>
                 <p id="error-msg" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;"></p>
             </form>
         </div>
     </div>
     
+    <!-- PIE DE PÁGINA -->
     <footer>
-        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Todos los derechos reservados. | Santiago, Chile</p>
+        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Arquitectura de Sistemas y Automatización Avanzada. | Santiago, Chile</p>
     </footer>
 
-    <!-- Lógica de Firebase Authentication Segura -->
+    <!-- LÓGICA DE FIREBASE AUTHENTICATION -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -332,7 +471,6 @@
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Al loguearse correctamente el admin, lo manda al panel de control interno
                     window.location.href = 'panel-de-control-equipo.html';
                 })
                 .catch((error) => {
