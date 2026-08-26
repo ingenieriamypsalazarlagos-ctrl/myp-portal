@@ -134,18 +134,17 @@
         .dashboard-frame { background: var(--surface-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem; margin-top: 1.5rem; }
         .dashboard-frame iframe { width: 100%; height: 500px; border: none; border-radius: 8px; }
 
-        /* ESTILOS CALENDARIO ESTILO GOOGLE */
+        /* ESTILOS CALENDARIO */
         .calendar-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; background: var(--surface-card); padding: 1.5rem; border-radius: 14px; border: 1px solid var(--border); }
         .cal-day-header { text-align: center; font-weight: 700; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; padding-bottom: 0.5rem; }
-        .cal-cell { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; min-height: 90px; padding: 8px; font-size: 0.85rem; display: flex; flex-direction: column; gap: 4px; }
+        .cal-cell { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; min-height: 100px; padding: 8px; font-size: 0.8rem; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
         .cal-cell.today { border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--glow-cyan); }
         .cal-date-num { font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
-        .cal-event-tag { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); border-left: 3px solid var(--accent-cyan); padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .cal-event-tag { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); border-left: 3px solid var(--accent-cyan); padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; display: flex; justify-content: space-between; align-items: center; gap: 4px; }
 
-        /* FORMULARIOS DE SOCIOS Y MINUTA */
         .form-box { background: var(--surface-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
-        .form-box input, .form-box select { background: var(--bg-dark); border: 1px solid var(--border); color: #fff; padding: 0.6rem 1rem; border-radius: 8px; outline: none; font-size: 0.9rem; flex: 1; min-width: 200px; }
+        .form-box input, .form-box select { background: var(--bg-dark); border: 1px solid var(--border); color: #fff; padding: 0.6rem 1rem; border-radius: 8px; outline: none; font-size: 0.9rem; flex: 1; min-width: 160px; }
         .form-box input:focus, .form-box select:focus { border-color: var(--accent-cyan); }
     </style>
 </head>
@@ -213,28 +212,24 @@
                 </div>
             </div>
 
-            <!-- 1. SECCIÓN: DASHBOARD VIVO Y ALIMENTADO -->
+            <!-- 1. SECCIÓN: DASHBOARD VIVO -->
             <div id="seccion-dashboard" class="app-section active">
                 <div class="metrics-grid">
                     <div class="metric-card">
                         <div class="header-card"><p>Ingresos Mes</p><i class="fa-solid fa-arrow-trend-up" style="color: var(--accent-green);"></i></div>
                         <h3 id="dash-ingresos" style="color: var(--accent-green);">$2.821.939</h3>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Calculado de finanzas</p>
                     </div>
                     <div class="metric-card">
                         <div class="header-card"><p>Egresos Mes</p><i class="fa-solid fa-arrow-trend-down" style="color: var(--accent-red);"></i></div>
                         <h3 id="dash-egresos" style="color: var(--accent-red);">$650.000</h3>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Gastos operativos</p>
                     </div>
                     <div class="metric-card">
                         <div class="header-card"><p>Solicitudes Pendientes</p><i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-orange);"></i></div>
                         <h3 id="dash-pendientes">0</h3>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Formulario web</p>
                     </div>
                     <div class="metric-card">
                         <div class="header-card"><p>Cuentas / Socios Activos</p><i class="fa-solid fa-users" style="color: var(--accent-cyan);"></i></div>
                         <h3 id="dash-socios">1 / 50</h3>
-                        <p style="font-size: 0.75rem; color: var(--accent-cyan); margin-top: 4px;">Cupos asignados</p>
                     </div>
                 </div>
 
@@ -244,9 +239,9 @@
                 </div>
             </div>
 
-            <!-- 2. SECCIÓN: CALENDARIO ESTILO GOOGLE CALENDAR & MINUTA -->
+            <!-- 2. SECCIÓN: CALENDARIO CON HORA Y REPROGRAMACIÓN -->
             <div id="seccion-calendario" class="app-section">
-                <div class="section-header"><h3><i class="fa-solid fa-calendar-days" style="color: var(--accent-cyan);"></i> Calendario de Reuniones y Disponibilidad</h3></div>
+                <div class="section-header"><h3><i class="fa-solid fa-calendar-days" style="color: var(--accent-cyan);"></i> Calendario, Minuta y Reprogramación</h3></div>
                 
                 <div class="calendar-header-bar">
                     <div style="font-size: 1.2rem; font-weight: 800; color: #fff;"><i class="fa-solid fa-calendar"></i> Vista Mensual - Agosto 2026</div>
@@ -256,22 +251,24 @@
                     </div>
                 </div>
 
-                <!-- Formulario para agendar -->
-                <div class="form-box">
+                <!-- Formulario dinámico para agendar o editar -->
+                <div class="form-box" style="background: rgba(6,182,212,0.05); border-color: var(--accent-cyan);">
+                    <input type="hidden" id="edit-evento-id">
                     <input type="date" id="cal-fecha">
-                    <input type="text" id="cal-titulo" placeholder="Ej: Reunión con Pyme / Bloqueo de hora" style="flex:2;">
+                    <input type="time" id="cal-hora" value="10:00">
+                    <input type="text" id="cal-titulo" placeholder="Ej: Reunión con Pyme / Accidente - Reprogramar" style="flex:2;">
                     <select id="cal-tipo">
                         <option value="Reunión">Reunión Cliente</option>
                         <option value="Proyecto">Nuevo Proyecto</option>
                         <option value="Bloqueado">Tiempo Bloqueado</option>
                     </select>
-                    <button class="btn-accion btn-proceso" style="padding: 0.7rem 1.2rem;" onclick="agregarEventoCal()"><i class="fa-solid fa-plus"></i> Agendar Evento</button>
+                    <button id="btn-guardar-evento" class="btn-accion btn-proceso" style="padding: 0.7rem 1.2rem;" onclick="guardarEventoCal()"><i class="fa-solid fa-plus"></i> Agendar Evento</button>
+                    <button id="btn-cancelar-edicion" class="btn-accion btn-eliminar" style="padding: 0.7rem 1rem; display:none;" onclick="cancelarEdicionCal()">Cancelar</button>
                 </div>
 
                 <!-- Vista Parrilla Mes -->
                 <div id="vista-mes" class="calendar-grid">
                     <div class="cal-day-header">Lun</div><div class="cal-day-header">Mar</div><div class="cal-day-header">Mié</div><div class="cal-day-header">Jue</div><div class="cal-day-header">Vie</div><div class="cal-day-header">Sáb</div><div class="cal-day-header">Dom</div>
-                    <!-- Generado por JS del 1 al 31 de agosto de 2026 -->
                 </div>
 
                 <!-- Vista Listado -->
@@ -279,10 +276,10 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Fecha</th>
+                                <th>Fecha & Hora</th>
                                 <th>Evento / Reunión</th>
                                 <th>Tipo</th>
-                                <th>Acción</th>
+                                <th>Acciones (Modificar / Borrar)</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-cal-lista"></tbody>
@@ -290,14 +287,12 @@
                 </div>
             </div>
 
-            <!-- 3. SECCIÓN: CUENTAS Y SOCIOS (ADMIN 1 + 50 CUENTAS) -->
+            <!-- 3. SECCIÓN: CUENTAS Y SOCIOS -->
             <div id="seccion-socios" class="app-section">
                 <div class="section-header">
-                    <h3><i class="fa-solid fa-users-gear" style="color: var(--accent-cyan);"></i> Gestión de Socios y Rangos (Hasta 50 Cuentas)</h3>
+                    <h3><i class="fa-solid fa-users-gear" style="color: var(--accent-cyan);"></i> Gestión de Socios y Rangos</h3>
                     <span id="contador-cupos-socios" style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: bold;">Cupos: 1 / 50</span>
                 </div>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Aquí el **Admin 1** crea y administra los accesos. Solo 1 cuenta de socio puede tener permisos de modificación (Editor), y el resto queda con rango de jugador/consulta.</p>
-
                 <div class="form-box">
                     <input type="text" id="socio-nombre" placeholder="Nombre y Apellido / Empresa">
                     <input type="email" id="socio-email" placeholder="Correo electrónico">
@@ -307,7 +302,6 @@
                     </select>
                     <button class="btn-accion btn-proceso" style="padding: 0.7rem 1.2rem;" onclick="agregarSocio()"><i class="fa-solid fa-user-plus"></i> Agregar Miembro</button>
                 </div>
-
                 <div class="table-container">
                     <table>
                         <thead>
@@ -319,9 +313,7 @@
                                 <th>Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-socios">
-                            <!-- Se llena por JS -->
-                        </tbody>
+                        <tbody id="tabla-socios"></tbody>
                     </table>
                 </div>
             </div>
@@ -329,7 +321,6 @@
             <!-- 4. SECCIÓN: INGRESOS Y EGRESOS -->
             <div id="seccion-finanzas" class="app-section">
                 <div class="section-header"><h3><i class="fa-solid fa-wallet" style="color: var(--accent-cyan);"></i> Control Financiero</h3></div>
-                
                 <div class="form-box">
                     <input type="date" id="fin-fecha">
                     <input type="text" id="fin-concepto" placeholder="Concepto del movimiento" style="flex:2;">
@@ -340,7 +331,6 @@
                     <input type="number" id="fin-monto" placeholder="Monto ($)">
                     <button class="btn-accion btn-proceso" style="padding: 0.7rem 1.2rem;" onclick="agregarFinanza()"><i class="fa-solid fa-plus"></i> Registrar</button>
                 </div>
-
                 <div class="table-container">
                     <table>
                         <thead>
@@ -352,9 +342,7 @@
                                 <th>Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-finanzas">
-                            <!-- Se llena por JS -->
-                        </tbody>
+                        <tbody id="tabla-finanzas"></tbody>
                     </table>
                 </div>
             </div>
@@ -381,13 +369,6 @@
                                 <td><span class="badge-status status-completado">Pagado</span></td>
                                 <td><button class="btn-accion btn-proceso">Comprobante</button></td>
                             </tr>
-                            <tr>
-                                <td><strong>Junta de Vecinos Los Álamos</strong></td>
-                                <td>Landing Page Corporativa</td>
-                                <td>$350.000</td>
-                                <td><span class="badge-status status-pendiente">Pendiente Cobro</span></td>
-                                <td><button class="btn-accion btn-completar">Recordatorio</button></td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -413,12 +394,6 @@
                                 <td>soporte@cloudlatam.cl</td>
                                 <td><span class="badge-status status-completado">Activo</span></td>
                             </tr>
-                            <tr>
-                                <td><strong>Telecomunicaciones Icetel</strong></td>
-                                <td>Redes y Conectividad Fibra Óptica</td>
-                                <td>contacto@icetel.cl</td>
-                                <td><span class="badge-status status-completado">Aliado Estratégico</span></td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -426,23 +401,13 @@
 
             <!-- 7. SECCIÓN: SOLICITUDES WEB -->
             <div id="seccion-solicitudes" class="app-section">
-                <div class="section-header">
-                    <h3><i class="fa-solid fa-envelope-open-text" style="color: var(--accent-cyan);"></i> Solicitudes del Formulario Web</h3>
-                </div>
-
+                <div class="section-header"><h3><i class="fa-solid fa-envelope-open-text" style="color: var(--accent-cyan);"></i> Solicitudes del Formulario Web</h3></div>
                 <div class="controls-bar">
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="input-buscar" placeholder="Buscar por cliente o correo..." oninput="filtrarSolicitudes()">
-                    </div>
-                    <div class="filter-btns">
-                        <button class="filter-btn active" onclick="cambiarFiltro('TODOS', this)">Todos</button>
-                        <button class="filter-btn" onclick="cambiarFiltro('PENDIENTE', this)">Pendientes</button>
-                        <button class="filter-btn" onclick="cambiarFiltro('EN PROCESO', this)">En Proceso</button>
-                        <button class="filter-btn" onclick="cambiarFiltro('COMPLETADO', this)">Completados</button>
+                        <input type="text" id="input-buscar" placeholder="Buscar por cliente..." oninput="filtrarSolicitudes()">
                     </div>
                 </div>
-
                 <div class="table-container" style="margin-bottom: 3rem;">
                     <table>
                         <thead>
@@ -455,16 +420,14 @@
                                 <th>Estado / Gestión</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-solicitudes">
-                            <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">Cargando...</td></tr>
-                        </tbody>
+                        <tbody id="tabla-solicitudes"></tbody>
                     </table>
                 </div>
             </div>
 
             <!-- 8. SECCIÓN: PAPELERA -->
             <div id="seccion-papelera" class="app-section">
-                <div class="section-header"><h3><i class="fa-solid fa-trash-can" style="color: var(--accent-red);"></i> Papelera de Registros Eliminados</h3></div>
+                <div class="section-header"><h3><i class="fa-solid fa-trash-can" style="color: var(--accent-red);"></i> Papelera</h3></div>
                 <div class="table-container">
                     <table>
                         <thead>
@@ -483,7 +446,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT ERP DEFINITIVO -->
+    <!-- SCRIPT DEFINITIVO -->
     <script>
         const PASSWORD_SECRETA = "myp2026";
 
@@ -523,12 +486,11 @@
         function cambiarSeccion(seccionId, elemento) {
             document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(seccionId).classList.add('active');
-            
             document.querySelectorAll('.sidebar-menu .menu-item').forEach(item => item.classList.remove('active'));
             if(elemento) elemento.classList.add('active');
         }
 
-        // --- 1. SOLICITUDES WEB & DASHBOARD VIVO ---
+        // --- SOLICITUDES ---
         let solicitudes = JSON.parse(localStorage.getItem('myp_solicitudes')) || [
             { id: 1, fecha: "25 Ago 2026, 16:05", nombre: "Mauricio Salazar", email: "mauriciosalazar.f1996@gmail.com", telefono: "+56932257821", mensaje: "quiero ampliar mi negocio dejando dashboard", estado: "PENDIENTE" }
         ];
@@ -539,19 +501,13 @@
             const tbody = document.getElementById('tabla-solicitudes');
             const tbodyPapelera = document.getElementById('tabla-papelera');
             const contadorPendientes = document.getElementById('dash-pendientes');
-            const textoBusqueda = document.getElementById('input-buscar')?.value.toLowerCase() || '';
-            
+            if(!tbody) return;
             tbody.innerHTML = '';
             tbodyPapelera.innerHTML = '';
             let pendientesCount = 0;
 
             let activas = solicitudes.filter(s => s.estado !== 'ELIMINADO');
             let eliminadas = solicitudes.filter(s => s.estado === 'ELIMINADO');
-
-            if (filtroActual !== 'TODOS') activas = activas.filter(s => s.estado === filtroActual);
-            if (textoBusqueda.trim() !== '') {
-                activas = activas.filter(s => s.nombre.toLowerCase().includes(textoBusqueda) || s.email.toLowerCase().includes(textoBusqueda) || s.mensaje.toLowerCase().includes(textoBusqueda));
-            }
 
             solicitudes.forEach(s => { if(s.estado === 'PENDIENTE') pendientesCount++; });
             if(contadorPendientes) contadorPendientes.textContent = pendientesCount;
@@ -592,33 +548,66 @@
             renderizarSolicitudes();
         }
 
-        function cambiarFiltro(filtro, btn) {
-            filtroActual = filtro;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderizarSolicitudes();
-        }
-
-        function filtrarSolicitudes() { renderizarSolicitudes(); }
-
-        // --- 2. CALENDARIO ESTILO GOOGLE CALENDAR ---
+        // --- CALENDARIO CON HORA Y EDICIÓN ---
         let eventosCal = JSON.parse(localStorage.getItem('myp_cal')) || [
-            { id: 1, fecha: "2026-08-28", titulo: "Reunión con Restaurant Don Lucho", tipo: "Reunión" }
+            { id: 1, fecha: "2026-08-28", hora: "15:30", titulo: "Reunión con Restaurant Don Lucho", tipo: "Reunión" }
         ];
 
-        function agregarEventoCal() {
+        function guardarEventoCal() {
+            const editId = document.getElementById('edit-evento-id').value;
             const fecha = document.getElementById('cal-fecha').value;
+            const hora = document.getElementById('cal-hora').value;
             const titulo = document.getElementById('cal-titulo').value;
             const tipo = document.getElementById('cal-tipo').value;
 
-            if(!fecha || !titulo) { alert("Completa la fecha y el título."); return; }
-            eventosCal.push({ id: Date.now(), fecha, titulo, tipo });
+            if(!fecha || !titulo || !hora) { alert("Completa la fecha, la hora y el título."); return; }
+
+            if(editId) {
+                // Modificar evento existente (reprogramar)
+                eventosCal = eventosCal.map(ev => {
+                    if(ev.id == editId) {
+                        return { id: Number(editId), fecha, hora, titulo, tipo };
+                    }
+                    return ev;
+                });
+                cancelarEdicionCal();
+            } else {
+                // Crear nuevo evento
+                eventosCal.push({ id: Date.now(), fecha, hora, titulo, tipo });
+            }
+
             localStorage.setItem('myp_cal', JSON.stringify(eventosCal));
-            
             document.getElementById('cal-titulo').value = '';
             document.getElementById('cal-fecha').value = '';
+            document.getElementById('cal-hora').value = '10:00';
             renderizarCalendarioMes();
             renderizarCalendarioLista();
+        }
+
+        function editarEventoCal(id) {
+            const ev = eventosCal.find(e => e.id === id);
+            if(!ev) return;
+
+            document.getElementById('edit-evento-id').value = ev.id;
+            document.getElementById('cal-fecha').value = ev.fecha;
+            document.getElementById('cal-hora').value = ev.hora || "10:00";
+            document.getElementById('cal-titulo').value = ev.titulo;
+            document.getElementById('cal-tipo').value = ev.tipo;
+
+            document.getElementById('btn-guardar-evento').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Actualizar`;
+            document.getElementById('btn-cancelar-edicion').style.display = 'inline-block';
+            
+            // Subir la vista hacia el formulario si hace falta
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function cancelarEdicionCal() {
+            document.getElementById('edit-evento-id').value = '';
+            document.getElementById('cal-titulo').value = '';
+            document.getElementById('cal-fecha').value = '';
+            document.getElementById('cal-hora').value = '10:00';
+            document.getElementById('btn-guardar-evento').innerHTML = `<i class="fa-solid fa-plus"></i> Agendar Evento`;
+            document.getElementById('btn-cancelar-edicion').style.display = 'none';
         }
 
         function cambiarVistaCal(vista, btn) {
@@ -636,11 +625,8 @@
         function renderizarCalendarioMes() {
             const grid = document.getElementById('vista-mes');
             if(!grid) return;
-            // Mantener los headers de los días
             let html = `<div class="cal-day-header">Lun</div><div class="cal-day-header">Mar</div><div class="cal-day-header">Mié</div><div class="cal-day-header">Jue</div><div class="cal-day-header">Vie</div><div class="cal-day-header">Sáb</div><div class="cal-day-header">Dom</div>`;
             
-            // Agosto 2026 empieza en Sábado (offset de celdas vacías si es necesario, o directo del 1 al 31)
-            // Para simplificar y ver la parrilla limpia de agosto 2026:
             for(let i = 1; i <= 31; i++) {
                 let mesStr = i < 10 ? `0${i}` : `${i}`;
                 let fechaIso = `2026-08-${mesStr}`;
@@ -649,15 +635,10 @@
 
                 let tagsHtml = '';
                 evsDia.forEach(ev => {
-                    tagsHtml += `<div class="cal-event-tag">${ev.titulo}</div>`;
+                    tagsHtml += `<div class="cal-event-tag"><span><strong>${ev.hora}</strong> - ${ev.titulo}</span> <i class="fa-solid fa-pen" style="cursor:pointer;" onclick="editarEventoCal(${ev.id})"></i></div>`;
                 });
 
-                html += `
-                    <div class="cal-cell ${esHoy}">
-                        <div class="cal-date-num">${i}</div>
-                        ${tagsHtml}
-                    </div>
-                `;
+                html += `<div class="cal-cell ${esHoy}"><div class="cal-date-num">${i}</div>${tagsHtml}</div>`;
             }
             grid.innerHTML = html;
         }
@@ -671,41 +652,47 @@
             eventosCal.forEach(ev => {
                 let badge = ev.tipo === 'Reunión' ? '<span class="badge-status status-proceso">Reunión</span>' : ev.tipo === 'Proyecto' ? '<span class="badge-status status-completado">Proyecto</span>' : '<span class="badge-status" style="background:rgba(239,68,68,0.2); color:#ef4444;">Bloqueado</span>';
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><strong>${ev.fecha}</strong></td><td>${ev.titulo}</td><td>${badge}</td><td><button class="btn-accion btn-eliminar" onclick="eliminarEventoCal(${ev.id})"><i class="fa-solid fa-trash"></i></button></td>`;
+                tr.innerHTML = `
+                    <td><strong>${ev.fecha}</strong> <span style="color:var(--accent-cyan); margin-left:6px;"><i class="fa-solid fa-clock"></i> ${ev.hora || 'Todo el día'}</span></td>
+                    <td>${ev.titulo}</td>
+                    <td>${badge}</td>
+                    <td>
+                        <button class="btn-accion btn-proceso" onclick="editarEventoCal(${ev.id})"><i class="fa-solid fa-pen-to-square"></i> Modificar</button>
+                        <button class="btn-accion btn-eliminar" onclick="eliminarEventoCal(${ev.id})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
                 tbody.appendChild(tr);
             });
         }
 
         function eliminarEventoCal(id) {
-            eventosCal = eventosCal.filter(e => e.id !== id);
-            localStorage.setItem('myp_cal', JSON.stringify(eventosCal));
-            renderizarCalendarioMes();
-            renderizarCalendarioLista();
+            if(confirm("¿Estás seguro de cancelar y eliminar este evento?")) {
+                eventosCal = eventosCal.filter(e => e.id !== id);
+                localStorage.setItem('myp_cal', JSON.stringify(eventosCal));
+                renderizarCalendarioMes();
+                renderizarCalendarioLista();
+            }
         }
 
-        // --- 3. GESTIÓN DE SOCIOS Y RANGOS (HASTA 50 CUENTAS) ---
+        // --- SOCIOS ---
         let socios = JSON.parse(localStorage.getItem('myp_socios')) || [
             { id: 1, nombre: "Admin 1 (Mauricio)", email: "mauriciosalazar.f1996@gmail.com", rango: "Admin Principal", permisos: "Control Total" }
         ];
 
         function agregarSocio() {
-            if(socios.length >= 50) { alert("Has alcanzado el límite máximo de 50 cuentas de socios."); return; }
+            if(socios.length >= 50) { alert("Límite de 50 cuentas alcanzado."); return; }
             const nombre = document.getElementById('socio-nombre').value;
             const email = document.getElementById('socio-email').value;
             const rango = document.getElementById('socio-rango').value;
+            if(!nombre || !email) { alert("Completa los campos."); return; }
 
-            if(!nombre || !email) { alert("Completa el nombre y correo del socio."); return; }
-
-            // Validar si ya hay un socio editor
-            if(rango.includes("Editor")) {
-                let existeEditor = socios.some(s => s.rango.includes("Editor"));
-                if(existeEditor) { alert("Ya existe una cuenta con rango de Socio Editor (máximo 1 permitido)."); return; }
+            if(rango.includes("Editor") && socios.some(s => s.rango.includes("Editor"))) {
+                alert("Ya existe un socio con permisos de edición."); return;
             }
 
-            let permisos = rango.includes("Admin") || rango.includes("Editor") ? "Modifica / Edita" : "Solo Lectura (Jugador)";
+            let permisos = rango.includes("Admin") || rango.includes("Editor") ? "Modifica / Edita" : "Solo Lectura";
             socios.push({ id: Date.now(), nombre, email, rango, permisos });
             localStorage.setItem('myp_socios', JSON.stringify(socios));
-
             document.getElementById('socio-nombre').value = '';
             document.getElementById('socio-email').value = '';
             renderizarSocios();
@@ -716,21 +703,14 @@
             const contadorCupos = document.getElementById('contador-cupos-socios');
             const dashSocios = document.getElementById('dash-socios');
             if(!tbody) return;
-
             tbody.innerHTML = '';
             if(contadorCupos) contadorCupos.textContent = `Cupos: ${socios.length} / 50`;
             if(dashSocios) dashSocios.textContent = `${socios.length} / 50`;
 
             socios.forEach(s => {
-                let badge = s.rango.includes("Admin") ? '<span class="badge-status badge-admin">Admin 1</span>' : s.rango.includes("Editor") ? '<span class="badge-status badge-socio">Socio Editor</span>' : '<span class="badge-status badge-jugador">Jugador / Baja</span>';
+                let badge = s.rango.includes("Admin") ? '<span class="badge-status badge-admin">Admin 1</span>' : s.rango.includes("Editor") ? '<span class="badge-status badge-socio">Socio Editor</span>' : '<span class="badge-status badge-jugador">Jugador</span>';
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${s.nombre}</strong></td>
-                    <td>${s.email}</td>
-                    <td>${badge}</td>
-                    <td>${s.permisos}</td>
-                    <td>${s.rango.includes("Admin") ? '<span style="color:var(--text-muted); font-size:0.8rem;">Protegido</span>' : `<button class="btn-accion btn-eliminar" onclick="eliminarSocio(${s.id})"><i class="fa-solid fa-trash"></i> Eliminar</button>`}</td>
-                `;
+                tr.innerHTML = `<td><strong>${s.nombre}</strong></td><td>${s.email}</td><td>${badge}</td><td>${s.permisos}</td><td>${s.rango.includes("Admin") ? '<span style="color:var(--text-muted); font-size:0.8rem;">Protegido</span>' : `<button class="btn-accion btn-eliminar" onclick="eliminarSocio(${s.id})"><i class="fa-solid fa-trash"></i></button>`}</td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -741,11 +721,10 @@
             renderizarSocios();
         }
 
-        // --- 4. FINANZAS (INGRESOS Y EGRESOS EN VIVO) ---
+        // --- FINANZAS ---
         let finanzas = JSON.parse(localStorage.getItem('myp_finanzas')) || [
-            { id: 1, fecha: "24 Ago 2026", concepto: "Desarrollo Dashboard Club Deportivo Fénix", tipo: "Ingreso", monto: 1200000 },
-            { id: 2, fecha: "22 Ago 2026", concepto: "Pago Servidores Hosting y n8n", tipo: "Egreso", monto: 150000 },
-            { id: 3, fecha: "18 Ago 2026", concepto: "Implementación Restaurante Don Lucho", tipo: "Ingreso", monto: 1621939 }
+            { id: 1, fecha: "24 Ago 2026", concepto: "Desarrollo Dashboard Fénix", tipo: "Ingreso", monto: 1200000 },
+            { id: 2, fecha: "22 Ago 2026", concepto: "Pago Servidores Hosting", tipo: "Egreso", monto: 150000 }
         ];
 
         function agregarFinanza() {
@@ -753,14 +732,11 @@
             const concepto = document.getElementById('fin-concepto').value;
             const tipo = document.getElementById('fin-tipo').value;
             const monto = parseFloat(document.getElementById('fin-monto').value);
-
-            if(!fecha || !concepto || isNaN(monto)) { alert("Completa todos los campos de finanzas."); return; }
+            if(!fecha || !concepto || isNaN(monto)) { alert("Completa los datos de finanzas."); return; }
             finanzas.push({ id: Date.now(), fecha, concepto, tipo, monto });
             localStorage.setItem('myp_finanzas', JSON.stringify(finanzas));
-
             document.getElementById('fin-concepto').value = '';
             document.getElementById('fin-monto').value = '';
-            document.getElementById('fin-fecha').value = '';
             renderizarFinanzas();
         }
 
@@ -769,30 +745,17 @@
             const dashIng = document.getElementById('dash-ingresos');
             const dashEgr = document.getElementById('dash-egresos');
             if(!tbody) return;
-
             tbody.innerHTML = '';
-            let totalIngresos = 0;
-            let totalEgresos = 0;
+            let totalIngresos = 0, totalEgresos = 0;
 
             finanzas.forEach(f => {
-                if(f.tipo === 'Ingreso') totalIngresos += f.monto;
-                else totalEgresos += f.monto;
-
+                if(f.tipo === 'Ingreso') totalIngresos += f.monto; else totalEgresos += f.monto;
                 let badge = f.tipo === 'Ingreso' ? '<span class="badge-status status-completado">Ingreso</span>' : '<span class="badge-status status-pendiente">Egreso</span>';
                 let colorMonto = f.tipo === 'Ingreso' ? 'var(--accent-green)' : 'var(--accent-red)';
-                let signo = f.tipo === 'Ingreso' ? '+' : '-';
-
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${f.fecha}</td>
-                    <td>${f.concepto}</td>
-                    <td>${badge}</td>
-                    <td style="color: ${colorMonto}; font-weight: bold;">${signo}$${f.monto.toLocaleString('es-CL')}</td>
-                    <td><button class="btn-accion btn-eliminar" onclick="eliminarFinanza(${f.id})"><i class="fa-solid fa-trash"></i></button></td>
-                `;
+                tr.innerHTML = `<td>${f.fecha}</td><td>${f.concepto}</td><td>${badge}</td><td style="color:${colorMonto}; font-weight:bold;">$${f.monto.toLocaleString('es-CL')}</td><td><button class="btn-accion btn-eliminar" onclick="eliminarFinanza(${f.id})"><i class="fa-solid fa-trash"></i></button></td>`;
                 tbody.appendChild(tr);
             });
-
             if(dashIng) dashIng.textContent = `$${totalIngresos.toLocaleString('es-CL')}`;
             if(dashEgr) dashEgr.textContent = `$${totalEgresos.toLocaleString('es-CL')}`;
         }
