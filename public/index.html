@@ -9,7 +9,7 @@
         :root { 
             --bg-dark: #0f172a;        
             --surface-card: #1e293b;   
-            --accent-cyan: #06b6d4; 
+            --accent-cyan: #06b6d4;  
             --accent-blue: #3b82f6;
             --accent-orange: #f97316; 
             --text-main: #f1f5f9;      
@@ -215,12 +215,14 @@
         </div>
 
         <div class="nav-buttons">
+            <!-- Acceso Equipo (Abre modal de Firebase para entrar al panel interno) -->
             <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none;">
                 <i class="fa-solid fa-user-lock"></i> Acceso Equipo
             </button>
-            <button class="btn-glow" onclick="abrirLogin('cliente')" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none;">
+            <!-- Acceso Clientes (Te redirige directamente a tu portal de pymes independiente) -->
+            <a href="portal-cliente.html" class="btn-glow" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none; text-decoration:none; display:inline-flex; align-items:center; gap:0.4rem;">
                 <i class="fa-solid fa-users"></i> Acceso Clientes
-            </button>
+            </a>
         </div>
     </header>
 
@@ -277,20 +279,20 @@
         </div>
     </section>
 
-    <!-- Modal de Login -->
+    <!-- Modal de Login (Solo para Acceso Equipo / Admin) -->
     <div id="login-modal">
         <div class="login-card">
             <i class="fa-solid fa-xmark close-btn" onclick="cerrarLogin()"></i>
             <h3 id="modal-title" style="margin-bottom:1.5rem;">Acceso al Sistema</h3>
             <form onsubmit="enviarLogin(event)">
-                <input type="email" id="usuario" class="login-input" placeholder="Correo electrónico" required>
+                <input type="email" id="usuario" class="login-input" placeholder="Correo de Gerencia" required>
                 <input type="password" id="password" class="login-input" placeholder="Contraseña" required>
                 <button type="submit" class="btn-glow" style="width:100%; margin-top:1rem; justify-content:center;">Ingresar</button>
                 <p id="error-msg" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;"></p>
             </form>
         </div>
     </div>
-
+    
     <footer>
         <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Todos los derechos reservados. | Santiago, Chile</p>
     </footer>
@@ -312,20 +314,8 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        let tipoUsuarioActual = '';
 
         window.abrirLogin = function(tipo) {
-            tipoUsuarioActual = tipo;
-            const titulo = document.getElementById('modal-title');
-            const userField = document.getElementById('usuario');
-            
-            if (tipo === 'admin') {
-                titulo.innerText = "Acceso Administrativo (Gerencia MyP)";
-                userField.placeholder = "Correo de Gerencia";
-            } else {
-                titulo.innerText = "Portal Exclusivo de Clientes";
-                userField.placeholder = "Correo del Cliente";
-            }
             document.getElementById('login-modal').style.display = 'flex';
             document.getElementById('error-msg').style.display = 'none';
         }
@@ -342,11 +332,8 @@
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    if (tipoUsuarioActual === 'admin') {
-                        window.location.href = 'equipo-dashboard.html';
-                    } else {
-                        window.location.href = 'cliente-dashboard.html';
-                    }
+                    // Al loguearse correctamente el admin, lo manda al panel de control interno
+                    window.location.href = 'panel-de-control-equipo.html';
                 })
                 .catch((error) => {
                     errorMsg.style.display = 'block';
