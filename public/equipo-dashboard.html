@@ -138,7 +138,7 @@
         .dashboard-frame { background: var(--surface-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-top: 2rem; }
         .dashboard-frame iframe { width: 100%; height: 550px; border: none; border-radius: 10px; }
 
-        /* CALENDARIO ESPACIADO Y LIMPIO */
+        /* CALENDARIO */
         .calendar-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; background: var(--surface-card); padding: 2rem; border-radius: 16px; border: 1px solid var(--border); }
         .cal-day-header { text-align: center; font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; padding-bottom: 0.8rem; }
@@ -147,11 +147,10 @@
         .cal-date-num { font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
         .cal-event-tag { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); border-left: 3px solid var(--accent-cyan); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 
-        /* FORMULARIOS ESPACIADOS */
+        /* FORMULARIOS */
         .form-box { background: var(--surface-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; align-items: center; }
         .form-box input, .form-box select { background: var(--bg-dark); border: 1px solid var(--border); color: #fff; padding: 0.8rem 1.2rem; border-radius: 10px; outline: none; font-size: 0.95rem; width: 100%; }
         .form-box input:focus, .form-box select:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--glow-cyan); }
-        .form-box .full-width { grid-column: 1 / -1; }
     </style>
 </head>
 <body>
@@ -182,6 +181,7 @@
             <div class="sidebar-menu">
                 <div class="menu-category">Principal</div>
                 <a onclick="cambiarSeccion('seccion-dashboard', this)" class="menu-item active"><i class="fa-solid fa-chart-line"></i> Dashboard Vivo</a>
+                <a onclick="cambiarSeccion('seccion-portal-clientes', this)" class="menu-item"><i class="fa-solid fa-globe"></i> Portal de Clientes (Dominios)</a>
                 <a onclick="cambiarSeccion('seccion-calendario', this)" class="menu-item"><i class="fa-solid fa-calendar-days"></i> Calendario & Minuta</a>
                 <a onclick="cambiarSeccion('seccion-proyectos', this)" class="menu-item"><i class="fa-solid fa-folder-tree"></i> Catálogo de Proyectos</a>
                 <a onclick="cambiarSeccion('seccion-socios', this)" class="menu-item"><i class="fa-solid fa-users-gear"></i> Cuentas & Socios (50 máx)</a>
@@ -209,7 +209,7 @@
             <div class="top-bar">
                 <div class="greeting">
                     <h1>Centro de Control Empresarial</h1>
-                    <p>Agosto de 2026 • ERP General de Ingeniería MyP</p>
+                    <p>Agosto de 2026 • Gestión de Dominios, Pymes y Analítica</p>
                 </div>
                 <div class="top-actions">
                     <div class="badge-pill" style="border-color: var(--accent-cyan); color: var(--accent-cyan);">
@@ -246,7 +246,49 @@
                 </div>
             </div>
 
-            <!-- 2. SECCIÓN: CALENDARIO -->
+            <!-- 2. NUEVA SECCIÓN: PORTAL DE CLIENTES (DOMINIOS Y APPS INDIVIDUALES) -->
+            <div id="seccion-portal-clientes" class="app-section">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-globe" style="color: var(--accent-cyan);"></i> Portal de Clientes y Dominios Específicos</h3>
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Administra los dominios web independientes de cada pyme (ej: www.clientedonlucho.cl), el estado de sus automatizaciones en n8n y sus dashboards asociados.</p>
+
+                <div class="form-box" style="background: rgba(6,182,212,0.03); border-color: var(--accent-cyan);">
+                    <input type="text" id="pc-empresa" placeholder="Nombre de la Pyme / Cliente">
+                    <input type="text" id="pc-dominio" placeholder="Dominio web (Ej: www.donlucho.cl)">
+                    <select id="pc-servicio">
+                        <option value="Landing / Web + Dominio">Landing / Web + Dominio</option>
+                        <option value="Automatización n8n + Sheets">Automatización n8n + Sheets</option>
+                        <option value="Dashboard Looker Studio">Dashboard Looker Studio</option>
+                        <option value="ERP / Sistema Integral">ERP / Sistema Integral</option>
+                    </select>
+                    <select id="pc-estado">
+                        <option value="Activo y Operativo">Activo y Operativo</option>
+                        <option value="En Desarrollo / Configuración">En Desarrollo / Configuración</option>
+                        <option value="Mantenimiento">Mantenimiento</option>
+                    </select>
+                    <button class="btn-accion btn-proceso" style="padding: 0.8rem 1.5rem;" onclick="agregarPortalCliente()"><i class="fa-solid fa-plus"></i> Registrar Cliente</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente / Pyme</th>
+                                <th>Dominio Web Asignado</th>
+                                <th>Servicio Contratado</th>
+                                <th>Estado de Servidor / App</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-portal-clientes">
+                            <!-- Se llena por JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. SECCIÓN: CALENDARIO -->
             <div id="seccion-calendario" class="app-section">
                 <div class="section-header"><h3><i class="fa-solid fa-calendar-days" style="color: var(--accent-cyan);"></i> Calendario de Reuniones y Minuta</h3></div>
                 
@@ -258,7 +300,6 @@
                     </div>
                 </div>
 
-                <!-- Formulario Calendario Espaciado -->
                 <div class="form-box" style="background: rgba(6,182,212,0.03); border-color: var(--accent-cyan);">
                     <input type="hidden" id="edit-evento-id">
                     <div>
@@ -291,12 +332,10 @@
                     </div>
                 </div>
 
-                <!-- Parrilla Mes -->
                 <div id="vista-mes" class="calendar-grid">
                     <div class="cal-day-header">Lun</div><div class="cal-day-header">Mar</div><div class="cal-day-header">Mié</div><div class="cal-day-header">Jue</div><div class="cal-day-header">Vie</div><div class="cal-day-header">Sáb</div><div class="cal-day-header">Dom</div>
                 </div>
 
-                <!-- Vista Listado -->
                 <div id="vista-lista" class="table-container" style="display:none; margin-top: 1rem;">
                     <table>
                         <thead>
@@ -313,7 +352,7 @@
                 </div>
             </div>
 
-            <!-- 3. SECCIÓN: PROYECTOS -->
+            <!-- 4. SECCIÓN: PROYECTOS -->
             <div id="seccion-proyectos" class="app-section">
                 <div class="section-header"><h3><i class="fa-solid fa-folder-tree" style="color: var(--accent-cyan);"></i> Catálogo de Servicios y Códigos</h3></div>
                 <div class="form-box">
@@ -337,7 +376,7 @@
                 </div>
             </div>
 
-            <!-- 4. SECCIÓN: SOCIOS -->
+            <!-- 5. SECCIÓN: SOCIOS -->
             <div id="seccion-socios" class="app-section">
                 <div class="section-header">
                     <h3><i class="fa-solid fa-users-gear" style="color: var(--accent-cyan);"></i> Gestión de Socios y Rangos</h3>
@@ -368,7 +407,7 @@
                 </div>
             </div>
 
-            <!-- 5. SECCIÓN: FINANZAS -->
+            <!-- 6. SECCIÓN: FINANZAS -->
             <div id="seccion-finanzas" class="app-section">
                 <div class="section-header"><h3><i class="fa-solid fa-wallet" style="color: var(--accent-cyan);"></i> Control Financiero</h3></div>
                 <div class="form-box">
@@ -397,7 +436,7 @@
                 </div>
             </div>
 
-            <!-- 6. SECCIÓN: CENTRAL DE PAGO -->
+            <!-- 7. SECCIÓN: CENTRAL DE PAGO -->
             <div id="seccion-pagos" class="app-section">
                 <div class="section-header"><h3><i class="fa-solid fa-credit-card" style="color: var(--accent-cyan);"></i> Central de Pago y Cobranza</h3></div>
                 <div class="table-container">
@@ -424,10 +463,9 @@
                 </div>
             </div>
 
-            <!-- 7. SECCIÓN: PROVEEDORES (HABILITADA INGRESO Y MODIFICACIÓN) -->
+            <!-- 8. SECCIÓN: PROVEEDORES -->
             <div id="seccion-proveedores" class="app-section">
                 <div class="section-header"><h3><i class="fa-solid fa-truck-field" style="color: var(--accent-cyan);"></i> Directorio de Proveedores</h3></div>
-                
                 <div class="form-box" style="background: rgba(6,182,212,0.03); border-color: var(--accent-cyan);">
                     <input type="text" id="prov-empresa" placeholder="Nombre Empresa / Proveedor">
                     <input type="text" id="prov-rubro" placeholder="Rubro o Servicio">
@@ -439,7 +477,6 @@
                     </select>
                     <button class="btn-accion btn-proceso" style="padding: 0.8rem 1.5rem;" onclick="agregarProveedor()"><i class="fa-solid fa-plus"></i> Registrar Proveedor</button>
                 </div>
-
                 <div class="table-container">
                     <table>
                         <thead>
@@ -451,14 +488,12 @@
                                 <th>Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-proveedores">
-                            <!-- Se llena por JS dinámicamente -->
-                        </tbody>
+                        <tbody id="tabla-proveedores"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 8. SECCIÓN: SOLICITUDES WEB -->
+            <!-- 9. SECCIÓN: SOLICITUDES WEB -->
             <div id="seccion-solicitudes" class="app-section">
                 <div class="section-header"><h3><i class="fa-solid fa-envelope-open-text" style="color: var(--accent-cyan);"></i> Solicitudes Web (SLA)</h3></div>
                 <div class="controls-bar">
@@ -484,7 +519,7 @@
                 </div>
             </div>
 
-            <!-- 9. SECCIÓN: PAPELERA -->
+            <!-- 10. SECCIÓN: PAPELERA -->
             <div id="seccion-papelera" class="app-section">
                 <div class="section-header"><h3><i class="fa-solid fa-trash-can" style="color: var(--accent-red);"></i> Papelera</h3></div>
                 <div class="table-container">
@@ -531,6 +566,7 @@
             renderizarFinanzas();
             renderizarCodigosProyectos();
             renderizarProveedores();
+            renderizarPortalClientes();
         }
 
         function cerrarSesion() {
@@ -551,12 +587,61 @@
             if(elemento) elemento.classList.add('active');
         }
 
+        // --- PORTAL DE CLIENTES (DOMINIOS Y APPS) ---
+        let portalClientes = JSON.parse(localStorage.getItem('myp_portal_clientes')) || [
+            { id: 1, empresa: "Restaurante Don Lucho", dominio: "www.donlucho.cl", servicio: "Automatización n8n + Sheets", estado: "Activo y Operativo" },
+            { id: 2, empresa: "Club Deportivo Fénix", dominio: "www.clubfenix.cl", servicio: "Dashboard Looker Studio", estado: "Activo y Operativo" }
+        ];
+
+        function agregarPortalCliente() {
+            const empresa = document.getElementById('pc-empresa').value.trim();
+            const dominio = document.getElementById('pc-dominio').value.trim();
+            const servicio = document.getElementById('pc-servicio').value;
+            const estado = document.getElementById('pc-estado').value;
+
+            if(!empresa || !dominio) { alert("Completa el nombre de la empresa y su dominio web."); return; }
+            portalClientes.push({ id: Date.now(), empresa, dominio, servicio, estado });
+            localStorage.setItem('myp_portal_clientes', JSON.stringify(portalClientes));
+
+            document.getElementById('pc-empresa').value = '';
+            document.getElementById('pc-dominio').value = '';
+            renderizarPortalClientes();
+        }
+
+        function renderizarPortalClientes() {
+            const tbody = document.getElementById('tabla-portal-clientes');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            if(portalClientes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No hay clientes en el portal.</td></tr>`;
+                return;
+            }
+
+            portalClientes.forEach(c => {
+                let badge = c.estado.includes('Activo') ? '<span class="badge-status status-completado">Activo</span>' : c.estado.includes('Desarrollo') ? '<span class="badge-status status-proceso">En Desarrollo</span>' : '<span class="badge-status status-pendiente">Mantenimiento</span>';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${c.empresa}</strong></td>
+                    <td style="color:var(--accent-cyan); font-family:monospace;"><i class="fa-solid fa-globe"></i> <a href="https://${c.dominio}" target="_blank" style="color:var(--accent-cyan); text-decoration:none;">${c.dominio}</a></td>
+                    <td>${c.servicio}</td>
+                    <td>${badge}</td>
+                    <td><button class="btn-accion btn-eliminar" onclick="eliminarPortalCliente(${c.id})"><i class="fa-solid fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function eliminarPortalCliente(id) {
+            portalClientes = portalClientes.filter(c => c.id !== id);
+            localStorage.setItem('myp_portal_clientes', JSON.stringify(portalClientes));
+            renderizarPortalClientes();
+        }
+
         // --- SOLICITUDES & SLA ---
         let solicitudes = JSON.parse(localStorage.getItem('myp_solicitudes')) || [
             { id: 1, fecha: "25 Ago 2026, 16:05", timestamp: Date.now() - 200000000, nombre: "Mauricio Salazar", email: "mauriciosalazar.f1996@gmail.com", telefono: "+56932257821", mensaje: "quiero ampliar mi negocio dejando dashboard", estado: "PENDIENTE" }
         ];
-
-        let filtroActual = 'TODOS';
 
         function renderizarSolicitudes() {
             const tbody = document.getElementById('tabla-solicitudes');
@@ -741,7 +826,7 @@
             }
         }
 
-        // --- PROVEEDORES DINÁMICOS ---
+        // --- PROVEEDORES ---
         let proveedores = JSON.parse(localStorage.getItem('myp_proveedores')) || [
             { id: 1, empresa: "Cloud Services Latam", rubro: "Servidores VPS", contacto: "soporte@cloudlatam.cl", estado: "Activo" }
         ];
@@ -766,22 +851,10 @@
             const tbody = document.getElementById('tabla-proveedores');
             if(!tbody) return;
             tbody.innerHTML = '';
-
-            if(proveedores.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No hay proveedores registrados.</td></tr>`;
-                return;
-            }
-
             proveedores.forEach(p => {
                 let badge = p.estado === 'Activo' ? '<span class="badge-status status-completado">Activo</span>' : p.estado === 'Aliado Estratégico' ? '<span class="badge-status status-proceso">Aliado Estratégico</span>' : '<span class="badge-status status-pendiente">Inactivo</span>';
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${p.empresa}</strong></td>
-                    <td>${p.rubro}</td>
-                    <td style="color:var(--accent-cyan);">${p.contacto}</td>
-                    <td>${badge}</td>
-                    <td><button class="btn-accion btn-eliminar" onclick="eliminarProveedor(${p.id})"><i class="fa-solid fa-trash"></i></button></td>
-                `;
+                tr.innerHTML = `<td><strong>${p.empresa}</strong></td><td>${p.rubro}</td><td style="color:var(--accent-cyan);">${p.contacto}</td><td>${badge}</td><td><button class="btn-accion btn-eliminar" onclick="eliminarProveedor(${p.id})"><i class="fa-solid fa-trash"></i></button></td>`;
                 tbody.appendChild(tr);
             });
         }
