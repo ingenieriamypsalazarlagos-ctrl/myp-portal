@@ -3,10 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingeniería MyP - Soluciones Digitales & Automatización</title>
     <title>Ingeniería MyP - Arquitectura de Sistemas y Automatización</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
+            --bg-dark: #0f172a;        
+            --surface-card: #1e293b;   
+            --accent-cyan: #06b6d4; 
+            --accent-blue: #3b82f6;
+            --accent-orange: #f97316; 
+            --text-main: #f1f5f9;      
+            --text-muted: #94a3b8;     
+            --border: rgba(255, 255, 255, 0.12);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+        
+        header { 
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(10px); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            padding: 0.5rem 1rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border); 
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            background: transparent;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .logo-img { height: 45px; width: auto; object-fit: contain; display: block; }
+        
+        .nav-links { display: flex; gap: 1.2rem; align-items: center; margin-left: 0.5rem; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+        
+        /* Contenedor de los 8 banners superiores */
+        .header-collage {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+            justify-content: flex-start;
+            margin: 0 0.5rem;
+            flex-wrap: nowrap;
+            max-width: 440px;
+            overflow: hidden;
+        }
+        .header-mini-banner {
+            position: relative;
+            width: 50px;
+            height: 32px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .header-mini-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+            transition: all 0.3s ease;
+        }
+        .header-mini-banner:hover {
+            transform: scale(1.15);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+            z-index: 10;
+        }
+        .header-mini-banner:hover img {
+            filter: brightness(1.15);
+        }
+
+        .nav-buttons { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
+
+        .btn-glow { 
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); 
+            color: #fff; 
+            padding: 0.9rem 2.2rem; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            border: none; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.5rem; 
+            box-shadow: 0 0 20px rgba(6,182,212,0.4); 
+        }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(6,182,212,0.7); }
+        
+        /* Sección Hero interactiva con imagen de fondo */
+        .hero { 
+            position: relative;
+            text-align: center; 
+            padding: 7rem 2rem 6rem; 
+            background: url('creacion de adan.jpg') no-repeat center center;
+            background-size: cover;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.35); 
+            transition: background 0.5s ease-in-out;
+            z-index: 1;
+        }
+        .hero:hover::before {
+            background: rgba(15, 23, 42, 0.85); 
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        .hero h1 { 
+            font-size: 3.2rem; 
+            margin-bottom: 1.2rem; 
+            font-weight: 900; 
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+        }
+        .hero h1 span {
+            color: var(--accent-cyan);
+        }
+        .hero p { 
+            font-size: 1.2rem; 
+            color: #f1f5f9; 
+            max-width: 750px; 
+            margin: 0 auto 2.5rem; 
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+        .section-title { text-align: center; margin-bottom: 3rem; }
+        .section-title h2 { font-size: 2.3rem; font-weight: 800; margin-bottom: 0.5rem; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
+        .card { background: var(--surface-card); border-radius: 16px; padding: 2.5rem 2rem; border: 1px solid var(--border); transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+        .card:hover { border-color: var(--accent-cyan); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(6,182,212,0.15); }
+        .card h3 { font-size: 1.2rem; margin-bottom: 1rem; color: #fff; display: flex; align-items: center; gap: 0.8rem; }
+        .card h3 i { color: var(--accent-cyan); font-size: 1.4rem; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+        
+        .card-btn { background: rgba(6,182,212,0.1); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); padding: 0.7rem 1rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.85rem; text-align: center; transition: 0.2s; }
+        .card-btn:hover { background: var(--accent-cyan); color: #000; }
+
+        .suggestion-notice {
+            text-align: center;
+            margin-top: 2.5rem;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+        .suggestion-notice a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .suggestion-notice a:hover {
+            text-decoration: underline;
             --bg-dark: #0f172a; --surface-card: #1e293b; --surface-hover: #334155;
             --accent-cyan: #06b6d4; --accent-blue: #3b82f6; --accent-green: #10b981;
             --text-main: #f8fafc; --text-muted: #94a3b8; --border: rgba(255, 255, 255, 0.08);
@@ -15,6 +183,16 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
+        #login-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
+        .login-card { background: var(--surface-card); padding: 2.5rem; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--accent-cyan); position: relative; }
+        .login-input { width: 100%; padding: 0.85rem; margin: 0.6rem 0; background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; color: #fff; outline: none; }
+        .login-input:focus { border-color: var(--accent-cyan); }
+        .close-btn { position: absolute; top: 1rem; right: 1rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
+        
+        footer { background: #0b0f19; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
+
+        @media (max-width: 1250px) { .header-collage { display: none; } }
+        @media (max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 2.2rem; } }
         /* HEADER Y NAVEGACIÓN */
         header { 
             background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px); padding: 1.2rem 3rem; 
@@ -60,10 +238,38 @@
 
     <!-- BARRA SUPERIOR CON ACCESO A CLIENTES Y ADMIN -->
     <header>
+        <a href="index.html" class="logo-container">
+            <img src="logo.png" alt="Logo" class="logo-img">
         <a href="index.html" class="logo-area">
             <i class="fa-solid fa-square-root-variable"></i> Ingeniería MyP
         </a>
+        
+        <nav class="nav-links">
+            <a href="index.html" class="active">Inicio</a>
+            <a href="quienessomos.html">Quiénes Somos</a>
+            <a href="precios.html">Precios y Planes</a>
+            <a href="solicitudes.html">Solicitudes</a>
+            <a href="faq.html">Preguntas Frecuentes</a>
+        </nav>
+
+        <div class="header-collage">
+            <div class="header-mini-banner" title="ChatGPT"><img src="ChatGPT.jpg" alt="ChatGPT"></div>
+            <div class="header-mini-banner" title="Claude"><img src="Claude.jpg" alt="Claude"></div>
+            <div class="header-mini-banner" title="Datastudio"><img src="Datastudio.jpg" alt="Datastudio"></div>
+            <div class="header-mini-banner" title="Gemini"><img src="Gemini.jpg" alt="Gemini"></div>
+            <div class="header-mini-banner" title="Google"><img src="Google.jpg" alt="Google"></div>
+            <div class="header-mini-banner" title="Googledrive"><img src="Googledrive.jpg" alt="Googledrive"></div>
+            <div class="header-mini-banner" title="Googleforms"><img src="Googleforms.jpg" alt="Googleforms"></div>
+            <div class="header-mini-banner" title="N8N"><img src="N8N.jpg" alt="N8N"></div>
+        </div>
+
         <div class="nav-buttons">
+            <button class="btn-glow" onclick="abrirLogin('admin')" style="background:transparent; border:1px solid var(--accent-cyan); color:var(--accent-cyan); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none;">
+                <i class="fa-solid fa-user-lock"></i> Acceso Equipo
+            </button>
+            <button class="btn-glow" onclick="abrirLogin('cliente')" style="background:transparent; border:1px solid var(--accent-orange); color:var(--accent-orange); padding:0.4rem 0.8rem; font-size:0.75rem; box-shadow:none;">
+                <i class="fa-solid fa-users"></i> Acceso Clientes
+            </button>
             <!-- BOTÓN QUE LLEVA DIRECTO AL PORTAL DE CLIENTES -->
             <a href="portal-cliente.html" class="btn-portal">
                 <i class="fa-solid fa-lock"></i> Acceso Clientes
@@ -75,36 +281,155 @@
         </div>
     </header>
 
+    <!-- Sección Hero interactiva -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Soluciones Digitales <span>Inteligentes</span> & Automatización</h1>
+            <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar tu PyME.</p>
+            <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
+                <i class="fa-brands fa-whatsapp"></i> Cotizar por WhatsApp Directo
+            </a>
     <!-- SECCIÓN PRINCIPAL DE LA WEB -->
     <div class="container">
         <div class="hero">
             <h1>Automatización Avanzada y Sistemas a Medida</h1>
             <p>Optimizamos los flujos operativos de pymes e industrias mediante arquitecturas de datos en la nube, paneles interactivos y flujos automatizados de alta eficiencia.</p>
         </div>
+    </section>
 
+    <!-- Sección de Servicios Principales -->
+    <section class="container">
+        <div class="section-title">
+            <h2>Nuestros Servicios Principales</h2>
+            <p style="color:var(--text-muted)">Soluciones robustas orientadas a la optimización, desarrollo y continuidad de tu negocio.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div>
+                    <h3><i class="fa-solid fa-network-wired"></i> Flujos de Automatización</h3>
+                    <p>Flujos de automatización para empresas conectamos drive correo google form data studio</p>
+                </div>
+                <a href="https://wa.me/56969176666?text=Me%20interesa%20automatizar%20procesos" target="_blank" class="card-btn">Consultar por WhatsApp</a>
         <div class="services-grid">
             <div class="service-card">
                 <i class="fa-solid fa-globe"></i>
                 <h3>Desarrollo Web & Dominios</h3>
                 <p>Creamos y administramos sitios web profesionales y landing pages con dominios independientes (.cl) para cada empresa.</p>
             </div>
+            <div class="card">
+                <div>
+                    <h3><i class="fa-solid fa-code"></i> Páginas Web, Dashboards & APIs</h3>
+                    <p>Diseño y desarrollo a medida de páginas web profesionales, paneles de control (dashboards) interactivos y construcción de APIs conectadas.</p>
+                </div>
+                <a href="https://wa.me/56969176666?text=Quiero%20cotizar%20una%20web%20o%20dashboard" target="_blank" class="card-btn">Consultar por WhatsApp</a>
             <div class="service-card">
                 <i class="fa-solid fa-bolt"></i>
                 <h3>Automatización con n8n</h3>
                 <p>Conectamos tus formularios, bases de datos en Google Sheets y sistemas operativos para que funcionen en piloto automático.</p>
             </div>
+            <div class="card">
+                <div>
+                    <h3><i class="fa-solid fa-screwdriver-wrench"></i> Mantenimiento Mensual Web</h3>
+                    <p>Servicio periódico de mantenimiento y soporte mensual para garantizar el óptimo funcionamiento, seguridad y actualización de tu página web.</p>
+                </div>
+                <a href="https://wa.me/56969176666?text=Quiero%20información%20de%20mantenimiento%20web" target="_blank" class="card-btn">Consultar por WhatsApp</a>
             <div class="service-card">
                 <i class="fa-solid fa-chart-pie"></i>
                 <h3>Dashboards Gerenciales</h3>
                 <p>Visualiza métricas en tiempo real con analíticas profesionales integradas para la toma de decisiones empresariales.</p>
             </div>
+            <div class="card">
+                <div>
+                    <h3><i class="fa-solid fa-brain"></i> Mantenimiento de Flujos & Agentes IA</h3>
+                    <p>Soporte y mantenimiento mensual especializado para flujos de automatización, APIs, agentes conversacionales de Inteligencia Artificial y más.</p>
+                </div>
+                <a href="https://wa.me/56969176666?text=Quiero%20saber%20sobre%20mantenimiento%20de%20flujos%20e%20IA" target="_blank" class="card-btn">Consultar por WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="suggestion-notice">
+            ¿Necesitas otro servicio que no se encuentra en el listado? Déjanos tu sugerencia o solicitud en nuestra <a href="solicitudes.html">bandeja de solicitudes</a>.
+        </div>
+    </section>
+
+    <!-- Modal de Login -->
+    <div id="login-modal">
+        <div class="login-card">
+            <i class="fa-solid fa-xmark close-btn" onclick="cerrarLogin()"></i>
+            <h3 id="modal-title" style="margin-bottom:1.5rem;">Acceso al Sistema</h3>
+            <form onsubmit="enviarLogin(event)">
+                <input type="email" id="usuario" class="login-input" placeholder="Correo electrónico" required>
+                <input type="password" id="password" class="login-input" placeholder="Contraseña" required>
+                <button type="submit" class="btn-glow" style="width:100%; margin-top:1rem; justify-content:center;">Ingresar</button>
+                <p id="error-msg" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;"></p>
+            </form>
         </div>
     </div>
 
     <!-- PIE DE PÁGINA -->
     <footer>
+        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Todos los derechos reservados. | Santiago, Chile</p>
         <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Arquitectura de Sistemas y Automatización Avanzada.</p>
     </footer>
 
+    <!-- Lógica de Firebase Authentication Segura -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAHQLLGjYtjHQ6dYiOcBTx8xyRv7X3RUco",
+            authDomain: "ingenieriamyp-auth.firebaseapp.com",
+            projectId: "ingenieriamyp-auth",
+            storageBucket: "ingenieriamyp-auth.firebasestorage.app",
+            messagingSenderId: "834613528522",
+            appId: "1:834613528522:web:e6d63d05970a2ef4d23133",
+            measurementId: "G-3TYPD3EJ7F"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        let tipoUsuarioActual = '';
+
+        window.abrirLogin = function(tipo) {
+            tipoUsuarioActual = tipo;
+            const titulo = document.getElementById('modal-title');
+            const userField = document.getElementById('usuario');
+            
+            if (tipo === 'admin') {
+                titulo.innerText = "Acceso Administrativo (Gerencia MyP)";
+                userField.placeholder = "Correo de Gerencia";
+            } else {
+                titulo.innerText = "Portal Exclusivo de Clientes";
+                userField.placeholder = "Correo del Cliente";
+            }
+            document.getElementById('login-modal').style.display = 'flex';
+            document.getElementById('error-msg').style.display = 'none';
+        }
+
+        window.cerrarLogin = function() { 
+            document.getElementById('login-modal').style.display = 'none'; 
+        }
+
+        window.enviarLogin = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('usuario').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    if (tipoUsuarioActual === 'admin') {
+                        window.location.href = 'equipo-dashboard.html';
+                    } else {
+                        window.location.href = 'cliente-dashboard.html';
+                    }
+                })
+                .catch((error) => {
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerText = "Correo o contraseña incorrectos.";
+                });
+        }
+    </script>
 </body>
 </html>
