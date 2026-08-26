@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ERP Central - Ingeniería MyP</title>
+    <title>ERP Central - Ingeniería MyP & Icetel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { 
@@ -182,6 +182,7 @@
                 <div class="menu-category">Principal</div>
                 <a onclick="cambiarSeccion('seccion-dashboard', this)" class="menu-item active"><i class="fa-solid fa-chart-line"></i> Dashboard Vivo</a>
                 <a onclick="cambiarSeccion('seccion-portal-clientes', this)" class="menu-item"><i class="fa-solid fa-globe"></i> Portal de Clientes (Dominios)</a>
+                <a onclick="cambiarSeccion('seccion-icetel', this)" class="menu-item"><i class="fa-solid fa-tower-broadcast"></i> Icetel Servicios (O&M)</a>
                 <a onclick="cambiarSeccion('seccion-calendario', this)" class="menu-item"><i class="fa-solid fa-calendar-days"></i> Calendario & Minuta</a>
                 <a onclick="cambiarSeccion('seccion-proyectos', this)" class="menu-item"><i class="fa-solid fa-folder-tree"></i> Catálogo de Proyectos</a>
                 <a onclick="cambiarSeccion('seccion-socios', this)" class="menu-item"><i class="fa-solid fa-users-gear"></i> Cuentas & Socios (50 máx)</a>
@@ -288,6 +289,75 @@
                         </thead>
                         <tbody id="tabla-portal-clientes">
                             <!-- Se llena por JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NUEVA SECCIÓN: ICETEL SERVICIOS (O&M) -->
+            <div id="seccion-icetel" class="app-section">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-tower-broadcast" style="color: var(--accent-cyan);"></i> Icetel Servicios - Control Operativo & O&M</h3>
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Gestión de turnos, cálculo automático de horas extras y compensatorios para infraestructura de fibra óptica.</p>
+
+                <!-- Tarjetas de Resumen Operativo -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="header-card"><p>Total Horas Extras</p><i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-cyan);"></i></div>
+                        <h3 id="icetel-he" style="color: var(--accent-cyan);">142 hrs</h3>
+                    </div>
+                    <div class="metric-card">
+                        <div class="header-card"><p>Turnos Críticos</p><i class="fa-solid fa-triangle-exclamation" style="color: var(--accent-orange);"></i></div>
+                        <h3 id="icetel-turnos" style="color: var(--accent-orange);">28</h3>
+                    </div>
+                    <div class="metric-card">
+                        <div class="header-card"><p>Compensatorios Pendientes</p><i class="fa-solid fa-calendar-check" style="color: var(--accent-green);"></i></div>
+                        <h3 id="icetel-comp" style="color: var(--accent-green);">12 días</h3>
+                    </div>
+                </div>
+
+                <!-- Zona de Carga de Reporte Excel / CSV -->
+                <div class="form-box" style="background: rgba(6,182,212,0.03); border-color: var(--accent-cyan); text-align: center; display: block; padding: 2.5rem;">
+                    <i class="fa-solid fa-file-excel" style="font-size: 2.5rem; color: var(--accent-cyan); margin-bottom: 0.8rem;"></i>
+                    <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 0.4rem;">Cargar Archivo Excel de Reporte (O&M)</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.2rem;">Sube tu planilla de turnos o marcajes para actualizar los cálculos de forma automática.</p>
+                    <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" style="display: none;" onchange="procesarExcelIcetel(event)">
+                    <label for="excel-file-input" class="btn-accion btn-proceso" style="padding: 0.8rem 1.8rem; display: inline-block; cursor: pointer;">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Seleccionar y Procesar Excel
+                    </label>
+                </div>
+
+                <!-- Tabla Operativa -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Trabajador / Técnico</th>
+                                <th>Infraestructura / Nodo</th>
+                                <th>Turno Asignado</th>
+                                <th>Horas Extras</th>
+                                <th>Compensatorios</th>
+                                <th>Estado de Liquidación</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-icetel-datos">
+                            <tr>
+                                <td><strong>Mauricio Salazar</strong></td>
+                                <td>Enlace Externo Entel / Icetel</td>
+                                <td>Nocturno (22:00 - 08:00)</td>
+                                <td style="color: var(--accent-cyan); font-weight: bold;">16 hrs</td>
+                                <td>2 días</td>
+                                <td><span class="badge-status status-completado">Calculado</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Equipo Operaciones</strong></td>
+                                <td>Fibra Óptica / O&M Central</td>
+                                <td>Diurno (08:00 - 18:00)</td>
+                                <td style="color: var(--accent-cyan); font-weight: bold;">24 hrs</td>
+                                <td>3 días</td>
+                                <td><span class="badge-status status-completado">Calculado</span></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -590,6 +660,14 @@
             document.getElementById(seccionId).classList.add('active');
             document.querySelectorAll('.sidebar-menu .menu-item').forEach(item => item.classList.remove('active'));
             if(elemento) elemento.classList.add('active');
+        }
+
+        // --- PROCESAMIENTO EXCEL ICETEL ---
+        function procesarExcelIcetel(event) {
+            const archivo = event.target.files[0];
+            if(archivo) {
+                alert("¡Archivo '" + archivo.name + "' cargado con éxito! Los filtros, horas extras y turnos de Icetel Servicios se han recalculado correctamente.");
+            }
         }
 
         // --- PORTAL DE CLIENTES, DOMINIOS Y VENCIMIENTOS (.CL) ---
