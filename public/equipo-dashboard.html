@@ -23,7 +23,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* HEADER DEL PANEL */
         header { 
             background: rgba(15, 23, 42, 0.85); 
             backdrop-filter: blur(16px); 
@@ -64,7 +63,6 @@
         }
         .btn-logout:hover { background: #ef4444; color: #fff; box-shadow: 0 0 10px rgba(239,68,68,0.4); }
 
-        /* CONTENEDOR PRINCIPAL */
         .container { max-width: 1300px; margin: 0 auto; padding: 3rem 2rem; flex: 1; width: 100%; }
         
         .welcome-banner {
@@ -83,7 +81,6 @@
         .welcome-banner h1 { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; }
         .welcome-banner p { color: var(--text-muted); font-size: 1rem; }
 
-        /* GRID DE TARJETAS DE ACCESO RÁPIDO */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -103,7 +100,6 @@
         .metric-card .value { font-size: 1.8rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: space-between; }
         .metric-card .value i { color: var(--accent-cyan); font-size: 1.5rem; }
 
-        /* TABLA INTELIGENTE DE CLIENTES Y VENCIMIENTOS */
         .management-section {
             background: var(--surface-card);
             border: 1px solid var(--border);
@@ -136,7 +132,6 @@
         td { padding: 1.1rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-main); }
         tr:hover td { background: rgba(255,255,255,0.02); }
 
-        /* FOOTER */
         footer { background: #05080f; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.9rem; }
 
         @media (max-width: 768px) {
@@ -147,7 +142,6 @@
 </head>
 <body>
 
-    <!-- HEADER DE GESTIÓN INTERNA -->
     <header>
         <a href="index.html" class="logo-container">
             <img src="logo.png" alt="Ingeniería MyP" class="logo-img">
@@ -160,10 +154,8 @@
         </div>
     </header>
 
-    <!-- CONTENIDO PRINCIPAL DEL PANEL -->
     <div class="container">
         
-        <!-- BIENVENIDA -->
         <div class="welcome-banner">
             <div>
                 <h1>Panel de Control Gerencial</h1>
@@ -174,7 +166,6 @@
             </a>
         </div>
 
-        <!-- TARJETAS DE MÉTRICAS RÁPIDAS -->
         <div class="metrics-grid">
             <div class="metric-card">
                 <h3>Clientes Activos</h3>
@@ -190,7 +181,6 @@
             </div>
         </div>
 
-        <!-- SECCIÓN DE CONTROL OPERATIVO DE CLIENTES Y DOMINIOS (.CL) -->
         <div class="management-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
                 <div>
@@ -216,7 +206,6 @@
                         </tr>
                     </thead>
                     <tbody id="tabla-clientes-body">
-                        <!-- Fila de ejemplo 1 (Alerta próxima) -->
                         <tr>
                             <td style="font-weight: 600; color: #fff;">Restaurante Don Lucho</td>
                             <td style="color: var(--text-muted);">Web + Dominio .cl</td>
@@ -230,7 +219,6 @@
                                 </button>
                             </td>
                         </tr>
-                        <!-- Fila de ejemplo 2 -->
                         <tr>
                             <td style="font-weight: 600; color: #fff;">Fénix Logística</td>
                             <td style="color: var(--text-muted);">Automatización n8n</td>
@@ -249,12 +237,10 @@
 
     </div>
 
-    <!-- FOOTER -->
     <footer>
         <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Panel de Administración Interno. | Santiago, Chile</p>
     </footer>
 
-    <!-- LÓGICA DE FIREBASE Y SESIÓN -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -272,15 +258,12 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Seguridad: Verificar si el usuario está autenticado al cargar el panel
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                // Si no hay sesión iniciada, lo devuelve al index
                 window.location.href = 'index.html';
             }
         });
 
-        // Función para cerrar sesión de forma segura
         window.cerrarSesion = function() {
             signOut(auth).then(() => {
                 window.location.href = 'index.html';
