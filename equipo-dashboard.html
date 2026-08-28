@@ -69,6 +69,10 @@
         .iframe-wrapper { flex: 1; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-card); border: 1px solid var(--border); background: #ffffff; min-height: 700px; }
         .iframe-wrapper iframe { width: 100%; height: 100%; border: none; min-height: 700px; }
 
+        .grid-graficos { display: grid; grid-template-columns: 1fr; gap: 1.5rem; flex: 1; }
+        .card-grafico { background: var(--surface-card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; min-height: 600px; }
+        .card-grafico h3 { color: var(--accent-cyan); margin-bottom: 0.8rem; font-size: 1.1rem; }
+
         .filter-module { background: var(--surface-card); border: 1px solid var(--border); border-radius: 18px; padding: 2rem; box-shadow: var(--shadow-card); }
         .filter-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
         .filter-controls { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -81,6 +85,14 @@
         tr:hover td { background: var(--surface-card-hover); color: #fff; }
         
         .col-correo { color: var(--accent-cyan) !important; font-size: 0.85rem; }
+
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 1.2rem; }
+        .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .stat-icon.cyan { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); }
+        .stat-icon.orange { background: rgba(249, 115, 22, 0.15); color: var(--accent-orange); }
+        .stat-info h4 { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; text-transform: uppercase; }
+        .stat-info span { font-size: 1.6rem; font-weight: 700; color: #fff; }
 
         footer { background: #05080f; padding: 1.5rem 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.85rem; }
     </style>
@@ -107,11 +119,14 @@
                 <a class="submenu-item active" id="btn-graficos" onclick="cambiarVista('vista-graficos', 'btn-graficos')">
                     <i class="fa-solid fa-chart-line"></i> Gráfico e indicadores
                 </a>
+                <a class="submenu-item" id="btn-solicitudes" onclick="cambiarVista('vista-solicitudes', 'btn-solicitudes')">
+                    <i class="fa-solid fa-inbox"></i> Solicitudes y Proyectos
+                </a>
                 <a class="submenu-item" id="btn-personal" onclick="cambiarVista('vista-personal', 'btn-personal')">
-                    <i class="fa-solid fa-users"></i> Personal de planta externa
+                    <i class="fa-solid fa-users"></i> Funcionarios planta externa RM
                 </a>
                 <a class="submenu-item" id="btn-flota" onclick="cambiarVista('vista-flota', 'btn-flota')">
-                    <i class="fa-solid fa-truck"></i> Área flota
+                    <i class="fa-solid fa-truck"></i> Área flota RM
                 </a>
             </div>
 
@@ -123,17 +138,52 @@
         <main class="main-content">
             <div class="dashboard-header">
                 <h1>Proyecto: <span>Icetel Servicios (O&M)</span></h1>
-                <p>Usa el menú lateral para alternar entre el Panel Gráfico en vivo, el personal de planta externa y el área de flota.</p>
+                <p>Usa el menú lateral para alternar entre el Panel Gráfico, Solicitudes, Personal y Flota.</p>
             </div>
 
-            <!-- VISTA 1: LOOKER STUDIO (GRÁFICO E INDICADORES) -->
+            <!-- VISTA 1: GRÁFICO E INDICADORES (Hojas 1 y 2 con IpG7F y p_dur8tz1u6d)[cite: 3] -->
             <div id="vista-graficos" class="vista-seccion activa">
-                <div class="iframe-wrapper">
-                    <iframe width="100%" height="100%" src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/IpG7F" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+                <div class="grid-graficos">
+                    <div class="card-grafico">
+                        <h3>Indicadores Principales (Hoja 1)[cite: 3]</h3>
+                        <div class="iframe-wrapper">
+                            <iframe width="100%" height="100%" src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/IpG7F" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+                        </div>
+                    </div>
+                    <div class="card-grafico">
+                        <h3>Métricas y Detalle Operativo (Hoja 2)[cite: 3]</h3>
+                        <div class="iframe-wrapper">
+                            <iframe width="100%" height="100%" src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/p_dur8tz1u6d" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- VISTA 2: PERSONAL DE PLANTA EXTERNA -->
+            <!-- VISTA SOLICITUDES Y PROYECTOS ACTIVOS -->
+            <div id="vista-solicitudes" class="vista-seccion">
+                <div class="cards-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon cyan"><i class="fa-solid fa-envelope-open-text"></i></div>
+                        <div class="stat-info">
+                            <h4>Solicitudes de Trabajo (Correos)</h4>
+                            <span>12 Nuevas</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="fa-solid fa-list-check"></i></div>
+                        <div class="stat-info">
+                            <h4>Proyectos Activos Pendientes</h4>
+                            <span>5 En curso</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-module">
+                    <h3 style="color: #fff; font-size: 1.2rem; margin-bottom: 1rem;"><i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-cyan); margin-right: 0.5rem;"></i> Historial de Solicitudes Recientes</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Bandeja sincronizada con la recepción de correos y requerimientos de O&M de enlaces y fibra óptica.</p>
+                </div>
+            </div>
+
+            <!-- VISTA 2: FUNCIONARIOS PLANTA EXTERNA RM -->
             <div id="vista-personal" class="vista-seccion">
                 <div class="filter-module">
                     <div class="filter-header">
@@ -251,11 +301,10 @@
                 </div>
             </div>
 
-            <!-- VISTA 3: ÁREA FLOTA (EMBED DE LOOKER STUDIO) -->
+            <!-- VISTA 3: ÁREA FLOTA RM (Hoja 3 exclusiva / p_emle984u6d)[cite: 3] -->
             <div id="vista-flota" class="vista-seccion">
                 <div class="iframe-wrapper">
-                    <!-- Recuerda reemplazar la URL de este iframe con el link embed de tu reporte de flota si es diferente al de gráficos -->
-                    <iframe width="100%" height="100%" src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/..." frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+                    <iframe width="100%" height="100%" src="https://datastudio.google.com/embed/reporting/40dd3851-e89e-4679-b902-463b5cee3c45/page/p_emle984u6d" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
                 </div>
             </div>
 
