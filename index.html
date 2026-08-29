@@ -14,6 +14,48 @@
             flex-direction: column;
             align-items: center;
         }
+        /* Pantalla de Login de Técnicos */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #1e1e2f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .login-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .login-box h3 { margin-top: 0; color: #333; }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .login-box button:hover { background-color: #1d4ed8; }
+        .login-error { color: #dc2626; font-size: 12px; margin-top: 5px; display: none; }
+
         h2 {
             color: #333;
             text-align: center;
@@ -291,6 +333,17 @@
 </head>
 <body>
 
+    <!-- Pantalla de Login de Técnicos -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h3>Acceso Técnico</h3>
+            <p style="font-size: 12px; color: #666;">Ingrese contraseña de operador</p>
+            <input type="password" id="input-password" placeholder="Contraseña">
+            <button onclick="verificarPassword()">Ingresar</button>
+            <div id="login-error" class="login-error">Contraseña incorrecta</div>
+        </div>
+    </div>
+
     <div class="container">
         <h2>Catastro Mufa TP</h2>
         <p class="subtitle">Gestión Integral de Mufas, Cables y Fusiones</p>
@@ -355,6 +408,25 @@
     </div>
 
     <script>
+        const PASSWORD_TECNICO = "tecnicos2026";
+
+        function verificarPassword() {
+            let pass = document.getElementById("input-password").value;
+            if (pass === PASSWORD_TECNICO) {
+                document.getElementById("login-screen").style.display = "none";
+                sessionStorage.setItem("tecnico_autenticado", "true");
+            } else {
+                let err = document.getElementById("login-error");
+                err.style.display = "block";
+            }
+        }
+
+        window.onload = function() {
+            if (sessionStorage.getItem("tecnico_autenticado") === "true") {
+                document.getElementById("login-screen").style.display = "none";
+            }
+        };
+
         let datosTrabajo = { tp: '', nombre: '', fechaInicio: '' };
         let mufas = {};
         let planoActivo = false;
@@ -454,7 +526,6 @@
                 if (!confirmarCables) return;
             }
 
-            // Romper fusiones externas asociadas a cables de esta mufa
             for (let cName in mufas[nombreMufa]) {
                 mufas[nombreMufa][cName].filamentosArray.forEach(f => {
                     if (f.fusionadoCon) {
