@@ -3,347 +3,726 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingeniería MyP - Soluciones Digitales & Automatización</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Catastro Mufa TP - Nube</title>
+    <!-- Importar SDK de Firebase (Compat version para fácil integración) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <style>
-        :root { 
-            --bg-dark: #090d16;        
-            --surface-card: #131c31;   
-            --surface-card-hover: #1b2642;
-            --accent-cyan: #06b6d4;  
-            --accent-blue: #3b82f6;
-            --accent-orange: #f97316; 
-            --text-main: #f8fafc;      
-            --text-muted: #94a3b8;     
-            --border: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(6, 182, 212, 0.3);
-            --shadow-card: 0 10px 30px -10px rgba(0,0,0,0.5);
-        }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        header { 
-            background: rgba(15, 23, 42, 0.85); 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px);
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-            padding: 0.8rem 2rem; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid var(--border); 
-        }
-        
-        .logo-container { display: flex; align-items: center; background: transparent; text-decoration: none; flex-shrink: 0; transition: transform 0.3s ease; }
-        .logo-container:hover { transform: scale(1.02); }
-        .logo-img { height: 42px; width: auto; object-fit: contain; display: block; }
-        
-        .nav-links { display: flex; gap: 1.5rem; align-items: center; margin-left: 1rem; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s ease; }
-        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); text-shadow: 0 0 10px rgba(6,182,212,0.4); }
-        
-        .header-collage {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
             display: flex;
-            gap: 4px;
+            flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            margin: 0 1rem;
-            flex-wrap: nowrap;
-            max-width: 380px;
-            overflow: hidden;
         }
-        .header-mini-banner {
-            position: relative;
-            width: 44px;
-            height: 28px;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        .header-mini-banner img {
+        h2 { color: #333; text-align: center; margin-bottom: 5px; }
+        .subtitle { font-size: 14px; color: #666; text-align: center; margin-bottom: 20px; }
+        .container {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.85);
-            transition: all 0.3s ease;
-        }
-        .header-mini-banner:hover {
-            transform: translateY(-2px) scale(1.1);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
-            z-index: 10;
-        }
-        .header-mini-banner:hover img { filter: brightness(1.15); }
-
-        .nav-buttons { display: flex; gap: 0.8rem; align-items: center; flex-shrink: 0; }
-
-        .btn-nav-action {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 0.5rem 1rem;
+            max-width: 750px;
+            background: #fff;
+            padding: 20px;
             border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .plano-control-bar {
+            background: #212529;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
+            gap: 10px;
         }
-        .btn-nav-action.admin:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); box-shadow: 0 0 10px rgba(6,182,212,0.2); }
-        .btn-nav-action.client { border-color: rgba(249, 115, 22, 0.4); color: var(--accent-orange); }
-        .btn-nav-action.client:hover { border-color: var(--accent-orange); background: rgba(249,115,22,0.1); box-shadow: 0 0 10px rgba(249,115,22,0.2); }
+        .plano-status { font-size: 14px; font-weight: bold; }
+        .info-trabajo-header {
+            background: #e2e8f0;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #333;
+            display: none;
+        }
+        .grupo-botones-plano { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-plano {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .btn-iniciar { background-color: #28a745; color: white; }
+        .btn-iniciar:hover { background-color: #218838; }
+        .btn-unirse { background-color: #0284c7; color: white; }
+        .btn-unirse:hover { background-color: #0369a1; }
+        .btn-cerrar { background-color: #dc3545; color: white; }
+        .btn-cerrar:hover { background-color: #c82333; }
+        .btn-excel { background-color: #17a2b8; color: white; }
+        .btn-excel:hover { background-color: #138496; }
+        .btn-visual { background-color: #6f42c1; color: white; }
+        .btn-visual:hover { background-color: #59339d; }
 
-        .hero { 
-            position: relative;
-            text-align: center; 
-            padding: 8rem 2rem 6rem; 
-            background: url('creacion-de-adan.jpg') no-repeat center center;
-            background-size: cover;
+        .top-mufa-controls { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        .btn-add-mufa {
+            background-color: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
         }
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(9, 13, 22, 0.6) 0%, rgba(9, 13, 22, 0.92) 100%); 
-            z-index: 1;
-        }
+        .btn-add-mufa:hover { background-color: #0284c7; }
 
-        .hero-content { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
-        .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; font-weight: 900; color: #ffffff; letter-spacing: -0.02em; line-height: 1.2; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8); }
-        .hero h1 span { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 750px; margin: 0 auto 2.5rem; line-height: 1.7; }
-        
-        .btn-glow { 
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); 
-            color: #fff; padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1rem;
-            border: none; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.8rem; box-shadow: 0 0 25px rgba(6,182,212,0.35); 
+        .mufa-section {
+            background: #f8f9fa;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            padding: 15px;
         }
-        .btn-glow:hover { transform: translateY(-3px); box-shadow: 0 0 35px rgba(6,182,212,0.6); filter: brightness(1.1); }
+        .mufa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #475569;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .btn-principal {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .btn-principal:hover { background-color: #0056b3; }
+        .cable-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        .cable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #334155;
+            color: white;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .cable-info { text-align: right; font-size: 12px; }
+        .botones-cable { margin-top: 4px; }
+        .btn-editar-cable {
+            background: #0ea5e9; color: white; border: none;
+            padding: 2px 5px; border-radius: 3px; cursor: pointer;
+            font-size: 11px; font-weight: bold; margin-right: 4px;
+        }
+        .btn-eliminar-cable {
+            background: #eab308; color: #000; border: none;
+            padding: 2px 5px; border-radius: 3px; cursor: pointer;
+            font-size: 11px; font-weight: bold;
+        }
+        .filamentos-container {
+            margin-top: 8px; padding-left: 8px;
+            border-left: 3px solid #334155; max-height: 200px; overflow-y: auto;
+        }
+        .filamento-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 5px 0; border-bottom: 1px dashed #e2e8f0; font-size: 12px;
+        }
+        .btn-fusionar { background: #16a34a; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        .btn-liberar { background: #dc2626; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-left: 4px; }
+        .resumen { margin-top: 25px; padding-top: 15px; border-top: 1px solid #cbd5e1; }
+        .resumen h3 { font-size: 16px; color: #333; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 5px; color: #475569; font-size: 12px; }
+        .bloqueado { opacity: 0.6; pointer-events: none; }
 
-        .stats-bar {
-            position: relative; z-index: 2; max-width: 1000px; margin: -3rem auto 3rem auto;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; padding: 0 2rem;
+        /* Modal Personalizado */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000;
         }
-        .stat-card {
-            background: rgba(19, 28, 49, 0.75); backdrop-filter: blur(10px); border: 1px solid var(--border);
-            border-radius: 14px; padding: 1.5rem; text-align: center; box-shadow: var(--shadow-card); transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-        .stat-card:hover { transform: translateY(-3px); border-color: var(--accent-cyan); }
-        .stat-card h4 { font-size: 2rem; font-weight: 800; color: var(--accent-cyan); margin-bottom: 0.3rem; }
-        .stat-card p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; flex: 1; }
-        .section-title { text-align: center; margin-bottom: 3.5rem; }
-        .section-title h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.8rem; }
-        .section-title p { color: var(--text-muted); font-size: 1.1rem; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
-        .card { 
-            background: var(--surface-card); border-radius: 18px; padding: 2.5rem 2rem; border: 1px solid var(--border); 
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: var(--shadow-card); position: relative; overflow: hidden;
-        }
-        .card:hover { border-color: var(--border-glow); transform: translateY(-6px); background: var(--surface-card-hover); box-shadow: 0 15px 35px -10px rgba(6, 182, 212, 0.15); }
-        
-        .card-icon-wrapper {
-            width: 55px; height: 55px; background: rgba(6, 182, 212, 0.1); border-radius: 12px;
-            display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; border: 1px solid rgba(6, 182, 212, 0.2);
-        }
-        .card h3 { font-size: 1.25rem; margin-bottom: 1rem; color: #fff; font-weight: 700; }
-        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6; }
-        
-        .card-btn { 
-            background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.3); color: var(--accent-cyan); 
-            padding: 0.8rem 1rem; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.9rem; text-align: center; transition: all 0.3s ease; display: block;
-        }
-        .card-btn:hover { background: var(--accent-cyan); color: #090d16; box-shadow: 0 0 15px rgba(6,182,212,0.4); }
-
-        .suggestion-notice {
-            text-align: center; margin-top: 4rem; color: var(--text-muted); font-size: 1.05rem;
-            background: rgba(19, 28, 49, 0.4); padding: 1.5rem; border-radius: 12px; border: 1px dashed var(--border);
-        }
-        .suggestion-notice a { color: var(--accent-cyan); text-decoration: none; font-weight: 700; }
-
-        #login-modal { display: none; position: fixed; inset: 0; background: rgba(5, 8, 15, 0.85); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 2000; padding: 1rem; }
-        .login-card { background: var(--surface-card); padding: 3rem 2.5rem; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; border: 1px solid var(--accent-cyan); box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; }
-        .login-input { width: 100%; padding: 0.9rem 1rem; margin: 0.8rem 0; background: #090d16; border: 1px solid var(--border); border-radius: 10px; color: #fff; outline: none; font-size: 0.95rem; }
-        .close-btn { position: absolute; top: 1.2rem; right: 1.2rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
-        
-        footer { background: #05080f; padding: 2.5rem 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.9rem; }
-
-        @media (max-width: 1250px) { .header-collage { display: none; } }
-        @media (max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 2.4rem; } header { padding: 0.8rem 1rem; } }
+        .modal-content { background: #fff; padding: 20px; border-radius: 8px; width: 320px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .modal-content h3 { margin-top: 0; font-size: 16px; color: #333; }
+        .modal-content label { font-size: 12px; font-weight: bold; color: #475569; display: block; margin-top: 10px; }
+        .modal-content select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; }
+        .modal-buttons { margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px; }
+        .modal-buttons button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .btn-modal-cancel { background: #64748b; color: white; }
+        .btn-modal-ok { background: #2563eb; color: white; }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="index.html" class="logo-container">
-            <img src="logo.png" alt="Ingeniería MyP" class="logo-img">
-        </a>
+    <div class="container">
+        <h2>Catastro Mufa TP (En Línea)</h2>
+        <p class="subtitle">Sincronización Multidispositivo en Tiempo Real</p>
         
-        <nav class="nav-links">
-            <a href="index.html" class="active">Inicio</a>
-            <a href="quienessomos.html">Quiénes Somos</a>
-            <a href="precios.html">Precios y Planes</a>
-            <a href="solicitudes.html">Solicitudes</a>
-            <a href="faq.html">Preguntas Frecuentes</a>
-        </nav>
-
-        <!-- Collage con ruta directa a las imágenes -->
-        <div class="header-collage">
-            <div class="header-mini-banner" title="ChatGPT"><img src="ChatGPT.jpg" alt="ChatGPT"></div>
-            <div class="header-mini-banner" title="Claude"><img src="Claude.jpg" alt="Claude"></div>
-            <div class="header-mini-banner" title="Datastudio"><img src="Datastudio.jpg" alt="Datastudio"></div>
-            <div class="header-mini-banner" title="Gemini"><img src="Gemini.jpg" alt="Gemini"></div>
-            <div class="header-mini-banner" title="Google"><img src="Google.jpg" alt="Google"></div>
-            <div class="header-mini-banner" title="Googledrive"><img src="Googledrive.jpg" alt="Googledrive"></div>
-            <div class="header-mini-banner" title="Googleforms"><img src="Googleforms.jpg" alt="Googleforms"></div>
-            <div class="header-mini-banner" title="N8N"><img src="N8N.jpg" alt="N8N"></div>
+        <!-- Barra superior de control -->
+        <div class="plano-control-bar">
+            <div id="estado-plano-txt" class="plano-status">Estado: Desconectado</div>
+            <div class="grupo-botones-plano">
+                <button id="btn-accion-plano" class="btn-plano btn-iniciar" onclick="iniciarOUnirseTP()">Iniciar / Unirse a TP</button>
+                <button class="btn-plano btn-visual" onclick="exportarPlanoVisual()">Descargar Plano Visual</button>
+                <button class="btn-plano btn-excel" onclick="exportarExcel()">Descargar Excel</button>
+            </div>
         </div>
 
-        <div class="nav-buttons">
-            <button class="btn-nav-action admin" onclick="abrirLogin('admin')">
-                <i class="fa-solid fa-user-lock"></i> Acceso Equipo
-            </button>
-            <a href="portal-cliente.html" class="btn-nav-action client">
-                <i class="fa-solid fa-users"></i> Acceso Clientes
-            </a>
+        <!-- Información del trabajo actual -->
+        <div id="info-trabajo" class="info-trabajo-header">
+            <strong>Incidencia / TP:</strong> <span id="txt-tp">-</span> | 
+            <strong>Nombre del Trabajo:</strong> <span id="txt-nombre">-</span> | 
+            <strong>Inicio:</strong> <span id="txt-fecha">-</span>
         </div>
-    </header>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Soluciones Digitales <span>Inteligentes</span> & Automatización</h1>
-            <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial para potenciar el crecimiento de tu PyME.</p>
-            <a href="https://wa.me/56969176666?text=Hola,%20quisiera%20cotizar%20un%20proyecto%20con%20Ingeniería%20MYP" target="_blank" class="btn-glow">
-                <i class="fa-brands fa-whatsapp fa-lg"></i> Cotizar por WhatsApp Directo
-            </a>
+        <div id="panel-trabajo" class="bloqueado">
+            <div class="top-mufa-controls" id="controles-agregar-mufa" style="display:none;">
+                <button class="btn-add-mufa" onclick="agregarMufaPrompt()">+ Agregar Mufa</button>
+            </div>
+            <div id="contenedor-mufas"></div>
         </div>
-    </section>
 
-    <div class="stats-bar">
-        <div class="stat-card"><h4>+100%</h4><p>Arquitectura Escalable</p></div>
-        <div class="stat-card"><h4>24/7</h4><p>Flujos en Piloto Automático</p></div>
-        <div class="stat-card"><h4>Dominio .CL</h4><p>Identidad Propia y Segura</p></div>
+        <div class="resumen">
+            <h3>Resumen de Fusiones en Vivo:</h3>
+            <ul id="lista-resumen">
+                <li>Aún no hay fusiones registradas.</li>
+            </ul>
+        </div>
     </div>
 
-    <section class="container">
-        <div class="section-title">
-            <h2>Nuestros Servicios Principales</h2>
-            <p>Soluciones robustas orientadas a la optimización operativa, desarrollo tecnológico y continuidad de tu negocio.</p>
-        </div>
-        
-        <div class="grid">
-            <div class="card">
-                <div>
-                    <div class="card-icon-wrapper"><i class="fa-solid fa-network-wired" style="color:var(--accent-cyan); font-size:1.5rem;"></i></div>
-                    <h3>Flujos de Automatización</h3>
-                    <p>Conectamos de forma inteligente herramientas como Google Drive, correos, Google Forms y Looker Studio para operar sin intervención manual.</p>
-                </div>
-                <a href="https://wa.me/56969176666?text=Me%20interesa%20automatizar%20procesos" target="_blank" class="card-btn">Consultar por WhatsApp</a>
-            </div>
+    <!-- Modal para Selección de Fusión -->
+    <div id="fusionModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Seleccionar Destino de Fusión</h3>
             
-            <div class="card">
-                <div>
-                    <div class="card-icon-wrapper"><i class="fa-solid fa-code" style="color:var(--accent-cyan); font-size:1.5rem;"></i></div>
-                    <h3>Páginas Web, Dashboards & APIs</h3>
-                    <p>Diseño y desarrollo a medida de páginas web profesionales con dominios independientes (.cl), paneles de control interactivos y APIs conectadas.</p>
-                </div>
-                <a href="https://wa.me/56969176666?text=Quiero%20cotizar%20una%20web%20o%20dashboard" target="_blank" class="card-btn">Consultar por WhatsApp</a>
+            <label for="selectMufa">Mufa de Destino:</label>
+            <select id="selectMufa" onchange="actualizarCablesDestino()">
+                <option value="">-- Seleccione Mufa --</option>
+            </select>
+
+            <label for="selectCable">Cable de Destino:</label>
+            <select id="selectCable" onchange="actualizarFilamentosDestino()">
+                <option value="">-- Seleccione Cable --</option>
+            </select>
+
+            <label for="selectFilamento">Filamento Disponible:</label>
+            <select id="selectFilamento">
+                <option value="">-- Seleccione Filamento --</option>
+            </select>
+
+            <div class="modal-buttons">
+                <button class="btn-modal-cancel" onclick="cerrarModalFusion()">Cancelar</button>
+                <button class="btn-modal-ok" onclick="confirmarFusionModal()">Fusionar</button>
             </div>
-
-            <div class="card">
-                <div>
-                    <div class="card-icon-wrapper"><i class="fa-solid fa-screwdriver-wrench" style="color:var(--accent-cyan); font-size:1.5rem;"></i></div>
-                    <h3>Mantenimiento Mensual Web</h3>
-                    <p>Servicio periódico de soporte técnico y mantenimiento mensual para garantizar el óptimo funcionamiento, alta seguridad y actualización de tu sitio.</p>
-                </div>
-                <a href="https://wa.me/56969176666?text=Quiero%20información%20de%20mantenimiento%20web" target="_blank" class="card-btn">Consultar por WhatsApp</a>
-            </div>
-
-            <div class="card">
-                <div>
-                    <div class="card-icon-wrapper"><i class="fa-solid fa-brain" style="color:var(--accent-cyan); font-size:1.5rem;"></i></div>
-                    <h3>Mantenimiento de Flujos & Agentes IA</h3>
-                    <p>Soporte especializado para flujos en n8n, bases de datos y agentes conversacionales entrenados con Inteligencia Artificial.</p>
-                </div>
-                <a href="https://wa.me/56969176666?text=Quiero%20saber%20sobre%20mantenimiento%20de%20flujos%20e%20IA" target="_blank" class="card-btn">Consultar por WhatsApp</a>
-            </div>
-        </div>
-
-        <div class="suggestion-notice">
-            ¿Necesitas otro servicio que no se encuentra en el listado? Déjanos tu sugerencia o solicitud en nuestra <a href="solicitudes.html">bandeja de solicitudes corporativas</a>.
-        </div>
-    </section>
-
-    <div id="login-modal">
-        <div class="login-card">
-            <i class="fa-solid fa-xmark close-btn" onclick="cerrarLogin()"></i>
-            <h3 style="margin-bottom:0.5rem; color:#fff; font-size:1.5rem;">Acceso Administrativo</h3>
-            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">Credenciales exclusivas para la gerencia de Ingeniería MyP.</p>
-            <form onsubmit="enviarLogin(event)">
-                <input type="email" id="usuario" class="login-input" placeholder="Correo de Gerencia" required>
-                <input type="password" id="password" class="login-input" placeholder="Contraseña" required>
-                <button type="submit" class="btn-glow" style="width:100%; margin-top:1.2rem; justify-content:center; padding:0.9rem;">Ingresar al Panel</button>
-                <p id="error-msg" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;"></p>
-            </form>
         </div>
     </div>
-    
-    <footer>
-        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Arquitectura de Sistemas y Automatización Avanzada. | Santiago, Chile</p>
-    </footer>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
+    <script>
+        // CONFIGURACIÓN DE FIREBASE (Reemplaza con los datos de tu consola de Firebase)
         const firebaseConfig = {
-            apiKey: "AIzaSyAHQLLGjYtjHQ6dYiOcBTx8xyRv7X3RUco",
-            authDomain: "ingenieriamyp-auth.firebaseapp.com",
-            projectId: "ingenieriamyp-auth",
-            storageBucket: "ingenieriamyp-auth.firebasestorage.app",
-            messagingSenderId: "834613528522",
-            appId: "1:834613528522:web:e6d63d05970a2ef4d23133",
-            measurementId: "G-3TYPD3EJ7F"
+            apiKey: "TU_API_KEY",
+            authDomain: "tu-proyecto.firebaseapp.com",
+            databaseURL: "https://tu-proyecto-default-rtdb.firebaseio.com",
+            projectId: "tu-proyecto",
+            storageBucket: "tu-proyecto.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        window.abrirLogin = function(tipo) {
-            document.getElementById('login-modal').style.display = 'flex';
-            document.getElementById('error-msg').style.display = 'none';
+        let currentTP = null;
+        let datosTrabajo = { tp: '', nombre: '', fechaInicio: '' };
+        let mufas = {};
+        let planoActivo = false;
+        const capacidadesValidas = [1, 6, 8, 12, 24, 36, 48, 64, 96, 192, 288];
+        let origenActualModal = { mufa: '', cable: '', index: -1 };
+        let dbRef = null;
+
+        function iniciarOUnirseTP() {
+            let tpInput = prompt("Ingrese el Número de Incidencia o TP al que desea entrar o crear:");
+            if (!tpInput || tpInput.trim() === "") return;
+            currentTP = tpInput.trim();
+
+            dbRef = db.ref('tps/' + currentTP);
+
+            // Escuchar cambios en tiempo real desde Firebase
+            dbRef.on('value', (snapshot) => {
+                let serverData = snapshot.val();
+                if (serverData) {
+                    datosTrabajo = serverData.trabajo || { tp: currentTP, nombre: 'Trabajo Activo', fechaInicio: '-' };
+                    mufas = serverData.mufas || {};
+                    planoActivo = true;
+
+                    document.getElementById("estado-plano-txt").innerText = "Estado: Sincronizado en Vivo";
+                    document.getElementById("txt-tp").innerText = datosTrabajo.tp;
+                    document.getElementById("txt-nombre").innerText = datosTrabajo.nombre;
+                    document.getElementById("txt-fecha").innerText = datosTrabajo.fechaInicio;
+                    document.getElementById("info-trabajo").style.display = "block";
+                    document.getElementById("controles-agregar-mufa").style.display = "flex";
+
+                    document.getElementById("btn-accion-plano").innerText = "Cerrar TP y Descargar";
+                    document.getElementById("btn-accion-plano").className = "btn-plano btn-cerrar";
+                    document.getElementById("panel-trabajo").classList.remove("bloqueado");
+
+                    renderizarMufas();
+                    actualizarResumen();
+                } else {
+                    // Si el TP no existe en la base de datos, crearlo de cero
+                    let nombreTrabajo = prompt("El TP no existe. Ingrese el Nombre del Trabajo para crearlo:");
+                    if (!nombreTrabajo) return;
+
+                    let numMufasStr = prompt("¿Cuántas mufas iniciales tendrá este TP?:", "1");
+                    let numMufas = parseInt(numMufasStr) || 1;
+
+                    let ahora = new Date();
+                    datosTrabajo = {
+                        tp: currentTP,
+                        nombre: nombreTrabajo.trim(),
+                        fechaInicio: ahora.toLocaleDateString() + ' ' + ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+
+                    mufas = {};
+                    for (let i = 1; i <= numMufas; i++) {
+                        mufas[`Mufa #${i}`] = {};
+                    }
+
+                    sincronizarFirebase();
+                }
+            });
         }
 
-        window.cerrarLogin = function() { 
-            document.getElementById('login-modal').style.display = 'none'; 
+        function sincronizarFirebase() {
+            if (!dbRef) return;
+            dbRef.set({
+                trabajo: datosTrabajo,
+                mufas: mufas
+            });
         }
 
-        window.enviarLogin = function(e) {
-            e.preventDefault();
-            const email = document.getElementById('usuario').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const errorMsg = document.getElementById('error-msg');
+        function alternarPlano() {
+            if (!planoActivo) {
+                iniciarOUnirseTP();
+            } else {
+                let confirmar = confirm("¿Deseas cerrar este TP? Se descargarán los archivos y se eliminará de la vista en vivo.");
+                if (confirmar) {
+                    exportarPlanoVisual();
+                    exportarExcel();
 
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    window.location.href = 'equipo-dashboard.html';
-                })
-                .catch((error) => {
-                    errorMsg.style.display = 'block';
-                    errorMsg.innerText = "Correo o contraseña incorrectos.";
-                });
+                    if (dbRef) dbRef.remove(); // Borra el TP activo de Firebase si se cierra oficialmente
+                    location.reload(); // Recarga la página para limpiar estado
+                }
+            }
+        }
+
+        function agregarMufaPrompt() {
+            if (!planoActivo) return;
+            let mufasKeys = Object.keys(mufas);
+            let siguienteNombre = `Mufa #${mufasKeys.length + 1}`;
+            
+            let nombreMufa = prompt("Ingrese el nombre para la nueva mufa:", siguienteNombre);
+            if (!nombreMufa || nombreMufa.trim() === "") return;
+            nombreMufa = nombreMufa.trim();
+
+            if (mufas[nombreMufa]) {
+                alert("Ya existe una mufa con ese nombre.");
+                return;
+            }
+
+            mufas[nombreMufa] = {};
+            sincronizarFirebase();
+        }
+
+        function eliminarMufa(nombreMufa) {
+            if (!planoActivo) return;
+            let confirmar = confirm(`¿Estás seguro de eliminar la mufa "${nombreMufa}"?`);
+            if (!confirmar) return;
+
+            delete mufas[nombreMufa];
+            sincronizarFirebase();
+        }
+
+        function agregarCablePrompt(nombreMufa) {
+            if (!planoActivo) return;
+
+            let nombreCable = prompt(`Ingrese el nombre o etiqueta del cable para ${nombreMufa} (ej: Cable A):`);
+            if (!nombreCable || nombreCable.trim() === "") return;
+            nombreCable = nombreCable.trim();
+
+            if (mufas[nombreMufa][nombreCable]) {
+                alert("Ya existe un cable con ese nombre en esta mufa.");
+                return;
+            }
+
+            let idCable = prompt(`Ingrese el ID o código identificador para "${nombreCable}":`);
+            if (!idCable || idCable.trim() === "") return;
+
+            let capacidadStr = prompt(`Ingrese cantidad de filamentos (1, 6, 8, 12, 24, 36, 48, 64, 96, 192, 288):`);
+            let capacidad = parseInt(capacidadStr);
+            if (!capacidadesValidas.includes(capacidad)) {
+                alert("Capacidad inválida.");
+                return;
+            }
+
+            let filamentosArray = [];
+            for (let i = 1; i <= capacidad; i++) {
+                filamentosArray.push({ numero: i, fusionadoCon: null });
+            }
+
+            mufas[nombreMufa][nombreCable] = {
+                nombre: nombreCable,
+                id: idCable.trim(),
+                capacidad: capacidad,
+                filamentosArray: filamentosArray
+            };
+
+            sincronizarFirebase();
+        }
+
+        function editarCable(nombreMufa, nombreActual) {
+            if (!planoActivo) return;
+            let cable = mufas[nombreMufa][nombreActual];
+
+            let nuevoNombre = prompt("Modificar nombre o etiqueta del cable:", cable.nombre);
+            if (!nuevoNombre || nuevoNombre.trim() === "") return;
+            nuevoNombre = nuevoNombre.trim();
+
+            let nuevoId = prompt("Modificar ID del cable:", cable.id);
+            if (!nuevoId || nuevoId.trim() === "") return;
+
+            let nuevaCapacidadStr = prompt(`Modificar cantidad de filamentos:\nActual: ${cable.capacidad}`);
+            let nuevaCapacidad = parseInt(nuevaCapacidadStr);
+            if (!capacidadesValidas.includes(nuevaCapacidad)) {
+                alert("Capacidad inválida.");
+                return;
+            }
+
+            let nuevoFilamentosArray = [];
+            for (let i = 1; i <= nuevaCapacidad; i++) {
+                if (i <= cable.filamentosArray.length) {
+                    nuevoFilamentosArray.push(cable.filamentosArray[i - 1]);
+                } else {
+                    nuevoFilamentosArray.push({ numero: i, fusionadoCon: null });
+                }
+            }
+
+            delete mufas[nombreMufa][nombreActual];
+            mufas[nombreMufa][nuevoNombre] = {
+                nombre: nuevoNombre,
+                id: nuevoId.trim(),
+                capacidad: nuevaCapacidad,
+                filamentosArray: nuevoFilamentosArray
+            };
+
+            sincronizarFirebase();
+        }
+
+        function eliminarCable(nombreMufa, nombreCable) {
+            if (!planoActivo) return;
+            let confirmar = confirm(`¿Eliminar el cable "${nombreCable}"?`);
+            if (!confirmar) return;
+
+            delete mufas[nombreMufa][nombreCable];
+            sincronizarFirebase();
+        }
+
+        function abrirModalFusion(mufaOrigen, cableOrigen, indexOrigen) {
+            if (!planoActivo) return;
+            let filOrigen = mufas[mufaOrigen][cableOrigen].filamentosArray[indexOrigen];
+
+            if (filOrigen.fusionadoCon) {
+                let accion = confirm(`El Filamento #${filOrigen.numero} está fusionado. ¿Romper fusión?`);
+                if (accion) {
+                    romperFusion(mufaOrigen, cableOrigen, indexOrigen);
+                }
+                return;
+            }
+
+            origenActualModal = { mufa: mufaOrigen, cable: cableOrigen, index: indexOrigen };
+
+            let selectMufa = document.getElementById("selectMufa");
+            selectMufa.innerHTML = '<option value="">-- Seleccione Mufa --</option>';
+            for (let mName in mufas) {
+                let opt = document.createElement("option");
+                opt.value = mName; opt.innerText = mName;
+                selectMufa.appendChild(opt);
+            }
+
+            document.getElementById("selectCable").innerHTML = '<option value="">-- Seleccione Cable --</option>';
+            document.getElementById("selectFilamento").innerHTML = '<option value="">-- Seleccione Filamento --</option>';
+            document.getElementById("fusionModal").style.display = "flex";
+        }
+
+        function actualizarCablesDestino() {
+            let mufaSeleccionada = document.getElementById("selectMufa").value;
+            let selectCable = document.getElementById("selectCable");
+            selectCable.innerHTML = '<option value="">-- Seleccione Cable --</option>';
+            document.getElementById("selectFilamento").innerHTML = '<option value="">-- Seleccione Filamento --</option>';
+
+            if (!mufaSeleccionada) return;
+            for (let cName in mufas[mufaSeleccionada]) {
+                if (mufaSeleccionada !== origenActualModal.mufa || cName !== origenActualModal.cable) {
+                    let opt = document.createElement("option");
+                    opt.value = cName; opt.innerText = cName;
+                    selectCable.appendChild(opt);
+                }
+            }
+        }
+
+        function actualizarFilamentosDestino() {
+            let mufaSeleccionada = document.getElementById("selectMufa").value;
+            let cableSeleccionado = document.getElementById("selectCable").value;
+            let selectFilamento = document.getElementById("selectFilamento");
+            selectFilamento.innerHTML = '<option value="">-- Seleccione Filamento --</option>';
+
+            if (!mufaSeleccionada || !cableSeleccionado) return;
+            let cableObj = mufas[mufaSeleccionada][cableSeleccionado];
+            cableObj.filamentosArray.forEach(f => {
+                if (!f.fusionadoCon) {
+                    let opt = document.createElement("option");
+                    opt.value = f.numero; opt.innerText = `Filamento #${f.numero} (Libre)`;
+                    selectFilamento.appendChild(opt);
+                }
+            });
+        }
+
+        function cerrarModalFusion() { document.getElementById("fusionModal").style.display = "none"; }
+
+        function confirmarFusionModal() {
+            let mufaDest = document.getElementById("selectMufa").value;
+            let cableDest = document.getElementById("selectCable").value;
+            let filNumDest = parseInt(document.getElementById("selectFilamento").value);
+
+            if (!mufaDest || !cableDest || isNaN(filNumDest)) {
+                alert("Seleccione todos los campos.");
+                return;
+            }
+
+            let mufaOrig = origenActualModal.mufa;
+            let cableOrig = origenActualModal.cable;
+            let indexOrig = origenActualModal.index;
+
+            let filOrigen = mufas[mufaOrig][cableOrig].filamentosArray[indexOrig];
+            let filDestinoObj = mufas[mufaDest][cableDest].filamentosArray[filNumDest - 1];
+
+            filOrigen.fusionadoCon = { mufa: mufaDest, cable: cableDest, filamento: filNumDest };
+            filDestinoObj.fusionadoCon = { mufa: mufaOrig, cable: cableOrig, filamento: filOrigen.numero };
+
+            cerrarModalFusion();
+            sincronizarFirebase();
+        }
+
+        function romperFusion(mufaNombre, cableNombre, index) {
+            if (!planoActivo) return;
+            let fil = mufas[mufaNombre][cableNombre].filamentosArray[index];
+            if (!fil.fusionadoCon) return;
+
+            let destMufa = fil.fusionadoCon.mufa;
+            let destCable = fil.fusionadoCon.cable;
+            let destNum = fil.fusionadoCon.filamento;
+
+            if (mufas[destMufa] && mufas[destMufa][destCable]) {
+                mufas[destMufa][destCable].filamentosArray[destNum - 1].fusionadoCon = null;
+            }
+            fil.fusionadoCon = null;
+
+            sincronizarFirebase();
+        }
+
+        function renderizarMufas() {
+            let contenedor = document.getElementById("contenedor-mufas");
+            contenedor.innerHTML = "";
+
+            let mufasKeys = Object.keys(mufas);
+            if (mufasKeys.length === 0) {
+                contenedor.innerHTML = `<p style="text-align: center; color: #888;">No hay mufas configuradas.</p>`;
+                return;
+            }
+
+            mufasKeys.forEach(mufaName => {
+                let mufaDiv = document.createElement("div");
+                mufaDiv.className = "mufa-section";
+
+                let headerHtml = `
+                    <div class="mufa-header">
+                        <span>${mufaName}</span>
+                        <div>
+                            ${planoActivo ? `<button class="btn-principal" onclick="agregarCablePrompt('${mufaName}')">+ Agregar Cable</button>` : ''}
+                            ${planoActivo && mufasKeys.length > 1 ? `<button class="btn-eliminar-cable" style="margin-left: 8px; padding: 5px 8px;" onclick="eliminarMufa('${mufaName}')">Eliminar Mufa</button>` : ''}
+                        </div>
+                    </div>
+                `;
+
+                let cablesContainer = document.createElement("div");
+                let cablesKeys = Object.keys(mufas[mufaName]);
+
+                if (cablesKeys.length === 0) {
+                    cablesContainer.innerHTML = `<p style="color: #666; font-size: 13px; text-align: center;">No hay cables.</p>`;
+                } else {
+                    cablesKeys.forEach(cableName => {
+                        let cable = mufas[mufaName][cableName];
+                        let card = document.createElement("div");
+                        card.className = "cable-card";
+
+                        let botonesHeader = planoActivo ? `
+                            <div class="botones-cable">
+                                <button class="btn-editar-cable" onclick="editarCable('${mufaName}', '${cableName}')">Editar</button>
+                                <button class="btn-eliminar-cable" onclick="eliminarCable('${mufaName}', '${cableName}')">Eliminar</button>
+                            </div>` : '';
+
+                        card.innerHTML = `
+                            <div class="cable-header">
+                                <span><strong>${cable.nombre}</strong> (ID: ${cable.id})</span>
+                                <div class="cable-info">
+                                    <span><b>${cable.capacidad} filamentos</b></span>
+                                    ${botonesHeader}
+                                </div>
+                            </div>
+                        `;
+
+                        let filContainer = document.createElement("div");
+                        filContainer.className = "filamentos-container";
+
+                        cable.filamentosArray.forEach((f, idx) => {
+                            let item = document.createElement("div");
+                            item.className = "filamento-item";
+
+                            let estadoTexto = f.fusionadoCon ? 
+                                `<span style="color: #16a34a; font-weight: bold;">Fusionado con [${f.fusionadoCon.mufa}] ${f.fusionadoCon.cable} (#${f.fusionadoCon.filamento})</span>` : 
+                                `<span style="color: #64748b; font-style: italic;">Libre</span>`;
+
+                            let botonesAccion = planoActivo ? (
+                                f.fusionadoCon ? 
+                                `<button class="btn-fusionar" onclick="abrirModalFusion('${mufaName}', '${cableName}', ${idx})">Cambiar</button>
+                                 <button class="btn-liberar" onclick="romperFusion('${mufaName}', '${cableName}', ${idx})">Liberar</button>` :
+                                `<button class="btn-fusionar" onclick="abrirModalFusion('${mufaName}', '${cableName}', ${idx})">Fusionar</button>`
+                            ) : '';
+
+                            item.innerHTML = `
+                                <span><strong>#${f.numero}</strong>: ${estadoTexto}</span>
+                                <div>${botonesAccion}</div>
+                            `;
+                            filContainer.appendChild(item);
+                        });
+
+                        card.appendChild(filContainer);
+                        cablesContainer.appendChild(card);
+                    });
+                }
+
+                mufaDiv.innerHTML = headerHtml;
+                mufaDiv.appendChild(cablesContainer);
+                contenedor.appendChild(mufaDiv);
+            });
+        }
+
+        function actualizarResumen() {
+            let listaResumen = document.getElementById("lista-resumen");
+            listaResumen.innerHTML = "";
+            let hayFusiones = false;
+            let procesados = new Set();
+
+            for (let mName in mufas) {
+                for (let cName in mufas[mName]) {
+                    mufas[mName][cName].filamentosArray.forEach(f => {
+                        if (f.fusionadoCon) {
+                            hayFusiones = true;
+                            let key1 = `${mName}|${cName}|${f.numero}`;
+                            let key2 = `${f.fusionadoCon.mufa}|${f.fusionadoCon.cable}|${f.fusionadoCon.filamento}`;
+                            let parKey = [key1, key2].sort().join(' <=> ');
+
+                            if (!procesados.has(parKey)) {
+                                procesados.add(parKey);
+                                let li = document.createElement("li");
+                                li.innerHTML = `🔗 [${mName}] <strong>${cName}</strong> (#${f.numero}) ⟷ [${f.fusionadoCon.mufa}] <strong>${f.fusionadoCon.cable}</strong> (#${f.fusionadoCon.filamento})`;
+                                listaResumen.appendChild(li);
+                            }
+                        }
+                    });
+                }
+            }
+            if (!hayFusiones) listaResumen.innerHTML = "<li>Aún no hay fusiones registradas.</li>";
+        }
+
+        function exportarPlanoVisual() {
+            let svgWidth = 1100, startY = 90, elements = [];
+            elements.push(`<rect width="100%" height="100%" fill="#111827" />`);
+            elements.push(`<text x="30" y="35" fill="#ffffff" font-family="Arial" font-size="16" font-weight="bold">TP / Incidencia: ${datosTrabajo.tp || 'N/A'}</text>`);
+            elements.push(`<text x="30" y="55" fill="#94a3b8" font-family="Arial" font-size="13">Trabajo: ${datosTrabajo.nombre || 'N/A'} | Inicio: ${datosTrabajo.fechaInicio || 'N/A'}</text>`);
+            elements.push(`<line x1="30" y1="70" x2="1070" y2="70" stroke="#374151" stroke-width="2" />`);
+
+            let coords = {}, currentY = startY + 20;
+            for (let mName in mufas) {
+                elements.push(`<text x="30" y="${currentY}" fill="#38bdf8" font-family="Arial" font-size="15" font-weight="bold">--- ${mName} ---</text>`);
+                currentY += 25;
+                for (let cName in mufas[mName]) {
+                    let cable = mufas[mName][cName];
+                    let boxX = 50, boxY = currentY, width = 270, boxHeight = 35 + (cable.capacidad * 18);
+                    elements.push(`<rect x="${boxX}" y="${boxY}" width="${width}" height="${boxHeight}" fill="#1f2937" stroke="#3b82f6" stroke-width="1.5" rx="4" />`);
+                    elements.push(`<text x="${boxX + 10}" y="${boxY + 20}" fill="#ffffff" font-family="Arial" font-size="13" font-weight="bold">${cable.nombre}</text>`);
+
+                    cable.filamentosArray.forEach((f, i) => {
+                        let fy = boxY + 35 + (i * 18), fx = boxX + width;
+                        elements.push(`<text x="${boxX + 10}" y="${fy + 4}" fill="#9ca3af" font-family="Arial" font-size="11">#${f.numero}</text>`);
+                        elements.push(`<circle cx="${fx}" cy="${fy}" r="3.5" fill="${f.fusionadoCon ? '#22c55e' : '#4b5563'}" />`);
+                        coords[`${mName}|${cName}|${f.numero}`] = { x: fx, y: fy };
+                    });
+                    currentY += boxHeight + 20;
+                }
+            }
+
+            let blob = new Blob([elements.join("\n") + "</svg>"], { type: "image/svg+xml" });
+            let link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Plano_Tecnico_TP_${datosTrabajo.tp || 'Mufa'}.svg`;
+            link.click();
+        }
+
+        function exportarExcel() {
+            let contenidoCSV = "\uFEFFMufa Origen,Cable Origen,Filamento Origen,Mufa Destino,Cable Destino,Filamento Destino\n";
+            let procesados = new Set();
+            for (let mName in mufas) {
+                for (let cName in mufas[mName]) {
+                    mufas[mName][cName].filamentosArray.forEach(f => {
+                        if (f.fusionadoCon) {
+                            let key1 = `${mName}|${cName}|${f.numero}`;
+                            let key2 = `${f.fusionadoCon.mufa}|${f.fusionadoCon.cable}|${f.fusionadoCon.filamento}`;
+                            let parKey = [key1, key2].sort().join(' <=> ');
+                            if (!procesados.has(parKey)) {
+                                procesados.add(parKey);
+                                contenidoCSV += `"${mName}","${cName}","${f.numero}","${f.fusionadoCon.mufa}","${f.fusionadoCon.cable}","${f.fusionadoCon.filamento}"\n`;
+                            }
+                        }
+                    });
+                }
+            }
+            let blob = new Blob([contenidoCSV], { type: 'text/csv;charset=utf-8;' });
+            let link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Catastro_TP_${datosTrabajo.tp || 'Fusiones'}.csv`;
+            link.click();
         }
     </script>
 </body>
