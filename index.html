@@ -15,7 +15,7 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        /* Pantalla de Login de Técnicos */
+        /* Pantalla de Login de Técnicos / Clientes */
         #login-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -47,7 +47,7 @@
         .login-box button {
             width: 100%;
             padding: 10px;
-            background-color: #2563eb;
+            background-color: #f97316;
             color: white;
             border: none;
             border-radius: 4px;
@@ -55,7 +55,7 @@
             font-weight: bold;
             font-size: 14px;
         }
-        .login-box button:hover { background-color: #1d4ed8; }
+        .login-box button:hover { background-color: #ea580c; }
         .login-error { color: #dc2626; font-size: 12px; margin-top: 5px; display: none; }
 
         header {
@@ -78,6 +78,11 @@
             font-size: 14px;
         }
         nav a:hover { color: #ffffff; }
+        
+        .nav-botones {
+            display: flex;
+            gap: 10px;
+        }
         .btn-acceso {
             background-color: #f97316;
             color: white;
@@ -86,6 +91,8 @@
             text-decoration: none;
             font-weight: bold;
             font-size: 14px;
+            cursor: pointer;
+            border: none;
         }
         .btn-acceso:hover { background-color: #ea580c; }
 
@@ -294,10 +301,10 @@
 </head>
 <body>
 
-    <!-- Pantalla de Login Protegida -->
+    <!-- Pantalla de Login Protegida (Clave: tecnicos2026) -->
     <div id="login-screen">
         <div class="login-box">
-            <h3>Acceso Clientes / Equipo</h3>
+            <h3>Acceso Operativo</h3>
             <p style="font-size: 12px; color: #666;">Ingrese contraseña de operador</p>
             <input type="password" id="input-password" placeholder="Contraseña">
             <button onclick="verificarPassword()">Ingresar</button>
@@ -305,7 +312,7 @@
         </div>
     </div>
 
-    <!-- Barra de Navegación del Portal -->
+    <!-- Barra de Navegación del Portal Corporativo -->
     <header>
         <div class="logo">INGENIERÍA MVP SALAZAR LAGOS</div>
         <nav>
@@ -314,7 +321,10 @@
             <a href="#">Precios y Planes</a>
             <a href="#">Solicitudes</a>
         </nav>
-        <a href="#portal-clientes" class="btn-acceso">Portal Operativo</a>
+        <div class="nav-botones">
+            <button class="btn-acceso" onclick="mostrarLogin()">Acceso Equipo</button>
+            <button class="btn-acceso" onclick="mostrarLogin()">Acceso Clientes</button>
+        </div>
     </header>
 
     <!-- Sección Principal de Gestión de TP -->
@@ -393,6 +403,12 @@
                 let err = document.getElementById("login-error");
                 err.style.display = "block";
             }
+        }
+
+        function mostrarLogin() {
+            document.getElementById("login-screen").style.display = "flex";
+            document.getElementById("input-password").value = "";
+            document.getElementById("login-error").style.display = "none";
         }
 
         window.onload = function() {
