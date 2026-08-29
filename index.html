@@ -146,3 +146,425 @@
         .modal-content select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; }
         .modal-buttons { margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px; }
         .modal-buttons button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .btn-modal-cancel { background: #64748b; color: white; }
+        .btn-modal-ok { background: #2563eb; color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla de Login de Técnicos -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h3>Acceso Técnico</h3>
+            <p style="font-size: 12px; color: #666;">Ingrese contraseña de operador</p>
+            <input type="password" id="input-password" placeholder="Contraseña">
+            <button onclick="verificarPassword()">Ingresar</button>
+            <div id="login-error" class="login-error">Contraseña incorrecta</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Catastro Mufa TP</h2>
+        <p class="subtitle">Gestión Integral de Mufas, Cables y Fusiones</p>
+        
+        <div class="plano-control-bar">
+            <div id="estado-plano-txt" class="plano-status">Estado del Plano: Inactivo</div>
+            <div class="grupo-botones-plano">
+                <button id="btn-accion-plano" class="btn-plano btn-iniciar" onclick="alternarPlano()">Iniciar Plano</button>
+                <button class="btn-plano btn-visual" onclick="exportarPlanoVisual()">Descargar Plano Visual</button>
+                <button class="btn-plano btn-excel" onclick="exportarExcel()">Descargar Excel</button>
+            </div>
+        </div>
+
+        <div id="info-trabajo" class="info-trabajo-header">
+            <strong>Incidencia / TP:</strong> <span id="txt-tp">-</span> | 
+            <strong>Nombre del Trabajo:</strong> <span id="txt-nombre">-</span> | 
+            <strong>Inicio:</strong> <span id="txt-fecha">-</span>
+        </div>
+
+        <div id="panel-trabajo" class="bloqueado">
+            <div class="top-mufa-controls" id="controles-agregar-mufa" style="display:none;">
+                <button class="btn-add-mufa" onclick="agregarMufaPrompt()">+ Agregar Mufa</button>
+            </div>
+            <div id="contenedor-mufas"></div>
+        </div>
+
+        <div class="resumen">
+            <h3>Resumen de Fusiones:</h3>
+            <ul id="lista-resumen">
+                <li>Aún no hay fusiones registradas.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="fusionModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Seleccionar Destino de Fusión</h3>
+            <label for="selectMufa">Mufa de Destino:</label>
+            <select id="selectMufa" onchange="actualizarCablesDestino()"><option value="">-- Seleccione Mufa --</option></select>
+            <label for="selectCable">Cable de Destino:</label>
+            <select id="selectCable" onchange="actualizarFilamentosDestino()"><option value="">-- Seleccione Cable --</option></select>
+            <label for="selectFilamento">Filamento Disponible:</label>
+            <select id="selectFilamento"><option value="">-- Seleccione Filamento --</option></select>
+            <div class="modal-buttons">
+                <button class="btn-modal-cancel" onclick="cerrarModalFusion()">Cancelar</button>
+                <button class="btn-modal-ok" onclick="confirmarFusionModal()">Fusionar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PASSWORD_TECNICO = "tecnicos2026";
+
+        function verificarPassword() {
+            let pass = document.getElementById("input-password").value;
+            if (pass === PASSWORD_TECNICO) {
+                document.getElementById("login-screen").style.display = "none";
+                sessionStorage.setItem("tecnico_autenticado", "true");
+            } else {
+                let err = document.getElementById("login-error");
+                err.style.display = "block";
+            }
+        }
+
+        window.onload = function() {
+            if (sessionStorage.getItem("tecnico_autenticado") === "true") {
+                document.getElementById("login-screen").style.display = "none";
+            }
+            let datosGuardados = localStorage.getItem('catastro_mufa_datos');
+            let trabajoGuardado = localStorage.getItem('catastro_mufa_trabajo');
+            let activoGuardado = localStorage.getItem('catastro_mufa_activo');
+
+            if (activoGuardado === 'true' && datosGuardados && trabajoGuardado) {
+                mufas = JSON.parse(datosGuardados);
+                datosTrabajo = JSON.parse(trabajoGuardado);
+                planoActivo = true;
+                document.getElementById("estado-plano-txt").innerText = "Estado del Plano: En Ejecución";
+                document.getElementById("txt-tp").innerText = datosTrabajo.tp;
+                document.getElementById("txt-nombre").innerText = datosTrabajo.nombre;
+                document.getElementById("txt-fecha").innerText = datosTrabajo.fechaInicio;
+                document.getElementById("info-trabajo").style.display = "block";
+                document.getElementById("controles-agregar-mufa").style.display = "flex";
+                document.getElementById("btn-accion-plano").innerText = "Cerrar TP";
+                document.getElementById("btn-accion-plano").className = "btn-plano btn-cerrar";
+                document.getElementById("panel-trabajo").classList.remove("bloqueado");
+                renderizarMufas();
+                actualizarResumen();
+            }
+        };
+
+        let datosTrabajo = { tp: '', nombre: '', fechaInicio: '' };
+        let mufas = {};
+        let planoActivo = false;
+        const capacidadesValidas = [1, 6, 8, 12, 24, 36, 48, 64, 96, 192, 288];
+        let origenActualModal = { mufa: '', cable: '', index: -1 };
+
+        function guardarAutomaticamente() {
+            if (planoActivo) {
+                localStorage.setItem('catastro_mufa_datos', JSON.stringify(mufas));
+                localStorage.setItem('catastro_mufa_trabajo', JSON.stringify(datosTrabajo));
+                localStorage.setItem('catastro_mufa_activo', 'true');
+            } else {
+                localStorage.removeItem('catastro_mufa_datos');
+                localStorage.removeItem('catastro_mufa_trabajo');
+                localStorage.removeItem('catastro_mufa_activo');
+            }
+        }
+
+        function alternarPlano() {
+            if (!planoActivo) {
+                let tp = prompt("Ingrese el Número de Incidencia o TP:");
+                if (!tp || tp.trim() === "") return;
+                let nombreTrabajo = prompt("Ingrese el Nombre del Trabajo:");
+                if (!nombreTrabajo || nombreTrabajo.trim() === "") return;
+                let numMufasStr = prompt("¿Cuántas mufas iniciales se van a trabajar en este TP?:", "1");
+                let numMufas = parseInt(numMufasStr);
+                if (isNaN(numMufas) || numMufas <= 0) return;
+
+                datosTrabajo.tp = tp.trim();
+                datosTrabajo.nombre = nombreTrabajo.trim();
+                let ahora = new Date();
+                datosTrabajo.fechaInicio = ahora.toLocaleDateString() + ' ' + ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                mufas = {};
+                for (let i = 1; i <= numMufas; i++) { mufas[`Mufa #${i}`] = {}; }
+
+                planoActivo = true;
+                document.getElementById("estado-plano-txt").innerText = "Estado del Plano: En Ejecución";
+                document.getElementById("txt-tp").innerText = datosTrabajo.tp;
+                document.getElementById("txt-nombre").innerText = datosTrabajo.nombre;
+                document.getElementById("txt-fecha").innerText = datosTrabajo.fechaInicio;
+                document.getElementById("info-trabajo").style.display = "block";
+                document.getElementById("controles-agregar-mufa").style.display = "flex";
+                document.getElementById("btn-accion-plano").innerText = "Cerrar TP";
+                document.getElementById("btn-accion-plano").className = "btn-plano btn-cerrar";
+                document.getElementById("panel-trabajo").classList.remove("bloqueado");
+                guardarAutomaticamente();
+                renderizarMufas();
+                actualizarResumen();
+            } else {
+                if (confirm("¿Cerrar TP? Se descargarán el plano visual y el Excel.")) {
+                    exportarPlanoVisual();
+                    exportarExcel();
+                    planoActivo = false;
+                    mufas = {};
+                    datosTrabajo = { tp: '', nombre: '', fechaInicio: '' };
+                    guardarAutomaticamente();
+                    document.getElementById("estado-plano-txt").innerText = "Estado del Plano: Inactivo";
+                    document.getElementById("txt-tp").innerText = "-";
+                    document.getElementById("txt-nombre").innerText = "-";
+                    document.getElementById("txt-fecha").innerText = "-";
+                    document.getElementById("info-trabajo").style.display = "none";
+                    document.getElementById("controles-agregar-mufa").style.display = "none";
+                    document.getElementById("btn-accion-plano").innerText = "Iniciar Plano";
+                    document.getElementById("btn-accion-plano").className = "btn-plano btn-iniciar";
+                    document.getElementById("panel-trabajo").classList.add("bloqueado");
+                    renderizarMufas();
+                    actualizarResumen();
+                }
+            }
+        }
+
+        function agregarMufaPrompt() {
+            if (!planoActivo) return;
+            let nombreMufa = prompt("Nombre de la nueva mufa:", `Mufa #${Object.keys(mufas).length + 1}`);
+            if (!nombreMufa || mufas[nombreMufa.trim()]) return;
+            mufas[nombreMufa.trim()] = {};
+            guardarAutomaticamente();
+            renderizarMufas();
+        }
+
+        function eliminarMufa(nombreMufa) {
+            if (!planoActivo || !confirm(`¿Eliminar ${nombreMufa}?`)) return;
+            delete mufas[nombreMufa];
+            guardarAutomaticamente();
+            renderizarMufas();
+            actualizarResumen();
+        }
+
+        function agregarCablePrompt(nombreMufa) {
+            if (!planoActivo) return;
+            let nombreCable = prompt("Nombre o etiqueta del cable:");
+            if (!nombreCable) return;
+            let idCable = prompt("ID o código identificador:");
+            if (!idCable) return;
+            let cap = parseInt(prompt("Cantidad de filamentos (1, 6, 8, 12, 24, 36, 48, 64, 96, 192, 288):"));
+            if (!capacidadesValidas.includes(cap)) return;
+
+            let filamentosArray = [];
+            for (let i = 1; i <= cap; i++) { filamentosArray.push({ numero: i, fusionadoCon: null }); }
+
+            mufas[nombreMufa][nombreCable.trim()] = { nombre: nombreCable.trim(), id: idCable.trim(), capacidad: cap, filamentosArray };
+            guardarAutomaticamente();
+            renderizarMufas();
+            actualizarResumen();
+        }
+
+        function editarCable(mufa, actual) {
+            let c = mufas[mufa][actual];
+            let nn = prompt("Nuevo nombre:", c.nombre);
+            let ni = prompt("Nuevo ID:", c.id);
+            if (!nn || !ni) return;
+            c.nombre = nn.trim();
+            c.id = ni.trim();
+            if (nn.trim() !== actual) {
+                mufas[mufa][nn.trim()] = c;
+                delete mufas[mufa][actual];
+            }
+            guardarAutomaticamente();
+            renderizarMufas();
+            actualizarResumen();
+        }
+
+        function eliminarCable(mufa, cable) {
+            if (confirm(`¿Eliminar cable ${cable}?`)) {
+                delete mufas[mufa][cable];
+                guardarAutomaticamente();
+                renderizarMufas();
+                actualizarResumen();
+            }
+        }
+
+        function abrirModalFusion(mufaOrig, cableOrig, idx) {
+            let fil = mufas[mufaOrig][cableOrig].filamentosArray[idx];
+            if (fil.fusionadoCon) {
+                if (confirm("¿Romper fusión?")) {
+                    romperFusion(mufaOrig, cableOrig, idx);
+                }
+                return;
+            }
+            origenActualModal = { mufa: mufaOrig, cable: cableOrig, index: idx };
+            let sM = document.getElementById("selectMufa");
+            sM.innerHTML = '<option value="">-- Seleccione Mufa --</option>';
+            for (let m in mufas) { sM.innerHTML += `<option value="${m}">${m}</option>`; }
+            document.getElementById("fusionModal").style.display = "flex";
+        }
+
+        function actualizarCablesDestino() {
+            let mDest = document.getElementById("selectMufa").value;
+            let sC = document.getElementById("selectCable");
+            sC.innerHTML = '<option value="">-- Seleccione Cable --</option>';
+            if (!mDest) return;
+            for (let c in mufas[mDest]) {
+                if (mDest !== origenActualModal.mufa || c !== origenActualModal.cable) {
+                    sC.innerHTML += `<option value="${c}">${c}</option>`;
+                }
+            }
+        }
+
+        function actualizarFilamentosDestino() {
+            let mDest = document.getElementById("selectMufa").value;
+            let cDest = document.getElementById("selectCable").value;
+            let sF = document.getElementById("selectFilamento");
+            sF.innerHTML = '<option value="">-- Seleccione Filamento --</option>';
+            if (!mDest || !cDest) return;
+            mufas[mDest][cDest].filamentosArray.forEach(f => {
+                if (!f.fusionadoCon) { sF.innerHTML += `<option value="${f.numero}">Filamento #${f.numero} (Libre)</option>`; }
+            });
+        }
+
+        function cerrarModalFusion() { document.getElementById("fusionModal").style.display = "none"; }
+
+        function confirmarFusionModal() {
+            let mDest = document.getElementById("selectMufa").value;
+            let cDest = document.getElementById("selectCable").value;
+            let fDestNum = parseInt(document.getElementById("selectFilamento").value);
+            if (!mDest || !cDest || isNaN(fDestNum)) return;
+
+            let fOrig = mufas[origenActualModal.mufa][origenActualModal.cable].filamentosArray[origenActualModal.index];
+            let fTarget = mufas[mDest][cDest].filamentosArray[fDestNum - 1];
+
+            fOrig.fusionadoCon = { mufa: mDest, cable: cDest, filamento: fDestNum };
+            fTarget.fusionadoCon = { mufa: origenActualModal.mufa, cable: origenActualModal.cable, filamento: fOrig.numero };
+
+            cerrarModalFusion();
+            guardarAutomaticamente();
+            renderizarMufas();
+            actualizarResumen();
+        }
+
+        function romperFusion(mufa, cable, idx) {
+            let f = mufas[mufa][cable].filamentosArray[idx];
+            if (!f.fusionadoCon) return;
+            let dM = f.fusionadoCon.mufa, dC = f.fusionadoCon.cable, dN = f.fusionadoCon.filamento;
+            if (mufas[dM] && mufas[dM][dC]) {
+                mufas[dM][dC].filamentosArray[dN - 1].fusionadoCon = null;
+            }
+            f.fusionadoCon = null;
+            guardarAutomaticamente();
+            renderizarMufas();
+            actualizarResumen();
+        }
+
+        function renderizarMufas() {
+            let cont = document.getElementById("contenedor-mufas");
+            cont.innerHTML = "";
+            let keys = Object.keys(mufas);
+            if (keys.length === 0) { cont.innerHTML = '<p style="text-align:center;color:#888;">Inicia un plano.</p>'; return; }
+
+            keys.forEach(m => {
+                let div = document.createElement("div");
+                div.className = "mufa-section";
+                div.innerHTML = `<div class="mufa-header"><span>${m}</span><div>${planoActivo ? `<button class="btn-principal" onclick="agregarCablePrompt('${m}')">+ Agregar Cable</button>` : ''} ${planoActivo && keys.length > 1 ? `<button class="btn-eliminar-cable" onclick="eliminarMufa('${m}')">Eliminar</button>` : ''}</div></div>`;
+                
+                let cCont = document.createElement("div");
+                let cKeys = Object.keys(mufas[m]);
+                if (cKeys.length === 0) { cCont.innerHTML = '<p style="font-size:12px;color:#666;text-align:center;">Sin cables.</p>'; }
+                else {
+                    cKeys.forEach(ck => {
+                        let c = mufas[m][ck];
+                        let cCard = document.createElement("div");
+                        cCard.className = "cable-card";
+                        cCard.innerHTML = `<div class="cable-header"><span><strong>${c.nombre}</strong> (ID: ${c.id})</span><div class="cable-info"><span><b>${c.capacidad} fil.</b></span>${planoActivo ? `<div class="botones-cable"><button class="btn-editar-cable" onclick="editarCable('${m}','${ck}')">Editar</button><button class="btn-eliminar-cable" onclick="eliminarCable('${m}','${ck}')">Eliminar</button></div>` : ''}</div></div>`;
+                        
+                        let fCont = document.createElement("div");
+                        fCont.className = "filamentos-container";
+                        c.filamentosArray.forEach((f, idx) => {
+                            let fItem = document.createElement("div");
+                            fItem.className = "filamento-item";
+                            let txt = f.fusionadoCon ? `<span style="color:#16a34a;font-weight:bold;">Fusionado con [${f.fusionadoCon.mufa}] ${f.fusionadoCon.cable} (#${f.fusionadoCon.filamento})</span>` : `<span style="color:#64748b;font-style:italic;">Libre</span>`;
+                            let btn = planoActivo ? (f.fusionadoCon ? `<button class="btn-liberar" onclick="romperFusion('${m}','${ck}',${idx})">Liberar</button>` : `<button class="btn-fusionar" onclick="abrirModalFusion('${m}','${ck}',${idx})">Fusionar</button>`) : '';
+                            fItem.innerHTML = `<span><strong>#${f.numero}</strong>: ${txt}</span><div>${btn}</div>`;
+                            fCont.appendChild(fItem);
+                        });
+                        cCard.appendChild(fCont);
+                        cCont.appendChild(cCard);
+                    });
+                }
+                div.appendChild(cCont);
+                cont.appendChild(div);
+            });
+        }
+
+        function actualizarResumen() {
+            let lR = document.getElementById("lista-resumen");
+            lR.innerHTML = "";
+            let hay = false, procesados = new Set();
+            for (let m in mufas) {
+                for (let c in mufas[m]) {
+                    mufas[m][c].filamentosArray.forEach(f => {
+                        if (f.fusionadoCon) {
+                            hay = true;
+                            let k1 = `${m}|${c}|${f.numero}`, k2 = `${f.fusionadoCon.mufa}|${f.fusionadoCon.cable}|${f.fusionadoCon.filamento}`;
+                            let pk = [k1, k2].sort().join(' <=> ');
+                            if (!procesados.has(pk)) {
+                                procesados.add(pk);
+                                lR.innerHTML += `<li>🔗 [${m}] <strong>${c}</strong> (#${f.numero}) ⟷ [${f.fusionadoCon.mufa}] <strong>${f.fusionadoCon.cable}</strong> (#${f.fusionadoCon.filamento})</li>`;
+                            }
+                        }
+                    });
+                }
+            }
+            if (!hay) lR.innerHTML = "<li>Aún no hay fusiones registradas.</li>";
+        }
+
+        function exportarPlanoVisual() {
+            let svgW = 1100, y = 90, els = [`<rect width="100%" height="100%" fill="#111827" />`, `<text x="30" y="35" fill="#fff" font-size="16" font-weight="bold">TP: ${datosTrabajo.tp || 'N/A'}</text>`, `<text x="30" y="55" fill="#94a3b8" font-size="13">Trabajo: ${datosTrabajo.nombre || 'N/A'} | Inicio: ${datosTrabajo.fechaInicio || 'N/A'}</text>`, `<line x1="30" y1="70" x2="1070" y2="70" stroke="#374151" stroke-width="2" />`];
+            let coords = {};
+            for (let m in mufas) {
+                els.push(`<text x="30" y="${y}" fill="#38bdf8" font-size="15" font-weight="bold">--- ${m} ---</text>`);
+                y += 25;
+                for (let c in mufas[m]) {
+                    let cab = mufas[m][c];
+                    let bx = 50, by = y, bw = 270, bh = 35 + (cab.capacidad * 18);
+                    els.push(`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" fill="#1f2937" stroke="#3b82f6" stroke-width="1.5" rx="4" />`, `<text x="${bx+10}" y="${by+20}" fill="#fff" font-size="13" font-weight="bold">${cab.nombre}</text>`);
+                    cab.filamentosArray.forEach((f, i) => {
+                        let fy = by + 35 + (i * 18), fx = bx + bw;
+                        els.push(`<text x="${bx+10}" y="${fy+4}" fill="#9ca3af" font-size="11">#${f.numero}</text>`, `<circle cx="${fx}" cy="${fy}" r="3.5" fill="${f.fusionadoCon ? '#22c55e' : '#4b5563'}" />`);
+                        coords[`${m}|${c}|${f.numero}`] = { x: fx, y: fy };
+                    });
+                    y += bh + 20;
+                }
+            }
+            let blob = new Blob([els.join("\n") + "</svg>"], { type: "image/svg+xml" });
+            let l = document.createElement("a");
+            l.href = URL.createObjectURL(blob);
+            l.download = `Plano_TP_${datosTrabajo.tp || 'Mufa'}.svg`;
+            l.click();
+        }
+
+        function exportarExcel() {
+            let csv = "\uFEFFMufa Origen,Cable Origen,Filamento Origen,Mufa Destino,Cable Destino,Filamento Destino\n", proc = new Set();
+            for (let m in mufas) {
+                for (let c in mufas[m]) {
+                    mufas[m][c].filamentosArray.forEach(f => {
+                        if (f.fusionadoCon) {
+                            let k1 = `${m}|${c}|${f.numero}`, k2 = `${f.fusionadoCon.mufa}|${f.fusionadoCon.cable}|${f.fusionadoCon.filamento}`;
+                            let pk = [k1, k2].sort().join(' <=> ');
+                            if (!proc.has(pk)) {
+                                proc.add(pk);
+                                csv += `"${m}","${c}","${f.numero}","${f.fusionadoCon.mufa}","${f.fusionadoCon.cable}","${f.fusionadoCon.filamento}"\n`;
+                            }
+                        }
+                    });
+                }
+            }
+            let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            let l = document.createElement("a");
+            l.href = URL.createObjectURL(blob);
+            l.download = `Catastro_TP_${datosTrabajo.tp || 'Fusiones'}.csv`;
+            l.click();
+        }
+    </script>
+</body>
+</html>
