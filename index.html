@@ -3,351 +3,445 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingeniería MVP Salazar Lagos - Catastro Mufa TP</title>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <title>Ingeniería MyP - Portal Corporativo y Clientes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #0b0f19;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+        :root { 
+            --bg-dark: #090d16;        
+            --surface-card: #131c31;   
+            --surface-card-hover: #1b2642;
+            --accent-cyan: #06b6d4;  
+            --accent-blue: #3b82f6;
+            --accent-orange: #f97316; 
+            --accent-main: #8b5cf6;
+            --text-main: #f8fafc;      
+            --text-muted: #94a3b8;     
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(6, 182, 212, 0.3);
+            --shadow-card: 0 10px 30px -10px rgba(0,0,0,0.5);
         }
-        #login-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #1e1e2f;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        .login-box {
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            width: 300px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            color: #333;
-        }
-        .login-box h3 { margin-top: 0; color: #333; }
-        .login-box input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #cbd5e1;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        .login-box button {
-            width: 100%;
-            padding: 10px;
-            background-color: #f97316;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .login-box button:hover { background-color: #ea580c; }
-        .login-error { color: #dc2626; font-size: 12px; margin-top: 5px; display: none; }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background-color: #111827;
-            border-bottom: 1px solid #1f2937;
-        }
-        .logo {
-            font-weight: bold;
-            font-size: 18px;
-            color: #38bdf8;
-        }
-        nav a {
-            color: #cbd5e1;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 14px;
-        }
-        nav a:hover { color: #ffffff; }
         
-        .nav-botones { display: flex; gap: 10px; }
-        .btn-acceso {
-            background-color: #f97316;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        
+        header { 
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 1000; 
+            padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); 
         }
-        .btn-acceso:hover { background-color: #ea580c; }
+        .logo-container { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; font-size: 1.3rem; font-weight: 800; color: #fff; }
+        .logo-container span { color: var(--accent-cyan); }
+        .ia-badge { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 700; border: 1px solid var(--accent-cyan); text-transform: uppercase; }
 
-        .main-container {
-            width: 100%;
-            padding: 30px 20px;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex: 1;
-            background-color: #f4f4f9;
+        .nav-buttons { display: flex; gap: 0.8rem; align-items: center; }
+        .btn-nav-action {
+            background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 0.5rem 1rem;
+            border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;
         }
-        .app-card {
-            width: 100%;
-            max-width: 750px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            color: #333;
-        }
-        h2 { color: #333; text-align: center; margin-bottom: 5px; }
-        .subtitle { font-size: 14px; color: #666; text-align: center; margin-bottom: 20px; }
-        .plano-control-bar {
-            background: #212529;
-            color: white;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-        .plano-status { font-size: 14px; font-weight: bold; }
-        .info-trabajo-header {
-            background: #e2e8f0;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            color: #333;
-            display: none;
-        }
-        .grupo-botones-plano { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn-plano {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-        }
-        .btn-iniciar { background-color: #28a745; color: white; }
-        .btn-iniciar:hover { background-color: #218838; }
-        .btn-cerrar { background-color: #dc3545; color: white; }
-        .btn-cerrar:hover { background-color: #c82333; }
-        .btn-excel { background-color: #17a2b8; color: white; }
-        .btn-excel:hover { background-color: #138496; }
-        .btn-visual { background-color: #6f42c1; color: white; }
-        .btn-visual:hover { background-color: #59339d; }
+        .btn-nav-action.admin:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); box-shadow: 0 0 10px rgba(6,182,212,0.2); }
+        .btn-nav-action.client { border-color: rgba(249, 115, 22, 0.4); color: var(--accent-orange); }
+        .btn-nav-action.client:hover { border-color: var(--accent-orange); background: rgba(249,115,22,0.1); }
+        .btn-cerrar-sesion { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #ef4444; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: none; align-items: center; gap: 0.4rem; }
 
-        .top-mufa-controls { display: flex; justify-content: flex-end; margin-bottom: 15px; }
-        .btn-add-mufa {
-            background-color: #0ea5e9;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .btn-add-mufa:hover { background-color: #0284c7; }
+        .vista-seccion { display: none; width: 100%; flex: 1; }
+        .vista-seccion.activa { display: flex; flex-direction: column; }
 
-        .mufa-section {
-            background: #f8f9fa;
-            border: 2px solid #cbd5e1;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            padding: 15px;
-        }
-        .mufa-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #475569;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .btn-principal {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .btn-principal:hover { background-color: #0056b3; }
-        .cable-card {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            margin: 10px 0;
-            padding: 10px;
-        }
-        .cable-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #334155;
-            color: white;
-            padding: 8px 10px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        .cable-info { text-align: right; font-size: 12px; }
-        .botones-cable { margin-top: 4px; }
-        .btn-editar-cable {
-            background: #0ea5e9; color: white; border: none; padding: 2px 5px;
-            border-radius: 3px; cursor: pointer; font-size: 11px; font-weight: bold; margin-right: 4px;
-        }
-        .btn-eliminar-cable {
-            background: #eab308; color: #000; border: none; padding: 2px 5px;
-            border-radius: 3px; cursor: pointer; font-size: 11px; font-weight: bold;
-        }
-        .filamentos-container {
-            margin-top: 8px; padding-left: 8px; border-left: 3px solid #334155;
-            max-height: 200px; overflow-y: auto;
-        }
-        .filamento-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 5px 0; border-bottom: 1px dashed #e2e8f0; font-size: 12px;
-        }
-        .btn-fusionar { background: #16a34a; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; }
-        .btn-liberar { background: #dc2626; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-left: 4px; }
-        .resumen { margin-top: 25px; padding-top: 15px; border-top: 1px solid #cbd5e1; }
-        .resumen h3 { font-size: 16px; color: #333; }
-        ul { padding-left: 20px; }
-        li { margin-bottom: 5px; color: #475569; font-size: 12px; }
-        .bloqueado { opacity: 0.6; pointer-events: none; }
+        .hero { position: relative; text-align: center; padding: 7rem 2rem 5rem; background: radial-gradient(circle at center, #131c31 0%, #090d16 100%); }
+        .hero h1 { font-size: 3.2rem; margin-bottom: 1.2rem; font-weight: 900; color: #fff; }
+        .hero h1 span { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem; }
 
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000;
-        }
-        .modal-content {
-            background: #fff; padding: 20px; border-radius: 8px; width: 320px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); color: #333;
-        }
-        .modal-content h3 { margin-top: 0; font-size: 16px; color: #333; }
-        .modal-content label { font-size: 12px; font-weight: bold; color: #475569; display: block; margin-top: 10px; }
-        .modal-content select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; }
-        .modal-buttons { margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px; }
-        .modal-buttons button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
-        .btn-modal-cancel { background: #64748b; color: white; }
-        .btn-modal-ok { background: #2563eb; color: white; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5, 8, 15, 0.85); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 2000; padding: 1rem; }
+        .login-card { background: var(--surface-card); padding: 3rem 2.5rem; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; border: 1px solid var(--accent-cyan); box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; }
+        .login-input { width: 100%; padding: 0.9rem 1rem; margin: 0.8rem 0; background: #090d16; border: 1px solid var(--border); border-radius: 10px; color: #fff; outline: none; font-size: 0.95rem; text-align: center; }
+        .btn-glow { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; padding: 0.9rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700; border: none; cursor: pointer; width: 100%; margin-top: 1rem; }
+        .close-btn { position: absolute; top: 1.2rem; right: 1.2rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
+
+        /* Estilos generales para los contenedores de clientes que se despliegan */
+        .dashboard-layout-client { display: flex; flex: 1; width: 100%; min-height: calc(100vh - 65px); }
+        aside.sidebar-client { width: 260px; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 8px; border-right: 1px solid rgba(255,255,255,0.1); }
+        .menu-titulo { font-size: 11px; text-transform: uppercase; font-weight: bold; margin: 15px 0 5px 10px; letter-spacing: 0.5px; }
+        .btn-menu { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 14px; background: transparent; border: none; font-size: 13px; font-weight: 600; border-radius: 8px; cursor: pointer; text-align: left; }
+        .main-content-client { flex: 1; padding: 2rem; overflow-y: auto; }
+        .seccion-interna { display: none; width: 100%; }
+        .seccion-interna.activa { display: block; }
+
+        /* Estilos específicos Salón de Belleza */
+        #vista-app-salon { background: #1a0a14; color: #f8fafc; }
+        #vista-app-salon aside.sidebar-client { background: #220d1a; border-color: rgba(244,114,182,0.2); }
+        #vista-app-salon .btn-menu { color: #cbd5e1; }
+        #vista-app-salon .btn-menu:hover, #vista-app-salon .btn-menu.activo { background: #2d1222; color: #fff; border-left: 4px solid #ec4899; }
+        #vista-app-salon .btn-menu i { color: #ec4899; }
+        #vista-app-salon .modulo-app-container { background: #fdf2f8; color: #334155; padding: 25px; border-radius: 16px; min-height: 650px; border: 1px solid #fbcfe8; }
+        #vista-app-salon .salon-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        #vista-app-salon .salon-stat-card { background: #ffffff; padding: 18px; border-radius: 10px; border: 1px solid #fbcfe8; }
+        #vista-app-salon .salon-stat-card h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; font-weight: bold; }
+        #vista-app-salon .salon-stat-card .val { font-size: 24px; font-weight: 800; color: #831843; }
+        #vista-app-salon .salon-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; font-size: 13px; margin-top: 10px; color:#333; }
+        #vista-app-salon .salon-table th, #vista-app-salon .salon-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        #vista-app-salon .salon-table th { background: #db2777; color: #fff; font-size: 12px; text-transform: uppercase; }
+
+        /* Estilos específicos Club Deportivo */
+        #vista-app-club { background: #061a14; color: #f8fafc; }
+        #vista-app-club aside.sidebar-client { background: #092219; border-color: rgba(52,211,153,0.2); }
+        #vista-app-club .btn-menu { color: #cbd5e1; }
+        #vista-app-club .btn-menu:hover, #vista-app-club .btn-menu.activo { background: #0e2e23; color: #fff; border-left: 4px solid #10b981; }
+        #vista-app-club .btn-menu i { color: #10b981; }
+        #vista-app-club .modulo-app-container { background: #ecfdf5; color: #1e293b; padding: 25px; border-radius: 16px; min-height: 650px; border: 1px solid #a7f3d0; }
+        #vista-app-club .club-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        #vista-app-club .club-stat-card { background: #ffffff; padding: 18px; border-radius: 10px; border: 1px solid #a7f3d0; }
+        #vista-app-club .club-stat-card h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; font-weight: bold; }
+        #vista-app-club .club-stat-card .val { font-size: 24px; font-weight: 800; color: #065f46; }
+        #vista-app-club .club-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; font-size: 13px; margin-top: 10px; color:#333; }
+        #vista-app-club .club-table th, #vista-app-club .club-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        #vista-app-club .club-table th { background: #059669; color: #fff; font-size: 12px; text-transform: uppercase; }
+
+        /* Estilos específicos Icetel */
+        #vista-app-icetel { background: #09111e; color: #f8fafc; }
+        #vista-app-icetel aside.sidebar-client { background: #0d1726; border-color: rgba(56,189,248,0.2); }
+        #vista-app-icetel .btn-menu { color: #94a3b8; }
+        #vista-app-icetel .btn-menu:hover, #vista-app-icetel .btn-menu.activo { background: #132238; color: #fff; border-left: 4px solid #0284c7; }
+        #vista-app-icetel .btn-menu i { color: #38bdf8; }
+        #vista-app-icetel .modulo-app-container { background: #f0f9ff; color: #1e293b; padding: 25px; border-radius: 16px; min-height: 650px; border: 1px solid #bae6fd; }
+        #vista-app-icetel .icetel-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        #vista-app-icetel .icetel-stat-card { background: #ffffff; padding: 18px; border-radius: 10px; border: 1px solid #bae6fd; }
+        #vista-app-icetel .icetel-stat-card h4 { font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 5px; font-weight: bold; }
+        #vista-app-icetel .icetel-stat-card .val { font-size: 24px; font-weight: 800; color: #0369a1; }
+        #vista-app-icetel .icetel-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; font-size: 13px; margin-top: 10px; color:#333; }
+        #vista-app-icetel .icetel-table th, #vista-app-icetel .icetel-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        #vista-app-icetel .icetel-table th { background: #0284c7; color: #fff; font-size: 12px; text-transform: uppercase; }
+
+        .dashboard-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+        .panel-seccion { background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px; color:#333; }
+        .panel-seccion h3 { font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        .chart-container { background: #fff; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; height: 260px; position: relative; margin-top: 15px; }
+        
+        .badge-estado { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .badge-completado { background: #d1fae5; color: #059669; }
+        .badge-pendiente { background: #fef3c7; color: #d97706; }
+        .btn-accion { padding: 6px 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; color: white; }
+        
+        footer { background: #05080f; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h3>Acceso Operativo</h3>
-            <p style="font-size: 12px; color: #666;">Ingrese contraseña de operador</p>
-            <input type="password" id="input-password" placeholder="Contraseña">
-            <button onclick="verificarPassword()">Ingresar</button>
-            <div id="login-error" class="login-error">Contraseña incorrecta</div>
-        </div>
-    </div>
-
     <header>
-        <div class="logo">INGENIERÍA MVP SALAZAR LAGOS</div>
-        <nav>
-            <a href="#">Inicio</a>
-            <a href="#">Quiénes Somos</a>
-            <a href="#">Precios y Planes</a>
-            <a href="#">Solicitudes</a>
-        </nav>
-        <div class="nav-botones">
-            <button class="btn-acceso" onclick="mostrarLogin()">Acceso Equipo</button>
-            <button class="btn-acceso" onclick="mostrarLogin()">Acceso Clientes</button>
+        <a href="#" onclick="mostrarVista('home')" class="logo-container" style="cursor:pointer;">
+            Ingeniería <span>MyP</span> <div class="ia-badge">Cloud Hub</div>
+        </a>
+        
+        <div class="nav-buttons">
+            <button class="btn-nav-action admin" onclick="abrirModalAdmin()">
+                <i class="fa-solid fa-user-lock"></i> Acceso Equipo Interno
+            </button>
+            <button class="btn-nav-action client" onclick="abrirModalPortalClientes()">
+                <i class="fa-solid fa-users"></i> Portal Clientes
+            </button>
+            <button id="btnCerrarSesionGlobal" class="btn-cerrar-sesion" onclick="cerrarSesion()">
+                <i class="fa-solid fa-xmark"></i> Cerrar Sesión
+            </button>
         </div>
     </header>
 
-    <div id="portal-clientes" class="main-container">
-        <div class="app-card">
-            <h2>Catastro Mufa TP</h2>
-            <p class="subtitle">Gestión Integral de Mufas, Cables y Fusiones (Sincronizado en Vivo)</p>
-            
-            <div class="plano-control-bar">
-                <div id="estado-plano-txt" class="plano-status">Estado del Plano: Inactivo</div>
-                <div class="grupo-botones-plano">
-                    <button id="btn-accion-plano" class="btn-plano btn-iniciar" onclick="alternarPlano()">Iniciar Plano</button>
-                    <button class="btn-plano btn-visual" onclick="exportarPlanoVisual()">Descargar Plano Visual</button>
-                    <button class="btn-plano btn-excel" onclick="exportarExcel()">Descargar Excel</button>
+    <!-- 1. VISTA HOME PRINCIPAL -->
+    <div id="vista-home" class="vista-seccion activa">
+        <section class="hero">
+            <h1>Soluciones Digitales <span>Inteligentes</span> & Automatización</h1>
+            <p>Especialistas en desarrollo web corporativo, flujos automatizados y agentes conversacionales entrenados con Inteligencia Artificial.</p>
+            <button class="btn-glow" style="display:inline-flex; width:auto; gap:0.6rem;" onclick="abrirModalPortalClientes()">
+                <i class="fa-solid fa-arrow-right"></i> Ingresar al Portal de Clientes
+            </button>
+        </section>
+    </div>
+
+    <!-- 2. APLICACIÓN CLIENTE: SALÓN DE BELLEZA -->
+    <div id="vista-app-salon" class="vista-seccion">
+        <div class="dashboard-layout-client">
+            <aside class="sidebar-client">
+                <div class="menu-titulo" style="color:#f472b6;">Navegación Salón</div>
+                <button class="btn-menu activo" onclick="navegarSalon('dashboard', this)"><i class="fa-solid fa-chart-line"></i> Dashboard General</button>
+                <button class="btn-menu" onclick="navegarSalon('citas', this)"><i class="fa-solid fa-calendar-check"></i> Citas / Agenda</button>
+                <button class="btn-menu" onclick="navegarSalon('ingresos', this)"><i class="fa-solid fa-money-bill-trend-up"></i> Ingresos</button>
+                <button class="btn-menu" onclick="navegarSalon('egresos', this)"><i class="fa-solid fa-wallet"></i> Egresos / Gastos</button>
+                <button class="btn-menu" onclick="navegarSalon('tienda', this)"><i class="fa-solid fa-boxes-stacked"></i> Tienda & Ventas</button>
+            </aside>
+            <main class="main-content-client">
+                <div class="modulo-app-container">
+                    <div style="background:#fce7f3; color:#9d174d; padding:8px 15px; border-radius:8px; font-size:12px; font-weight:bold; margin-bottom:20px; border:1px solid #f472b6; display:flex; justify-content:space-between;">
+                        <span><i class="fa-solid fa-fire"></i> Conectado a Firebase Firestore: <strong>salon@ingenieriamyp.cl</strong></span>
+                    </div>
+                    
+                    <!-- Sec Dashboard Salón -->
+                    <div id="salon-sec-dashboard" class="seccion-interna activa">
+                        <h2 style="color:#831843; margin-bottom:5px;"><i class="fa-solid fa-chart-line"></i> Dashboard General Salón</h2>
+                        <div class="salon-stats-grid" style="margin-top:20px;">
+                            <div class="salon-stat-card"><h4>Ingresos Servicios</h4><div class="val" id="salonStatIngresos">$0</div></div>
+                            <div class="salon-stat-card"><h4>Ganancia Tienda</h4><div class="val" id="salonStatTienda" style="color:#2563eb;">$0</div></div>
+                            <div class="salon-stat-card"><h4>Egresos / Gastos</h4><div class="val" id="salonStatEgresos" style="color:#dc2626;">$0</div></div>
+                            <div class="salon-stat-card"><h4>Balance Neto</h4><div class="val" id="salonStatBalance" style="color:#059669;">$0</div></div>
+                        </div>
+                        <div class="panel-seccion">
+                            <h3><i class="fa-solid fa-chart-pie"></i> Gráfico Financiero</h3>
+                            <div class="chart-container"><canvas id="chartSalonFinanzas"></canvas></div>
+                        </div>
+                    </div>
+
+                    <!-- Sec Citas Salón -->
+                    <div id="salon-sec-citas" class="seccion-interna">
+                        <h2 style="color:#831843; margin-bottom:15px;"><i class="fa-solid fa-calendar-check"></i> Gestión de Citas y Agenda</h2>
+                        <table class="salon-table">
+                            <thead><tr><th>Fecha/Hora</th><th>Cliente</th><th>Servicio & Precio</th><th>Estilista</th><th>Estado</th></tr></thead>
+                            <tbody id="salonTablaCitas">
+                                <tr><td>2026-08-30 10:00</td><td><strong>María González</strong></td><td>Corte y Brushing ($20.000)</td><td>Carla V.</td><td><span class="badge-estado badge-completado">Completado</span></td></tr>
+                                <tr><td>2026-08-29 12:15</td><td><strong>Camila Riquelme</strong></td><td>Balayage ($45.000)</td><td>Sofía M.</td><td><span class="badge-estado badge-completado">Completado</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Sec Ingresos Salón -->
+                    <div id="salon-sec-ingresos" class="seccion-interna">
+                        <h2 style="color:#831843; margin-bottom:15px;"><i class="fa-solid fa-money-bill-trend-up"></i> Detalle de Ingresos</h2>
+                        <table class="salon-table">
+                            <thead><tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Monto ($)</th></tr></thead>
+                            <tbody id="salonTablaIngresos">
+                                <tr><td>2026-08-30</td><td>María González</td><td>Corte y Brushing</td><td><strong>$20.000</strong></td></tr>
+                                <tr><td>2026-08-29</td><td>Camila Riquelme</td><td>Balayage + Tratamiento</td><td><strong>$45.000</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Sec Egresos Salón -->
+                    <div id="salon-sec-egresos" class="seccion-interna">
+                        <h2 style="color:#831843; margin-bottom:15px;"><i class="fa-solid fa-wallet"></i> Control de Egresos</h2>
+                        <table class="salon-table">
+                            <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Monto ($)</th></tr></thead>
+                            <tbody>
+                                <tr><td>2026-08-28</td><td>Compra de Tintes Profesionales</td><td>Insumos</td><td><strong>$22.000</strong></td></tr>
+                                <tr><td>2026-08-01</td><td>Arriendo Local Comercial</td><td>Arriendo</td><td><strong>$180.000</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Sec Tienda Salón -->
+                    <div id="salon-sec-tienda" class="seccion-interna">
+                        <h2 style="color:#831843; margin-bottom:15px;"><i class="fa-solid fa-boxes-stacked"></i> Tienda & Inventario</h2>
+                        <table class="salon-table">
+                            <thead><tr><th>Producto</th><th>Categoría</th><th>Stock Actual</th><th>Precio Venta ($)</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Tintura Profesional 6.1</strong></td><td>Coloración</td><td>12 un.</td><td><strong>$6.500</strong></td></tr>
+                                <tr><td><strong>Shampoo Hidratante 500ml</strong></td><td>Cuidado Capilar</td><td>6 un.</td><td><strong>$12.000</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-
-            <div id="info-trabajo" class="info-trabajo-header">
-                <strong>Incidencia / TP:</strong> <span id="txt-tp">-</span> | 
-                <strong>Nombre del Trabajo:</strong> <span id="txt-nombre">-</span> | 
-                <strong>Inicio:</strong> <span id="txt-fecha">-</span>
-            </div>
-
-            <div id="panel-trabajo" class="bloqueado">
-                <div class="top-mufa-controls" id="controles-agregar-mufa" style="display:none;">
-                    <button class="btn-add-mufa" onclick="agregarMufaPrompt()">+ Agregar Mufa</button>
-                </div>
-                <div id="contenedor-mufas"></div>
-            </div>
-
-            <div class="resumen">
-                <h3>Resumen de Fusiones:</h3>
-                <ul id="lista-resumen">
-                    <li>Aún no hay fusiones registradas.</li>
-                </ul>
-            </div>
+            </main>
         </div>
     </div>
 
-    <div id="fusionModal" class="modal-overlay">
-        <div class="modal-content">
-            <h3>Seleccionar Destino de Fusión</h3>
-            
-            <label for="selectMufa">Mufa de Destino:</label>
-            <select id="selectMufa" onchange="actualizarCablesDestino()">
-                <option value="">-- Seleccione Mufa --</option>
-            </select>
+    <!-- 3. APLICACIÓN CLIENTE: CLUB DEPORTIVO -->
+    <div id="vista-app-club" class="vista-seccion">
+        <div class="dashboard-layout-client">
+            <aside class="sidebar-client">
+                <div class="menu-titulo" style="color:#34d399;">Navegación Club</div>
+                <button class="btn-menu activo" onclick="navegarClub('dashboard', this)"><i class="fa-solid fa-chart-line"></i> Dashboard General</button>
+                <button class="btn-menu" onclick="navegarClub('citas', this)"><i class="fa-solid fa-calendar-check"></i> Arriendos / Canchas</button>
+                <button class="btn-menu" onclick="navegarClub('ingresos', this)"><i class="fa-solid fa-money-bill-trend-up"></i> Ingresos</button>
+                <button class="btn-menu" onclick="navegarClub('egresos', this)"><i class="fa-solid fa-wallet"></i> Egresos / Gastos</button>
+                <button class="btn-menu" onclick="navegarClub('tienda', this)"><i class="fa-solid fa-shop"></i> Tienda & Ventas</button>
+            </aside>
+            <main class="main-content-client">
+                <div class="modulo-app-container">
+                    <div style="background:#d1fae5; color:#065f46; padding:8px 15px; border-radius:8px; font-size:12px; font-weight:bold; margin-bottom:20px; border:1px solid #34d399; display:flex; justify-content:space-between;">
+                        <span><i class="fa-solid fa-fire"></i> Conectado a Firebase Firestore: <strong>club@ingenieriamyp.cl</strong></span>
+                    </div>
 
-            <label for="selectCable">Cable de Destino:</label>
-            <select id="selectCable" onchange="actualizarFilamentosDestino()">
-                <option value="">-- Seleccione Cable --</option>
-            </select>
+                    <!-- Sec Dashboard Club -->
+                    <div id="club-sec-dashboard" class="seccion-interna activa">
+                        <h2 style="color:#065f46; margin-bottom:5px;"><i class="fa-solid fa-chart-line"></i> Dashboard General Club Deportivo</h2>
+                        <div class="club-stats-grid" style="margin-top:20px;">
+                            <div class="club-stat-card"><h4>Ingresos Arriendos</h4><div class="val" id="clubStatIngresos">$75.000</div></div>
+                            <div class="club-stat-card"><h4>Ganancia Tienda</h4><div class="val" id="clubStatTienda" style="color:#2563eb;">$4.500</div></div>
+                            <div class="club-stat-card"><h4>Egresos / Gastos</h4><div class="val" id="clubStatEgresos" style="color:#dc2626;">$110.000</div></div>
+                            <div class="club-stat-card"><h4>Balance Neto</h4><div class="val" id="clubStatBalance" style="color:#059669;">-$30.500</div></div>
+                        </div>
+                        <div class="panel-seccion">
+                            <h3><i class="fa-solid fa-chart-pie"></i> Gráfico Financiero Club</h3>
+                            <div class="chart-container"><canvas id="chartClubFinanzas"></canvas></div>
+                        </div>
+                    </div>
 
-            <label for="selectFilamento">Filamento Disponible:</label>
-            <select id="selectFilamento">
-                <option value="">-- Seleccione Filamento --</option>
-            </select>
+                    <!-- Sec Citas Club -->
+                    <div id="club-sec-citas" class="seccion-interna">
+                        <h2 style="color:#065f46; margin-bottom:15px;"><i class="fa-solid fa-calendar-check"></i> Arriendos de Canchas</h2>
+                        <table class="club-table">
+                            <thead><tr><th>Fecha/Hora</th><th>Cliente</th><th>Cancha & Precio</th><th>Turno</th><th>Estado</th></tr></thead>
+                            <tbody>
+                                <tr><td>2026-08-30 18:00</td><td>Los Leones FC</td><td>Cancha 1 Sintética ($35.000)</td><td>Turno Tarde</td><td><span class="badge-estado badge-completado">Completado</span></td></tr>
+                                <tr><td>2026-08-29 20:00</td><td>Deportivo Ñuble</td><td>Cancha 2 Techada ($40.000)</td><td>Turno Noche</td><td><span class="badge-estado badge-completado">Completado</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-            <div class="modal-buttons">
-                <button class="btn-modal-cancel" onclick="cerrarModalFusion()">Cancelar</button>
-                <button class="btn-modal-ok" onclick="confirmarFusionModal()">Fusionar</button>
-            </div>
+                    <!-- Sec Ingresos Club -->
+                    <div id="club-sec-ingresos" class="seccion-interna">
+                        <h2 style="color:#065f46; margin-bottom:15px;"><i class="fa-solid fa-money-bill-trend-up"></i> Detalle Ingresos Arriendos</h2>
+                        <table class="club-table">
+                            <thead><tr><th>Fecha</th><th>Cliente</th><th>Cancha</th><th>Monto ($)</th></tr></thead>
+                            <tbody>
+                                <tr><td>2026-08-30</td><td>Los Leones FC</td><td>Cancha 1 Sintética</td><td><strong>$35.000</strong></td></tr>
+                                <tr><td>2026-08-29</td><td>Deportivo Ñuble</td><td>Cancha 2 Techada</td><td><strong>$40.000</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Sec Egresos Club -->
+                    <div id="club-sec-egresos" class="seccion-interna">
+                        <h2 style="color:#065f46; margin-bottom:15px;"><i class="fa-solid fa-wallet"></i> Control de Egresos Club</h2>
+                        <table class="club-table">
+                            <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Monto ($)</th></tr></thead>
+                            <tbody>
+                                <tr><td>2026-08-28</td><td>Mantención focos LED</td><td>Mantención</td><td><strong>$45.000</strong></td></tr>
+                                <tr><td>2026-08-01</td><td>Pago Agua y Luz</td><td>Servicios Básicos</td><td><strong>$65.000</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Sec Tienda Club -->
+                    <div id="club-sec-tienda" class="seccion-interna">
+                        <h2 style="color:#065f46; margin-bottom:15px;"><i class="fa-solid fa-shop"></i> Tienda Deportiva</h2>
+                        <table class="club-table">
+                            <thead><tr><th>Producto</th><th>Categoría</th><th>Stock Actual</th><th>Precio Venta ($)</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Bebida Isotónica 500ml</strong></td><td>Bebidas</td><td>21 un.</td><td><strong>$1.500</strong></td></tr>
+                                <tr><td><strong>Pelota de Fútbol N°5</strong></td><td>Equipamiento</td><td>4 un.</td><td><strong>$18.000</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
-    <script>
-        // Configuración de Firebase
+    <!-- 4. APLICACIÓN CLIENTE: ICETEL / ENTEL -->
+    <div id="vista-app-icetel" class="vista-seccion">
+        <div class="dashboard-layout-client">
+            <aside class="sidebar-client">
+                <div class="menu-titulo" style="color:#38bdf8;">Módulos Icetel</div>
+                <button class="btn-menu activo" onclick="navegarIcetel('dashboard', this)"><i class="fa-solid fa-chart-line"></i> Dashboard General</button>
+                <button class="btn-menu" onclick="navegarIcetel('planillas', this)"><i class="fa-solid fa-file-excel"></i> Planillas & Tickets</button>
+                <button class="btn-menu" onclick="navegarIcetel('looker', this)"><i class="fa-solid fa-chart-pie"></i> Looker Studio (Flota)</button>
+                <button class="btn-menu" onclick="navegarIcetel('flota', this)"><i class="fa-solid fa-truck"></i> Control de Flota</button>
+                <button class="btn-menu" onclick="navegarIcetel('turnos', this)"><i class="fa-solid fa-clock"></i> Turnos & Horas Extras</button>
+            </aside>
+            <main class="main-content-client">
+                <div class="modulo-app-container">
+                    <div style="background:#e0f2fe; color:#0369a1; padding:8px 15px; border-radius:8px; font-size:12px; font-weight:bold; margin-bottom:20px; border:1px solid #7dd3fc; display:flex; justify-content:space-between;">
+                        <span><i class="fa-solid fa-server"></i> Conectado a Servidor Operativo: <strong>icetel@ingenieriamyp.cl</strong> (Entel Planta Externa)</span>
+                    </div>
+
+                    <!-- Sec Dashboard Icetel -->
+                    <div id="icetel-sec-dashboard" class="seccion-interna activa">
+                        <h2 style="color:#0369a1; margin-bottom:5px;"><i class="fa-solid fa-chart-line"></i> Dashboard de Operaciones Icetel</h2>
+                        <div class="icetel-stats-grid" style="margin-top:20px;">
+                            <div class="icetel-stat-card"><h4>Planillas / Tickets Abiertos</h4><div class="val">2</div></div>
+                            <div class="icetel-stat-card"><h4>Vehículos en Flota</h4><div class="val" style="color:#059669;">2</div></div>
+                            <div class="icetel-stat-card"><h4>Horas Extras Mes</h4><div class="val" style="color:#d97706;">6 hrs</div></div>
+                            <div class="icetel-stat-card"><h4>Personal Activo</h4><div class="val" style="color:#0284c7;">2</div></div>
+                        </div>
+                    </div>
+
+                    <!-- Sec Planillas Icetel -->
+                    <div id="icetel-sec-planillas" class="seccion-interna">
+                        <h2 style="color:#0369a1; margin-bottom:15px;"><i class="fa-solid fa-file-excel"></i> Planillas de Enlaces & Tickets</h2>
+                        <table class="icetel-table">
+                            <thead><tr><th>N° Ticket</th><th>Ruta / Zona</th><th>Detalle / Mediciones</th><th>Estado</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>TK-8812</strong></td><td>Fibra Troncal Entel - Norte</td><td>Medición OTDR - Enlace OK (-19.2 dBm)</td><td><span class="badge-estado badge-completado">Completado</span></td></tr>
+                                <tr><td><strong>TK-8815</strong></td><td>Empalme NAP Maipú</td><td>Fusión de 12 hilos, baja atenuación</td><td><span class="badge-estado badge-pendiente">En Proceso</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Sec Looker Icetel -->
+                    <div id="icetel-sec-looker" class="seccion-interna">
+                        <h2 style="color:#0369a1; margin-bottom:15px;"><i class="fa-solid fa-chart-pie"></i> Looker Studio - Reporte de Flota</h2>
+                        <div style="background:#0b1329; border-radius:10px; border:1px solid #38bdf8; padding:30px; text-align:center; color:#fff;">
+                            <i class="fa-solid fa-chart-area" style="font-size:3rem; color:#38bdf8; margin-bottom:15px;"></i>
+                            <h3>Panel Integrado de Looker Studio</h3>
+                            <p style="color:#94a3b8; font-size:13px; margin-top:5px;">Visualización en tiempo real del rendimiento de la flota operativa en la Región Metropolitana.</p>
+                        </div>
+                    </div>
+
+                    <!-- Sec Flota Icetel -->
+                    <div id="icetel-sec-flota" class="seccion-interna">
+                        <h2 style="color:#0369a1; margin-bottom:15px;"><i class="fa-solid fa-truck"></i> Control de Flota de Vehículos</h2>
+                        <table class="icetel-table">
+                            <thead><tr><th>Patente</th><th>Modelo / Vehículo</th><th>Chofer / Responsable</th><th>Estado</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>HX-KJ-88</strong></td><td>Changan CS75 (Operativo)</td><td>Mauricio Salazar</td><td><span class="badge-estado badge-completado">Operativo</span></td></tr>
+                                <tr><td><strong>KL-99-23</strong></td><td>Camioneta Soporte Taller</td><td>Esteban R.</td><td><span class="badge-estado badge-pendiente">Mantenimiento</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Sec Turnos Icetel -->
+                    <div id="icetel-sec-turnos" class="seccion-interna">
+                        <h2 style="color:#0369a1; margin-bottom:15px;"><i class="fa-solid fa-clock"></i> Control de Turnos & Horas Extras</h2>
+                        <table class="icetel-table">
+                            <thead><tr><th>Fecha</th><th>Personal</th><th>Turno</th><th>Horas Extras</th><th>Motivo</th></tr></thead>
+                            <tbody>
+                                <tr><td>2026-08-29</td><td>Mauricio Salazar</td><td>Turno Día</td><td>+4 hrs</td><td>Reparación de acometida crítica</td></tr>
+                                <tr><td>2026-08-30</td><td>Rodrigo Fuentes</td><td>Turno Noche</td><td>+2 hrs</td><td>Mantenimiento programado red</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL ACCESO EQUIPO INTERNO -->
+    <div id="modalAdmin" class="modal-overlay">
+        <div class="login-card">
+            <i class="fa-solid fa-xmark close-btn" onclick="cerrarModales()"></i>
+            <i class="fa-solid fa-user-lock" style="font-size: 2.5rem; color: var(--accent-cyan); margin-bottom: 1rem;"></i>
+            <h3 style="color:#fff; margin-bottom:0.5rem;">Acceso Equipo MyP</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">Credenciales de gerencia protegidas por Firebase Authentication[cite: 2].</p>
+            <form onsubmit="validarAdminFirebase(event)">
+                <input type="email" id="inputAdminEmail" class="login-input" placeholder="Correo Corporativo" required>
+                <input type="password" id="inputAdminPass" class="login-input" placeholder="Contraseña Segura" required>
+                <button type="submit" class="btn-glow">Acceder al Panel General</button>
+                <p id="errorAdmin" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CLAVE DIRECTA CLIENTES (APARECE AL PRESIONAR PORTAL CLIENTES) -->
+    <div id="modalPortalClientes" class="modal-overlay">
+        <div class="login-card">
+            <i class="fa-solid fa-xmark close-btn" onclick="cerrarModales()"></i>
+            <i class="fa-solid fa-key" style="font-size: 2.5rem; color: var(--accent-orange); margin-bottom: 1rem;"></i>
+            <h3 style="color:#fff; margin-bottom:0.5rem;">Acceso Portal Clientes</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">Ingresa tu clave corporativa asignada.</p>
+            <form onsubmit="validarLoginClienteDirecto(event)">
+                <input type="password" id="inputClientPassDirecto" class="login-input" placeholder="Contraseña segura" required>
+                <button type="submit" class="btn-glow" style="background: linear-gradient(135deg, var(--accent-orange), #ea580c);">Ingresar al Dashboard</button>
+                <p id="errorClientDirecto" style="color:#ef4444; font-size:0.85rem; margin-top:1rem; display:none;"></p>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Arquitectura de Sistemas y Automatización Avanzada. | Santiago, Chile</p>
+    </footer>
+
+    <!-- Lógica de Firebase Authentication y Control de Dashboards -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyAHQLLGjYtjHQ6dYiOcBTx8xyRv7X3RUco",
             authDomain: "ingenieriamyp-auth.firebaseapp.com",
@@ -358,668 +452,160 @@
             measurementId: "G-3TYPD3EJ7F"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        let chartSalonInstance = null;
+        let chartClubInstance = null;
 
-        const PASSWORD_TECNICO = "tecnicos2026";
+        window.mostrarVista = function(id) {
+            document.querySelectorAll('.vista-seccion').forEach(v => v.classList.remove('activa'));
+            document.getElementById('vista-' + id).classList.add('activa');
+            window.scrollTo(0,0);
+        }
 
-        function verificarPassword() {
-            let pass = document.getElementById("input-password").value;
-            if (pass === PASSWORD_TECNICO) {
-                document.getElementById("login-screen").style.display = "none";
-                sessionStorage.setItem("tecnico_autenticado", "true");
+        window.abrirModalAdmin = function() {
+            document.getElementById('modalAdmin').style.display = 'flex';
+            document.getElementById('inputAdminEmail').value = '';
+            document.getElementById('inputAdminPass').value = '';
+            document.getElementById('errorAdmin').style.display = 'none';
+        }
+
+        window.abrirModalPortalClientes = function() {
+            document.getElementById('modalPortalClientes').style.display = 'flex';
+            document.getElementById('inputClientPassDirecto').value = '';
+            document.getElementById('errorClientDirecto').style.display = 'none';
+        }
+
+        window.cerrarModales = function() {
+            document.getElementById('modalAdmin').style.display = 'none';
+            document.getElementById('modalPortalClientes').style.display = 'none';
+        }
+
+        // Validación Firebase Equipo Interno
+        window.validarAdminFirebase = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('inputAdminEmail').value.trim();
+            const password = document.getElementById('inputAdminPass').value.trim();
+            const errorMsg = document.getElementById('errorAdmin');
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    cerrarModales();
+                    document.getElementById('btnCerrarSesionGlobal').style.display = 'flex';
+                    alert("Autenticación exitosa en el equipo de Ingeniería MyP.");
+                })
+                .catch((error) => {
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerText = "Correo o contraseña corporativa incorrectos.";
+                });
+        }
+
+        // Validación Clientes directo con Firebase según contraseña
+        window.validarLoginClienteDirecto = function(e) {
+            e.preventDefault();
+            let pass = document.getElementById('inputClientPassDirecto').value.trim();
+            let errorMsg = document.getElementById('errorClientDirecto');
+
+            let targetType = '';
+            let targetEmail = '';
+
+            if (pass === 'belleza2026') {
+                targetType = 'app-salon';
+                targetEmail = 'salon@ingenieriamyp.cl';
+            } else if (pass === 'deporte2026') {
+                targetType = 'app-club';
+                targetEmail = 'club@ingenieriamyp.cl';
+            } else if (pass === 'icetel2026') {
+                targetType = 'app-icetel';
+                targetEmail = 'icetel@ingenieriamyp.cl';
             } else {
-                let err = document.getElementById("login-error");
-                err.style.display = "block";
+                errorMsg.style.display = 'block';
+                errorMsg.innerText = "Contraseña incorrecta o no autorizada.";
+                return;
             }
+
+            signInWithEmailAndPassword(auth, targetEmail, pass)
+                .then((userCredential) => {
+                    cerrarModales();
+                    document.getElementById('btnCerrarSesionGlobal').style.display = 'flex';
+                    mostrarVista(targetType);
+                    
+                    // Inicializar gráficos si corresponde
+                    setTimeout(() => {
+                        if (targetType === 'app-salon') inicializarGraficoSalon();
+                        if (targetType === 'app-club') inicializarGraficoClub();
+                    }, 200);
+                })
+                .catch((error) => {
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerText = "Error de autenticación en Firebase.";
+                });
         }
 
-        function mostrarLogin() {
-            document.getElementById("login-screen").style.display = "flex";
-            document.getElementById("input-password").value = "";
-            document.getElementById("login-error").style.display = "none";
+        // Navegación interna Salón de Belleza
+        window.navegarSalon = function(sec, btn) {
+            document.querySelectorAll('#vista-app-salon .seccion-interna').forEach(s => s.classList.remove('activa'));
+            document.getElementById('salon-sec-' + sec).classList.add('activa');
+            document.querySelectorAll('#vista-app-salon .btn-menu').forEach(b => b.classList.remove('activo'));
+            btn.classList.add('activo');
         }
 
-        window.onload = function() {
-            if (sessionStorage.getItem("tecnico_autenticado") === "true") {
-                document.getElementById("login-screen").style.display = "none";
-            }
-            sincronizarEnVivo();
-        };
+        // Navegación interna Club Deportivo
+        window.navegarClub = function(sec, btn) {
+            document.querySelectorAll('#vista-app-club .seccion-interna').forEach(s => s.classList.remove('activa'));
+            document.getElementById('club-sec-' + sec).classList.add('activa');
+            document.querySelectorAll('#vista-app-club .btn-menu').forEach(b => b.classList.remove('activo'));
+            btn.classList.add('activo');
+        }
 
-        let datosTrabajo = { tp: '', nombre: '', fechaInicio: '' };
-        let mufas = {};
-        let planoActivo = false;
-        const capacidadesValidas = [1, 6, 8, 12, 24, 36, 48, 64, 96, 192, 288];
-        let origenActualModal = { mufa: '', cable: '', index: -1 };
+        // Navegación interna Icetel
+        window.navegarIcetel = function(sec, btn) {
+            document.querySelectorAll('#vista-app-icetel .seccion-interna').forEach(s => s.classList.remove('activa'));
+            document.getElementById('icetel-sec-' + sec).classList.add('activa');
+            document.querySelectorAll('#vista-app-icetel .btn-menu').forEach(b => b.classList.remove('activo'));
+            btn.classList.add('activo');
+        }
 
-        // Sincronización en vivo con Firestore
-        function sincronizarEnVivo() {
-            db.collection("catastro_tp").doc("sesion_actual").onSnapshot((doc) => {
-                if (doc.exists) {
-                    let data = doc.data();
-                    datosTrabajo = data.datosTrabajo || { tp: '', nombre: '', fechaInicio: '' };
-                    mufas = data.mufas || {};
-                    planoActivo = data.planoActivo || false;
+        function inicializarGraficoSalon() {
+            let ctx = document.getElementById('chartSalonFinanzas');
+            if(!ctx) return;
+            if(chartSalonInstance) chartSalonInstance.destroy();
+            chartSalonInstance = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Ing. Servicios', 'Ganancia Tienda', 'Egresos', 'Balance Neto'],
+                    datasets: [{ data: [65000, 6500, 202000, -130500], backgroundColor: ['#10b981', '#2563eb', '#ef4444', '#ec4899'], borderRadius: 6 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+            document.getElementById('salonStatIngresos').innerText = "$65.000";
+            document.getElementById('salonStatTienda').innerText = "$6.500";
+            document.getElementById('salonStatEgresos').innerText = "$202.000";
+            document.getElementById('salonStatBalance').innerText = "-$130.500";
+        }
 
-                    actualizarInterfazEstado();
-                    renderizarMufas();
-                    actualizarResumen();
-                }
+        function inicializarGraficoClub() {
+            let ctx = document.getElementById('chartClubFinanzas');
+            if(!ctx) return;
+            if(chartClubInstance) chartClubInstance.destroy();
+            chartClubInstance = new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Ing. Arriendos', 'Ganancia Tienda', 'Egresos', 'Balance Neto'],
+                    datasets: [{ data: [75000, 4500, 110000, -30500], backgroundColor: ['#10b981', '#2563eb', '#ef4444', '#065f46'], borderRadius: 6 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
-        function guardarEnNube() {
-            db.collection("catastro_tp").doc("sesion_actual").set({
-                datosTrabajo: datosTrabajo,
-                mufas: mufas,
-                planoActivo: planoActivo
+        window.cerrarSesion = function() {
+            signOut(auth).then(() => {
+                document.getElementById('btnCerrarSesionGlobal').style.display = 'none';
+                mostrarVista('home');
             }).catch((error) => {
-                console.error("Error al guardar en Firebase: ", error);
+                document.getElementById('btnCerrarSesionGlobal').style.display = 'none';
+                mostrarVista('home');
             });
-        }
-
-        function actualizarInterfazEstado() {
-            if (planoActivo) {
-                document.getElementById("estado-plano-txt").innerText = "Estado del Plano: En Ejecución (En Vivo)";
-                document.getElementById("txt-tp").innerText = datosTrabajo.tp;
-                document.getElementById("txt-nombre").innerText = datosTrabajo.nombre;
-                document.getElementById("txt-fecha").innerText = datosTrabajo.fechaInicio;
-                document.getElementById("info-trabajo").style.display = "block";
-                document.getElementById("controles-agregar-mufa").style.display = "flex";
-
-                document.getElementById("btn-accion-plano").innerText = "Cerrar TP";
-                document.getElementById("btn-accion-plano").className = "btn-plano btn-cerrar";
-                document.getElementById("panel-trabajo").classList.remove("bloqueado");
-            } else {
-                document.getElementById("estado-plano-txt").innerText = "Estado del Plano: Inactivo";
-                document.getElementById("txt-tp").innerText = "-";
-                document.getElementById("txt-nombre").innerText = "-";
-                document.getElementById("txt-fecha").innerText = "-";
-                document.getElementById("info-trabajo").style.display = "none";
-                document.getElementById("controles-agregar-mufa").style.display = "none";
-
-                document.getElementById("btn-accion-plano").innerText = "Iniciar Plano";
-                document.getElementById("btn-accion-plano").className = "btn-plano btn-iniciar";
-                document.getElementById("panel-trabajo").classList.add("bloqueado");
-            }
-        }
-
-        function alternarPlano() {
-            if (!planoActivo) {
-                let tp = prompt("Ingrese el Número de Incidencia o TP:");
-                if (!tp || tp.trim() === "") return;
-                let nombreTrabajo = prompt("Ingrese el Nombre del Trabajo:");
-                if (!nombreTrabajo || nombreTrabajo.trim() === "") return;
-
-                let numMufasStr = prompt("¿Cuántas mufas iniciales se van a trabajar en este TP? (ej: 1, 2, 3):", "1");
-                let numMufas = parseInt(numMufasStr);
-                if (isNaN(numMufas) || numMufas <= 0) {
-                    alert("Número de mufas inválido.");
-                    return;
-                }
-
-                datosTrabajo.tp = tp.trim();
-                datosTrabajo.nombre = nombreTrabajo.trim();
-                
-                let ahora = new Date();
-                datosTrabajo.fechaInicio = ahora.toLocaleDateString() + ' ' + ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                mufas = {};
-                for (let i = 1; i <= numMufas; i++) {
-                    let mufaId = `Mufa #${i}`;
-                    mufas[mufaId] = {};
-                }
-
-                planoActivo = true;
-                guardarEnNube();
-            } else {
-                let confirmar = confirm("¿Deseas cerrar este TP? Se descargarán automáticamente el plano visual y el archivo Excel, y la base de datos se limpiará para un nuevo TP.");
-                if (confirmar) {
-                    exportarPlanoVisual();
-                    exportarExcel();
-
-                    planoActivo = false;
-                    mufas = {};
-                    datosTrabajo = { tp: '', nombre: '', fechaInicio: '' };
-                    guardarEnNube();
-                    alert("TP cerrado y respaldado correctamente.");
-                }
-            }
-        }
-
-        function agregarMufaPrompt() {
-            if (!planoActivo) return;
-            let mufasKeys = Object.keys(mufas);
-            let siguienteNombre = `Mufa #${mufasKeys.length + 1}`;
-            
-            let nombreMufa = prompt("Ingrese el nombre para la nueva mufa:", siguienteNombre);
-            if (!nombreMufa || nombreMufa.trim() === "") return;
-            nombreMufa = nombreMufa.trim();
-
-            if (mufas[nombreMufa]) {
-                alert("Ya existe una mufa con ese nombre.");
-                return;
-            }
-
-            mufas[nombreMufa] = {};
-            guardarEnNube();
-        }
-
-        function eliminarMufa(nombreMufa) {
-            if (!planoActivo) return;
-            let cablesCount = Object.keys(mufas[nombreMufa]).length;
-            if (cablesCount > 0) {
-                let confirmarCables = confirm(`La mufa "${nombreMufa}" contiene cables. ¿Estás seguro de eliminarla? Se romperán todas sus fusiones.`);
-                if (!confirmarCables) return;
-            }
-
-            for (let cName in mufas[nombreMufa]) {
-                mufas[nombreMufa][cName].filamentosArray.forEach(f => {
-                    if (f.fusionadoCon) {
-                        romperFusionExterna(f.fusionadoCon.mufa, f.fusionadoCon.cable, f.fusionadoCon.filamento, nombreMufa, cName, f.numero);
-                    }
-                });
-            }
-
-            delete mufas[nombreMufa];
-            guardarEnNube();
-        }
-
-        function agregarCablePrompt(nombreMufa) {
-            if (!planoActivo) return;
-
-            let nombreCable = prompt(`Ingrese el nombre o etiqueta del cable para ${nombreMufa} (ej: Cable A, Troncal Norte):`);
-            if (!nombreCable || nombreCable.trim() === "") return;
-            nombreCable = nombreCable.trim();
-
-            if (mufas[nombreMufa][nombreCable]) {
-                alert("Ya existe un cable con ese nombre en esta mufa.");
-                return;
-            }
-
-            let idCable = prompt(`Ingrese el ID o código identificador para "${nombreCable}":`);
-            if (!idCable || idCable.trim() === "") return;
-
-            let capacidadStr = prompt(`Ingrese la cantidad de filamentos para "${nombreCable}".\nPermitidas: 1, 6, 8, 12, 24, 36, 48, 64, 96, 192, 288`);
-            let capacidad = parseInt(capacidadStr);
-            if (!capacidadesValidas.includes(capacidad)) {
-                alert("Capacidad inválida.");
-                return;
-            }
-
-            let filamentosArray = [];
-            for (let i = 1; i <= capacidad; i++) {
-                filamentosArray.push({ numero: i, fusionadoCon: null });
-            }
-
-            mufas[nombreMufa][nombreCable] = {
-                nombre: nombreCable,
-                id: idCable.trim(),
-                capacidad: capacidad,
-                filamentosArray: filamentosArray
-            };
-
-            guardarEnNube();
-        }
-
-        function editarCable(nombreMufa, nombreActual) {
-            if (!planoActivo) return;
-            let cable = mufas[nombreMufa][nombreActual];
-
-            let nuevoNombre = prompt("Modificar nombre o etiqueta del cable:", cable.nombre);
-            if (!nuevoNombre || nuevoNombre.trim() === "") return;
-            nuevoNombre = nuevoNombre.trim();
-
-            let nuevoId = prompt("Modificar ID o código identificador del cable:", cable.id);
-            if (!nuevoId || nuevoId.trim() === "") return;
-
-            let nuevaCapacidadStr = prompt(`Modificar cantidad de filamentos:\nActual: ${cable.capacidad}`);
-            let nuevaCapacidad = parseInt(nuevaCapacidadStr);
-            if (!capacidadesValidas.includes(nuevaCapacidad)) {
-                alert("Capacidad inválida.");
-                return;
-            }
-
-            let nuevoFilamentosArray = [];
-            for (let i = 1; i <= nuevaCapacidad; i++) {
-                if (i <= cable.filamentosArray.length) {
-                    nuevoFilamentosArray.push(cable.filamentosArray[i - 1]);
-                } else {
-                    nuevoFilamentosArray.push({ numero: i, fusionadoCon: null });
-                }
-            }
-
-            if (nuevoNombre !== nombreActual) {
-                delete mufas[nombreMufa][nombreActual];
-            }
-
-            mufas[nombreMufa][nuevoNombre] = {
-                nombre: nuevoNombre,
-                id: nuevoId.trim(),
-                capacidad: nuevaCapacidad,
-                filamentosArray: nuevoFilamentosArray
-            };
-
-            guardarEnNube();
-        }
-
-        function eliminarCable(nombreMufa, nombreCable) {
-            if (!planoActivo) return;
-            let confirmar = confirm(`¿Eliminar el cable "${nombreCable}"? Se romperán sus fusiones.`);
-            if (!confirmar) return;
-
-            mufas[nombreMufa][nombreCable].filamentosArray.forEach(f => {
-                if (f.fusionadoCon) {
-                    romperFusionExterna(f.fusionadoCon.mufa, f.fusionadoCon.cable, f.fusionadoCon.filamento, nombreMufa, f.numero);
-                }
-            });
-
-            delete mufas[nombreMufa][nombreCable];
-            guardarEnNube();
-        }
-
-        function abrirModalFusion(mufaOrigen, cableOrigen, indexOrigen) {
-            if (!planoActivo) return;
-            let filOrigen = mufas[mufaOrigen][cableOrigen].filamentosArray[indexOrigen];
-
-            if (filOrigen.fusionadoCon) {
-                let accion = confirm(`El Filamento #${filOrigen.numero} está fusionado con [${filOrigen.fusionadoCon.mufa}] ${filOrigen.fusionadoCon.cable} (#${filOrigen.fusionadoCon.filamento}). ¿Romper fusión?`);
-                if (accion) {
-                    romperFusion(mufaOrigen, cableOrigen, indexOrigen);
-                }
-                return;
-            }
-
-            origenActualModal = { mufa: mufaOrigen, cable: cableOrigen, index: indexOrigen };
-
-            let selectMufa = document.getElementById("selectMufa");
-            selectMufa.innerHTML = '<option value="">-- Seleccione Mufa --</option>';
-            
-            for (let mName in mufas) {
-                let opt = document.createElement("option");
-                opt.value = mName;
-                opt.innerText = mName;
-                selectMufa.appendChild(opt);
-            }
-
-            document.getElementById("selectCable").innerHTML = '<option value="">-- Seleccione Cable --</option>';
-            document.getElementById("selectFilamento").innerHTML = '<option value="">-- Seleccione Filamento --</option>';
-
-            document.getElementById("fusionModal").style.display = "flex";
-        }
-
-        function actualizarCablesDestino() {
-            let mufaSeleccionada = document.getElementById("selectMufa").value;
-            let selectCable = document.getElementById("selectCable");
-            selectCable.innerHTML = '<option value="">-- Seleccione Cable --</option>';
-            document.getElementById("selectFilamento").innerHTML = '<option value="">-- Seleccione Filamento --</option>';
-
-            if (!mufaSeleccionada) return;
-
-            for (let cName in mufas[mufaSeleccionada]) {
-                if (mufaSeleccionada !== origenActualModal.mufa || cName !== origenActualModal.cable) {
-                    let opt = document.createElement("option");
-                    opt.value = cName;
-                    opt.innerText = cName;
-                    selectCable.appendChild(opt);
-                }
-            }
-        }
-
-        function actualizarFilamentosDestino() {
-            let mufaSeleccionada = document.getElementById("selectMufa").value;
-            let cableSeleccionado = document.getElementById("selectCable").value;
-            let selectFilamento = document.getElementById("selectFilamento");
-            selectFilamento.innerHTML = '<option value="">-- Seleccione Filamento --</option>';
-
-            if (!mufaSeleccionada || !cableSeleccionado) return;
-
-            let cableObj = mufas[mufaSeleccionada][cableSeleccionado];
-            cableObj.filamentosArray.forEach(f => {
-                if (!f.fusionadoCon) {
-                    let opt = document.createElement("option");
-                    opt.value = f.numero;
-                    opt.innerText = `Filamento #${f.numero} (Libre)`;
-                    selectFilamento.appendChild(opt);
-                }
-            });
-        }
-
-        function cerrarModalFusion() {
-            document.getElementById("fusionModal").style.display = "none";
-        }
-
-        function confirmarFusionModal() {
-            let mufaDest = document.getElementById("selectMufa").value;
-            let cableDest = document.getElementById("selectCable").value;
-            let filNumDest = parseInt(document.getElementById("selectFilamento").value);
-
-            if (!mufaDest || !cableDest || isNaN(filNumDest)) {
-                alert("Por favor seleccione todos los campos del destino.");
-                return;
-            }
-
-            let mufaOrig = origenActualModal.mufa;
-            let cableOrig = origenActualModal.cable;
-            let indexOrig = origenActualModal.index;
-
-            let filOrigen = mufas[mufaOrig][cableOrig].filamentosArray[indexOrig];
-            let indexDest = filNumDest - 1;
-            let filDestinoObj = mufas[mufaDest][cableDest].filamentosArray[indexDest];
-
-            if (filDestinoObj.fusionadoCon) {
-                alert("El filamento seleccionado ya se encuentra ocupado.");
-                return;
-            }
-
-            filOrigen.fusionadoCon = { mufa: mufaDest, cable: cableDest, filamento: filNumDest };
-            filDestinoObj.fusionadoCon = { mufa: mufaOrig, cable: cableOrig, filamento: filOrigen.numero };
-
-            cerrarModalFusion();
-            guardarEnNube();
-        }
-
-        function romperFusion(mufaNombre, cableNombre, index) {
-            if (!planoActivo) return;
-            let fil = mufas[mufaNombre][cableNombre].filamentosArray[index];
-            if (!fil.fusionadoCon) return;
-
-            let destMufa = fil.fusionadoCon.mufa;
-            let destCable = fil.fusionadoCon.cable;
-            let destNum = fil.fusionadoCon.filamento;
-            let destIndex = destNum - 1;
-
-            if (mufas[destMufa] && mufas[destMufa][destCable] && mufas[destMufa][destCable].filamentosArray[destIndex]) {
-                mufas[destMufa][destCable].filamentosArray[destIndex].fusionadoCon = null;
-            }
-
-            fil.fusionadoCon = null;
-            guardarEnNube();
-        }
-
-        function romperFusionExterna(mufaDest, cableDest, numDest, mufaOrig, cableOrig, numOrig) {
-            let destIndex = numDest - 1;
-            if (mufas[mufaDest] && mufas[mufaDest][cableDest] && mufas[mufaDest][cableDest].filamentosArray[destIndex]) {
-                let fDest = mufas[mufaDest][cableDest].filamentosArray[destIndex];
-                if (fDest.fusionadoCon && fDest.fusionadoCon.mufa === mufaOrig && fDest.fusionadoCon.cable === cableOrig && fDest.fusionadoCon.filamento === numOrig) {
-                    fDest.fusionadoCon = null;
-                }
-            }
-        }
-
-        function renderizarMufas() {
-            let contenedor = document.getElementById("contenedor-mufas");
-            contenedor.innerHTML = "";
-
-            let mufasKeys = Object.keys(mufas);
-            if (mufasKeys.length === 0) {
-                contenedor.innerHTML = `<p style="text-align: center; color: #888;">Inicia un plano para comenzar a registrar mufas y cables.</p>`;
-                return;
-            }
-
-            mufasKeys.forEach(mufaName => {
-                let mufaDiv = document.createElement("div");
-                mufaDiv.className = "mufa-section";
-
-                let headerHtml = `
-                    <div class="mufa-header">
-                        <span>${mufaName}</span>
-                        <div>
-                            ${planoActivo ? `<button class="btn-principal" onclick="agregarCablePrompt('${mufaName}')">+ Agregar Cable</button>` : ''}
-                            ${planoActivo && mufasKeys.length > 1 ? `<button class="btn-eliminar-cable" style="margin-left: 8px; padding: 5px 8px;" onclick="eliminarMufa('${mufaName}')">Eliminar Mufa</button>` : ''}
-                        </div>
-                    </div>
-                `;
-
-                let cablesContainer = document.createElement("div");
-                let cablesKeys = Object.keys(mufas[mufaName]);
-
-                if (cablesKeys.length === 0) {
-                    cablesContainer.innerHTML = `<p style="color: #666; font-size: 13px; text-align: center;">No hay cables en esta mufa.</p>`;
-                } else {
-                    cablesKeys.forEach(cableName => {
-                        let cable = mufas[mufaName][cableName];
-                        let card = document.createElement("div");
-                        card.className = "cable-card";
-
-                        let botonesHeader = planoActivo ? `
-                            <div class="botones-cable">
-                                <button class="btn-editar-cable" onclick="editarCable('${mufaName}', '${cableName}')">Editar</button>
-                                <button class="btn-eliminar-cable" onclick="eliminarCable('${mufaName}', '${cableName}')">Eliminar</button>
-                            </div>` : '';
-
-                        card.innerHTML = `
-                            <div class="cable-header">
-                                <span><strong>${cable.nombre}</strong> (ID: ${cable.id})</span>
-                                <div class="cable-info">
-                                    <span><b>${cable.capacidad} filamentos</b></span>
-                                    ${botonesHeader}
-                                </div>
-                            </div>
-                        `;
-
-                        let filContainer = document.createElement("div");
-                        filContainer.className = "filamentos-container";
-
-                        cable.filamentosArray.forEach((f, idx) => {
-                            let item = document.createElement("div");
-                            item.className = "filamento-item";
-
-                            let estadoTexto = "";
-                            let botonesAccion = "";
-
-                            if (f.fusionadoCon) {
-                                estadoTexto = `<span style="color: #16a34a; font-weight: bold;">Fusionado con [${f.fusionadoCon.mufa}] ${f.fusionadoCon.cable} (#${f.fusionadoCon.filamento})</span>`;
-                                if (planoActivo) {
-                                    botonesAccion = `
-                                        <button class="btn-fusionar" onclick="abrirModalFusion('${mufaName}', '${cableName}', ${idx})">Cambiar</button>
-                                        <button class="btn-liberar" onclick="romperFusion('${mufaName}', '${cableName}', ${idx})">Liberar</button>
-                                    `;
-                                }
-                            } else {
-                                estadoTexto = `<span style="color: #64748b; font-style: italic;">Libre</span>`;
-                                if (planoActivo) {
-                                    botonesAccion = `
-                                        <button class="btn-fusionar" onclick="abrirModalFusion('${mufaName}', '${cableName}', ${idx})">Fusionar</button>
-                                    `;
-                                }
-                            }
-
-                            item.innerHTML = `
-                                <span><strong>#${f.numero}</strong>: ${estadoTexto}</span>
-                                <div>${botonesAccion}</div>
-                            `;
-                            filContainer.appendChild(item);
-                        });
-
-                        card.appendChild(filContainer);
-                        cablesContainer.appendChild(card);
-                    });
-                }
-
-                mufaDiv.innerHTML = headerHtml;
-                mufaDiv.appendChild(cablesContainer);
-                contenedor.appendChild(mufaDiv);
-            });
-        }
-
-        function actualizarResumen() {
-            let listaResumen = document.getElementById("lista-resumen");
-            listaResumen.innerHTML = "";
-
-            let hayFusiones = false;
-            let procesados = new Set();
-
-            for (let mName in mufas) {
-                for (let cName in mufas[mName]) {
-                    mufas[mName][cName].filamentosArray.forEach(f => {
-                        if (f.fusionadoCon) {
-                            hayFusiones = true;
-                            let key1 = `${mName}|${cName}|${f.numero}`;
-                            let key2 = `${f.fusionadoCon.mufa}|${f.fusionadoCon.cable}|${f.fusionadoCon.filamento}`;
-                            let parKey = [key1, key2].sort().join(' <=> ');
-
-                            if (!procesados.has(parKey)) {
-                                procesados.add(parKey);
-                                let li = document.createElement("li");
-                                li.innerHTML = `🔗 [${mName}] <strong>${cName}</strong> (#${f.numero}) ⟷ [${f.fusionadoCon.mufa}] <strong>${f.fusionadoCon.cable}</strong> (#${f.fusionadoCon.filamento})`;
-                                listaResumen.appendChild(li);
-                            }
-                        }
-                    });
-                }
-            }
-
-            if (!hayFusiones) {
-                listaResumen.innerHTML = "<li>Aún no hay fusiones registradas.</li>";
-            }
-        }
-
-        function exportarPlanoVisual() {
-            let svgWidth = 1100;
-            let startY = 90;
-            let elements = [];
-
-            elements.push(`<rect width="100%" height="100%" fill="#111827" />`);
-            elements.push(`<text x="30" y="35" fill="#ffffff" font-family="Arial" font-size="16" font-weight="bold">TP / Incidencia: ${datosTrabajo.tp || 'N/A'}</text>`);
-            elements.push(`<text x="30" y="55" fill="#94a3b8" font-family="Arial" font-size="13">Trabajo: ${datosTrabajo.nombre || 'N/A'} | Inicio: ${datosTrabajo.fechaInicio || 'N/A'}</text>`);
-            elements.push(`<line x1="30" y1="70" x2="1070" y2="70" stroke="#374151" stroke-width="2" />`);
-
-            let coords = {};
-            let currentY = startY + 20;
-
-            for (let mName in mufas) {
-                elements.push(`<text x="30" y="${currentY}" fill="#38bdf8" font-family="Arial" font-size="15" font-weight="bold">--- ${mName} ---</text>`);
-                currentY += 25;
-
-                let cablesKeys = Object.keys(mufas[mName]);
-                if (cablesKeys.length === 0) {
-                    elements.push(`<text x="50" y="${currentY}" fill="#6b7280" font-family="Arial" font-size="12" font-style="italic">Sin cables</text>`);
-                    currentY += 30;
-                    continue;
-                }
-
-                cablesKeys.forEach((cName, cIdx) => {
-                    let cable = mufas[mName][cName];
-                    let boxX = 50 + (cIdx * 300);
-                    let boxY = currentY;
-                    let width = 270;
-                    let boxHeight = 35 + (cable.capacidad * 18);
-
-                    if (boxX + width > svgWidth - 50) {
-                        boxX = 50;
-                        currentY += boxHeight + 30;
-                        boxY = currentY;
-                    }
-
-                    elements.push(`<rect x="${boxX}" y="${boxY}" width="${width}" height="${boxHeight}" fill="#1f2937" stroke="#3b82f6" stroke-width="1.5" rx="4" />`);
-                    elements.push(`<text x="${boxX + 10}" y="${boxY + 20}" fill="#ffffff" font-family="Arial" font-size="13" font-weight="bold">${cable.nombre}</text>`);
-
-                    cable.filamentosArray.forEach((f, i) => {
-                        let fy = boxY + 35 + (i * 18);
-                        let fx = boxX + width;
-
-                        elements.push(`<text x="${boxX + 10}" y="${fy + 4}" fill="#9ca3af" font-family="Arial" font-size="11">#${f.numero}</text>`);
-                        elements.push(`<circle cx="${fx}" cy="${fy}" r="3.5" fill="${f.fusionadoCon ? '#22c55e' : '#4b5563'}" />`);
-
-                        coords[`${mName}|${cName}|${f.numero}`] = { x: fx, y: fy };
-                    });
-
-                    currentY += boxHeight + 20;
-                });
-                currentY += 15;
-            }
-
-            let procesados = new Set();
-            let coloresLineas = ['#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4', '#10b981', '#f97316'];
-            let colorIndex = 0;
-            let offsetRuta = 15;
-
-            for (let mName in mufas) {
-                for (let cName in mufas[mName]) {
-                    mufas[mName][cName].filamentosArray.forEach(f => {
-                        if (f.fusionadoCon) {
-                            let key1 = `${mName}|${cName}|${f.numero}`;
-                            let key2 = `${f.fusionadoCon.mufa}|${f.fusionadoCon.cable}|${f.fusionadoCon.filamento}`;
-                            let parKey = [key1, key2].sort().join(' <=> ');
-
-                            if (!procesados.has(parKey)) {
-                                procesados.add(parKey);
-                                let p1 = coords[key1];
-                                let p2 = coords[key2];
-
-                                if (p1 && p2) {
-                                    let color = coloresLineas[colorIndex % coloresLineas.length];
-                                    colorIndex++;
-                                    offsetRuta = (offsetRuta + 8) % 40;
-
-                                    let midX = Math.max(p1.x, p2.x) + 40 + offsetRuta;
-                                    let pathData = `M ${p1.x} ${p1.y} L ${midX} ${p1.y} L ${midX} ${p2.y} L ${p2.x} ${p2.y}`;
-
-                                    let markerId = `arrow-${colorIndex}`;
-                                    elements.push(`
-                                        <defs>
-                                            <marker id="${markerId}" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
-                                                <path d="M0,0 L0,6 L9,3 z" fill="${color}" />
-                                            </marker>
-                                        </defs>
-                                    `);
-
-                                    elements.push(`<path d="${pathData}" fill="none" stroke="${color}" stroke-width="2" marker-end="url(#${markerId})" />`);
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            let svgHeight = Math.max(currentY + 50, 600);
-            elements.unshift(`<svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}">`);
-            elements.push(`</svg>`);
-
-            let blob = new Blob([elements.join("\n")], { type: "image/svg+xml" });
-            let link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `Plano_Tecnico_TP_${datosTrabajo.tp || 'Mufa'}.svg`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function exportarExcel() {
-            let contenidoCSV = "\uFEFFMufa Origen,Cable Origen,Filamento Origen,Mufa Destino,Cable Destino,Filamento Destino\n";
-            let procesados = new Set();
-            let hayDatos = false;
-
-            for (let mName in mufas) {
-                for (let cName in mufas[mName]) {
-                    mufas[mName][cName].filamentosArray.forEach(f => {
-                        if (f.fusionadoCon) {
-                            hayDatos = true;
-                            let key1 = `${mName}|${cName}|${f.numero}`;
-                            let key2 = `${f.fusionadoCon.mufa}|${f.fusionadoCon.cable}|${f.fusionadoCon.filamento}`;
-                            let parKey = [key1, key2].sort().join(' <=> ');
-
-                            if (!procesados.has(parKey)) {
-                                procesados.add(parKey);
-                                contenidoCSV += `"${mName}","${cName}","${f.numero}","${f.fusionadoCon.mufa}","${f.fusionadoCon.cable}","${f.fusionadoCon.filamento}"\n`;
-                            }
-                        }
-                    });
-                }
-            }
-
-            if (!hayDatos) return;
-
-            let blob = new Blob([contenidoCSV], { type: 'text/csv;charset=utf-8;' });
-            let link = document.createElement("a");
-            let url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Catastro_TP_${datosTrabajo.tp || 'Fusiones'}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         }
     </script>
 </body>
