@@ -29,7 +29,7 @@
             background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 1000; 
             padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); 
         }
-        .logo-container { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; font-size: 1.3rem; font-weight: 800; color: #fff; }
+        .logo-container { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; font-size: 1.3rem; font-weight: 800; color: #fff; cursor: pointer; }
         .logo-container span { color: var(--accent-cyan); }
         .ia-badge { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 700; border: 1px solid var(--accent-cyan); text-transform: uppercase; }
 
@@ -58,7 +58,6 @@
         .btn-glow { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; padding: 0.9rem 2rem; border-radius: 10px; text-decoration: none; font-weight: 700; border: none; cursor: pointer; width: 100%; margin-top: 1rem; }
         .close-btn { position: absolute; top: 1.2rem; right: 1.2rem; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
 
-        /* Estilos generales para los contenedores de clientes que se despliegan */
         .dashboard-layout-client { display: flex; flex: 1; width: 100%; min-height: calc(100vh - 65px); }
         aside.sidebar-client { width: 260px; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 8px; border-right: 1px solid rgba(255,255,255,0.1); }
         .menu-titulo { font-size: 11px; text-transform: uppercase; font-weight: bold; margin: 15px 0 5px 10px; letter-spacing: 0.5px; }
@@ -67,7 +66,7 @@
         .seccion-interna { display: none; width: 100%; }
         .seccion-interna.activa { display: block; }
 
-        /* Estilos específicos Salón de Belleza */
+        /* Estilos Salón de Belleza */
         #vista-app-salon { background: #1a0a14; color: #f8fafc; }
         #vista-app-salon aside.sidebar-client { background: #220d1a; border-color: rgba(244,114,182,0.2); }
         #vista-app-salon .btn-menu { color: #cbd5e1; }
@@ -82,7 +81,7 @@
         #vista-app-salon .salon-table th, #vista-app-salon .salon-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
         #vista-app-salon .salon-table th { background: #db2777; color: #fff; font-size: 12px; text-transform: uppercase; }
 
-        /* Estilos específicos Club Deportivo */
+        /* Estilos Club Deportivo */
         #vista-app-club { background: #061a14; color: #f8fafc; }
         #vista-app-club aside.sidebar-client { background: #092219; border-color: rgba(52,211,153,0.2); }
         #vista-app-club .btn-menu { color: #cbd5e1; }
@@ -97,7 +96,7 @@
         #vista-app-club .club-table th, #vista-app-club .club-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
         #vista-app-club .club-table th { background: #059669; color: #fff; font-size: 12px; text-transform: uppercase; }
 
-        /* Estilos específicos Icetel */
+        /* Estilos Icetel */
         #vista-app-icetel { background: #09111e; color: #f8fafc; }
         #vista-app-icetel aside.sidebar-client { background: #0d1726; border-color: rgba(56,189,248,0.2); }
         #vista-app-icetel .btn-menu { color: #94a3b8; }
@@ -120,7 +119,6 @@
         .badge-estado { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
         .badge-completado { background: #d1fae5; color: #059669; }
         .badge-pendiente { background: #fef3c7; color: #d97706; }
-        .btn-accion { padding: 6px 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; color: white; }
         
         footer { background: #05080f; padding: 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 0.85rem; }
     </style>
@@ -128,7 +126,7 @@
 <body>
 
     <header>
-        <a href="#" onclick="mostrarVista('home')" class="logo-container" style="cursor:pointer;">
+        <a onclick="mostrarVista('home')" class="logo-container">
             Ingeniería <span>MyP</span> <div class="ia-badge">Cloud Hub</div>
         </a>
         
@@ -145,7 +143,7 @@
         </div>
     </header>
 
-    <!-- 1. VISTA HOME PRINCIPAL -->
+    <!-- 1. VISTA HOME PRINCIPAL (Banners y Fotos / Presentación) -->
     <div id="vista-home" class="vista-seccion activa">
         <section class="hero">
             <h1>Soluciones Digitales <span>Inteligentes</span> & Automatización</h1>
@@ -170,17 +168,16 @@
             <main class="main-content-client">
                 <div class="modulo-app-container">
                     <div style="background:#fce7f3; color:#9d174d; padding:8px 15px; border-radius:8px; font-size:12px; font-weight:bold; margin-bottom:20px; border:1px solid #f472b6; display:flex; justify-content:space-between;">
-                        <span><i class="fa-solid fa-fire"></i> Conectado a Firebase Firestore: <strong>salon@ingenieriamyp.cl</strong></span>
+                        <span><i class="fa-solid fa-fire"></i> Conectado a Firebase Firestore: <strong>salon@ingenieriamyp.cl</strong>[cite: 9, 11]</span>
                     </div>
                     
-                    <!-- Sec Dashboard Salón -->
                     <div id="salon-sec-dashboard" class="seccion-interna activa">
                         <h2 style="color:#831843; margin-bottom:5px;"><i class="fa-solid fa-chart-line"></i> Dashboard General Salón</h2>
                         <div class="salon-stats-grid" style="margin-top:20px;">
-                            <div class="salon-stat-card"><h4>Ingresos Servicios</h4><div class="val" id="salonStatIngresos">$0</div></div>
-                            <div class="salon-stat-card"><h4>Ganancia Tienda</h4><div class="val" id="salonStatTienda" style="color:#2563eb;">$0</div></div>
-                            <div class="salon-stat-card"><h4>Egresos / Gastos</h4><div class="val" id="salonStatEgresos" style="color:#dc2626;">$0</div></div>
-                            <div class="salon-stat-card"><h4>Balance Neto</h4><div class="val" id="salonStatBalance" style="color:#059669;">$0</div></div>
+                            <div class="salon-stat-card"><h4>Ingresos Servicios</h4><div class="val" id="salonStatIngresos">$65.000</div></div>
+                            <div class="salon-stat-card"><h4>Ganancia Tienda</h4><div class="val" id="salonStatTienda" style="color:#2563eb;">$6.500</div></div>
+                            <div class="salon-stat-card"><h4>Egresos / Gastos</h4><div class="val" id="salonStatEgresos" style="color:#dc2626;">$202.000</div></div>
+                            <div class="salon-stat-card"><h4>Balance Neto</h4><div class="val" id="salonStatBalance" style="color:#dc2626;">-$130.500</div></div>
                         </div>
                         <div class="panel-seccion">
                             <h3><i class="fa-solid fa-chart-pie"></i> Gráfico Financiero</h3>
@@ -188,31 +185,28 @@
                         </div>
                     </div>
 
-                    <!-- Sec Citas Salón -->
                     <div id="salon-sec-citas" class="seccion-interna">
                         <h2 style="color:#831843; margin-bottom:15px;"><i class="fa-solid fa-calendar-check"></i> Gestión de Citas y Agenda</h2>
                         <table class="salon-table">
                             <thead><tr><th>Fecha/Hora</th><th>Cliente</th><th>Servicio & Precio</th><th>Estilista</th><th>Estado</th></tr></thead>
-                            <tbody id="salonTablaCitas">
+                            <tbody>
                                 <tr><td>2026-08-30 10:00</td><td><strong>María González</strong></td><td>Corte y Brushing ($20.000)</td><td>Carla V.</td><td><span class="badge-estado badge-completado">Completado</span></td></tr>
                                 <tr><td>2026-08-29 12:15</td><td><strong>Camila Riquelme</strong></td><td>Balayage ($45.000)</td><td>Sofía M.</td><td><span class="badge-estado badge-completado">Completado</span></td></tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- Sec Ingresos Salón -->
                     <div id="salon-sec-ingresos" class="seccion-interna">
                         <h2 style="color:#831843; margin-bottom:15px;"><i class="fa-solid fa-money-bill-trend-up"></i> Detalle de Ingresos</h2>
                         <table class="salon-table">
                             <thead><tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Monto ($)</th></tr></thead>
-                            <tbody id="salonTablaIngresos">
+                            <tbody>
                                 <tr><td>2026-08-30</td><td>María González</td><td>Corte y Brushing</td><td><strong>$20.000</strong></td></tr>
                                 <tr><td>2026-08-29</td><td>Camila Riquelme</td><td>Balayage + Tratamiento</td><td><strong>$45.000</strong></td></tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- Sec Egresos Salón -->
                     <div id="salon-sec-egresos" class="seccion-interna">
                         <h2 style="color:#831843; margin-bottom:15px;"><i class="fa-solid fa-wallet"></i> Control de Egresos</h2>
                         <table class="salon-table">
@@ -224,7 +218,6 @@
                         </table>
                     </div>
 
-                    <!-- Sec Tienda Salón -->
                     <div id="salon-sec-tienda" class="seccion-interna">
                         <h2 style="color:#831843; margin-bottom:15px;"><i class="fa-solid fa-boxes-stacked"></i> Tienda & Inventario</h2>
                         <table class="salon-table">
@@ -254,17 +247,16 @@
             <main class="main-content-client">
                 <div class="modulo-app-container">
                     <div style="background:#d1fae5; color:#065f46; padding:8px 15px; border-radius:8px; font-size:12px; font-weight:bold; margin-bottom:20px; border:1px solid #34d399; display:flex; justify-content:space-between;">
-                        <span><i class="fa-solid fa-fire"></i> Conectado a Firebase Firestore: <strong>club@ingenieriamyp.cl</strong></span>
+                        <span><i class="fa-solid fa-fire"></i> Conectado a Firebase Firestore: <strong>club@ingenieriamyp.cl</strong>[cite: 10, 11]</span>
                     </div>
 
-                    <!-- Sec Dashboard Club -->
                     <div id="club-sec-dashboard" class="seccion-interna activa">
                         <h2 style="color:#065f46; margin-bottom:5px;"><i class="fa-solid fa-chart-line"></i> Dashboard General Club Deportivo</h2>
                         <div class="club-stats-grid" style="margin-top:20px;">
                             <div class="club-stat-card"><h4>Ingresos Arriendos</h4><div class="val" id="clubStatIngresos">$75.000</div></div>
                             <div class="club-stat-card"><h4>Ganancia Tienda</h4><div class="val" id="clubStatTienda" style="color:#2563eb;">$4.500</div></div>
                             <div class="club-stat-card"><h4>Egresos / Gastos</h4><div class="val" id="clubStatEgresos" style="color:#dc2626;">$110.000</div></div>
-                            <div class="club-stat-card"><h4>Balance Neto</h4><div class="val" id="clubStatBalance" style="color:#059669;">-$30.500</div></div>
+                            <div class="club-stat-card"><h4>Balance Neto</h4><div class="val" id="clubStatBalance" style="color:#dc2626;">-$30.500</div></div>
                         </div>
                         <div class="panel-seccion">
                             <h3><i class="fa-solid fa-chart-pie"></i> Gráfico Financiero Club</h3>
@@ -272,7 +264,6 @@
                         </div>
                     </div>
 
-                    <!-- Sec Citas Club -->
                     <div id="club-sec-citas" class="seccion-interna">
                         <h2 style="color:#065f46; margin-bottom:15px;"><i class="fa-solid fa-calendar-check"></i> Arriendos de Canchas</h2>
                         <table class="club-table">
@@ -284,7 +275,6 @@
                         </table>
                     </div>
 
-                    <!-- Sec Ingresos Club -->
                     <div id="club-sec-ingresos" class="seccion-interna">
                         <h2 style="color:#065f46; margin-bottom:15px;"><i class="fa-solid fa-money-bill-trend-up"></i> Detalle Ingresos Arriendos</h2>
                         <table class="club-table">
@@ -296,7 +286,6 @@
                         </table>
                     </div>
 
-                    <!-- Sec Egresos Club -->
                     <div id="club-sec-egresos" class="seccion-interna">
                         <h2 style="color:#065f46; margin-bottom:15px;"><i class="fa-solid fa-wallet"></i> Control de Egresos Club</h2>
                         <table class="club-table">
@@ -308,7 +297,6 @@
                         </table>
                     </div>
 
-                    <!-- Sec Tienda Club -->
                     <div id="club-sec-tienda" class="seccion-interna">
                         <h2 style="color:#065f46; margin-bottom:15px;"><i class="fa-solid fa-shop"></i> Tienda Deportiva</h2>
                         <table class="club-table">
@@ -338,10 +326,9 @@
             <main class="main-content-client">
                 <div class="modulo-app-container">
                     <div style="background:#e0f2fe; color:#0369a1; padding:8px 15px; border-radius:8px; font-size:12px; font-weight:bold; margin-bottom:20px; border:1px solid #7dd3fc; display:flex; justify-content:space-between;">
-                        <span><i class="fa-solid fa-server"></i> Conectado a Servidor Operativo: <strong>icetel@ingenieriamyp.cl</strong> (Entel Planta Externa)</span>
+                        <span><i class="fa-solid fa-server"></i> Conectado a Servidor Operativo: <strong>icetel@ingenieriamyp.cl</strong> (Entel Planta Externa)[cite: 7, 11]</span>
                     </div>
 
-                    <!-- Sec Dashboard Icetel -->
                     <div id="icetel-sec-dashboard" class="seccion-interna activa">
                         <h2 style="color:#0369a1; margin-bottom:5px;"><i class="fa-solid fa-chart-line"></i> Dashboard de Operaciones Icetel</h2>
                         <div class="icetel-stats-grid" style="margin-top:20px;">
@@ -352,7 +339,6 @@
                         </div>
                     </div>
 
-                    <!-- Sec Planillas Icetel -->
                     <div id="icetel-sec-planillas" class="seccion-interna">
                         <h2 style="color:#0369a1; margin-bottom:15px;"><i class="fa-solid fa-file-excel"></i> Planillas de Enlaces & Tickets</h2>
                         <table class="icetel-table">
@@ -364,29 +350,26 @@
                         </table>
                     </div>
 
-                    <!-- Sec Looker Icetel -->
                     <div id="icetel-sec-looker" class="seccion-interna">
                         <h2 style="color:#0369a1; margin-bottom:15px;"><i class="fa-solid fa-chart-pie"></i> Looker Studio - Reporte de Flota</h2>
                         <div style="background:#0b1329; border-radius:10px; border:1px solid #38bdf8; padding:30px; text-align:center; color:#fff;">
                             <i class="fa-solid fa-chart-area" style="font-size:3rem; color:#38bdf8; margin-bottom:15px;"></i>
                             <h3>Panel Integrado de Looker Studio</h3>
-                            <p style="color:#94a3b8; font-size:13px; margin-top:5px;">Visualización en tiempo real del rendimiento de la flota operativa en la Región Metropolitana.</p>
+                            <p style="color:#94a3b8; font-size:13px; margin-top:5px;">Visualización en tiempo real del rendimiento de la flota operativa en la Región Metropolitana[cite: 7].</p>
                         </div>
                     </div>
 
-                    <!-- Sec Flota Icetel -->
                     <div id="icetel-sec-flota" class="seccion-interna">
                         <h2 style="color:#0369a1; margin-bottom:15px;"><i class="fa-solid fa-truck"></i> Control de Flota de Vehículos</h2>
                         <table class="icetel-table">
                             <thead><tr><th>Patente</th><th>Modelo / Vehículo</th><th>Chofer / Responsable</th><th>Estado</th></tr></thead>
                             <tbody>
-                                <tr><td><strong>HX-KJ-88</strong></td><td>Changan CS75 (Operativo)</td><td>Mauricio Salazar</td><td><span class="badge-estado badge-completado">Operativo</span></td></tr>
+                                <tr><td><strong>HX-KJ-88</strong></td><td>Changan CS75 (Operativo)[cite: 7]</td><td>Mauricio Salazar</td><td><span class="badge-estado badge-completado">Operativo</span></td></tr>
                                 <tr><td><strong>KL-99-23</strong></td><td>Camioneta Soporte Taller</td><td>Esteban R.</td><td><span class="badge-estado badge-pendiente">Mantenimiento</span></td></tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- Sec Turnos Icetel -->
                     <div id="icetel-sec-turnos" class="seccion-interna">
                         <h2 style="color:#0369a1; margin-bottom:15px;"><i class="fa-solid fa-clock"></i> Control de Turnos & Horas Extras</h2>
                         <table class="icetel-table">
@@ -408,7 +391,7 @@
             <i class="fa-solid fa-xmark close-btn" onclick="cerrarModales()"></i>
             <i class="fa-solid fa-user-lock" style="font-size: 2.5rem; color: var(--accent-cyan); margin-bottom: 1rem;"></i>
             <h3 style="color:#fff; margin-bottom:0.5rem;">Acceso Equipo MyP</h3>
-            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">Credenciales de gerencia protegidas por Firebase Authentication[cite: 2].</p>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">Credenciales de gerencia protegidas por Firebase Authentication[cite: 11].</p>
             <form onsubmit="validarAdminFirebase(event)">
                 <input type="email" id="inputAdminEmail" class="login-input" placeholder="Correo Corporativo" required>
                 <input type="password" id="inputAdminPass" class="login-input" placeholder="Contraseña Segura" required>
@@ -418,13 +401,13 @@
         </div>
     </div>
 
-    <!-- MODAL CLAVE DIRECTA CLIENTES (APARECE AL PRESIONAR PORTAL CLIENTES) -->
+    <!-- MODAL CLAVE DIRECTA CLIENTES -->
     <div id="modalPortalClientes" class="modal-overlay">
         <div class="login-card">
             <i class="fa-solid fa-xmark close-btn" onclick="cerrarModales()"></i>
             <i class="fa-solid fa-key" style="font-size: 2.5rem; color: var(--accent-orange); margin-bottom: 1rem;"></i>
             <h3 style="color:#fff; margin-bottom:0.5rem;">Acceso Portal Clientes</h3>
-            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">Ingresa tu clave corporativa asignada.</p>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">Ingresa tu clave corporativa asignada (ej: <strong>icetel2026</strong>, <strong>belleza2026</strong>, <strong>deporte2026</strong>)[cite: 7, 9, 10, 11].</p>
             <form onsubmit="validarLoginClienteDirecto(event)">
                 <input type="password" id="inputClientPassDirecto" class="login-input" placeholder="Contraseña segura" required>
                 <button type="submit" class="btn-glow" style="background: linear-gradient(135deg, var(--accent-orange), #ea580c);">Ingresar al Dashboard</button>
@@ -434,7 +417,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Arquitectura de Sistemas y Automatización Avanzada. | Santiago, Chile</p>
+        <p>&copy; 2026 Ingeniería MyP Salazar Lagos. Arquitectura de Sistemas y Automatización Avanzada. | Santiago, Chile[cite: 11]</p>
     </footer>
 
     <!-- Lógica de Firebase Authentication y Control de Dashboards -->
@@ -481,7 +464,6 @@
             document.getElementById('modalPortalClientes').style.display = 'none';
         }
 
-        // Validación Firebase Equipo Interno
         window.validarAdminFirebase = function(e) {
             e.preventDefault();
             const email = document.getElementById('inputAdminEmail').value.trim();
@@ -489,18 +471,17 @@
             const errorMsg = document.getElementById('errorAdmin');
 
             signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
+                .then(() => {
                     cerrarModales();
                     document.getElementById('btnCerrarSesionGlobal').style.display = 'flex';
-                    alert("Autenticación exitosa en el equipo de Ingeniería MyP.");
+                    alert("Autenticación exitosa en el equipo de Ingeniería MyP[cite: 11].");
                 })
-                .catch((error) => {
+                .catch(() => {
                     errorMsg.style.display = 'block';
                     errorMsg.innerText = "Correo o contraseña corporativa incorrectos.";
                 });
         }
 
-        // Validación Clientes directo con Firebase según contraseña
         window.validarLoginClienteDirecto = function(e) {
             e.preventDefault();
             let pass = document.getElementById('inputClientPassDirecto').value.trim();
@@ -525,24 +506,22 @@
             }
 
             signInWithEmailAndPassword(auth, targetEmail, pass)
-                .then((userCredential) => {
+                .then(() => {
                     cerrarModales();
                     document.getElementById('btnCerrarSesionGlobal').style.display = 'flex';
                     mostrarVista(targetType);
                     
-                    // Inicializar gráficos si corresponde
                     setTimeout(() => {
                         if (targetType === 'app-salon') inicializarGraficoSalon();
                         if (targetType === 'app-club') inicializarGraficoClub();
                     }, 200);
                 })
-                .catch((error) => {
+                .catch(() => {
                     errorMsg.style.display = 'block';
-                    errorMsg.innerText = "Error de autenticación en Firebase.";
+                    errorMsg.innerText = "Error de autenticación en Firebase[cite: 11].";
                 });
         }
 
-        // Navegación interna Salón de Belleza
         window.navegarSalon = function(sec, btn) {
             document.querySelectorAll('#vista-app-salon .seccion-interna').forEach(s => s.classList.remove('activa'));
             document.getElementById('salon-sec-' + sec).classList.add('activa');
@@ -550,7 +529,6 @@
             btn.classList.add('activo');
         }
 
-        // Navegación interna Club Deportivo
         window.navegarClub = function(sec, btn) {
             document.querySelectorAll('#vista-app-club .seccion-interna').forEach(s => s.classList.remove('activa'));
             document.getElementById('club-sec-' + sec).classList.add('activa');
@@ -558,7 +536,6 @@
             btn.classList.add('activo');
         }
 
-        // Navegación interna Icetel
         window.navegarIcetel = function(sec, btn) {
             document.querySelectorAll('#vista-app-icetel .seccion-interna').forEach(s => s.classList.remove('activa'));
             document.getElementById('icetel-sec-' + sec).classList.add('activa');
@@ -578,10 +555,6 @@
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
-            document.getElementById('salonStatIngresos').innerText = "$65.000";
-            document.getElementById('salonStatTienda').innerText = "$6.500";
-            document.getElementById('salonStatEgresos').innerText = "$202.000";
-            document.getElementById('salonStatBalance').innerText = "-$130.500";
         }
 
         function inicializarGraficoClub() {
@@ -602,7 +575,7 @@
             signOut(auth).then(() => {
                 document.getElementById('btnCerrarSesionGlobal').style.display = 'none';
                 mostrarVista('home');
-            }).catch((error) => {
+            }).catch(() => {
                 document.getElementById('btnCerrarSesionGlobal').style.display = 'none';
                 mostrarVista('home');
             });
